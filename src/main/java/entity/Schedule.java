@@ -5,13 +5,13 @@ import java.util.Date;
 
 public class Schedule 
 {
-	private ArrayList<Day> days;
-	private Date startDate;
-	private Date endDate;
-	private int meetingDuration;
-	private String organizerCode;
-	private String scheduleName;
-	private String shareCode;
+	ArrayList<Day> days;
+	Date startDate;
+	Date endDate;
+	int meetingDuration;
+	String organizerCode;
+	String scheduleName;
+	String shareCode;
 	
 	public Schedule(String name, Date startDate, Date endDate, String shareCode)
 	{
@@ -38,12 +38,12 @@ public class Schedule
 	
 	public String getScheduleName()
 	{
-		return organizerCode;
+		return scheduleName;
 	}
 	
 	public String getShareCode()
 	{
-		return organizerCode;
+		return shareCode;
 	}
 	
 	public ArrayList<Day> getDays()
