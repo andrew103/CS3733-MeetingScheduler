@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Team Cursa Meeting Scheduler/SysAdmin</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+  .fakeimg {
+      height: 20px;
+      background: #aaa;
+  }
+  </style>
+</head>
+<body>
+
+<div class="jumbotron text-center" style="margin-bottom:0">
+  <h1>Team Cursa Meeting Scheduler</h1>
+  <p>This is the System Administrator view</p> 
+</div>
+
+<div class="container">
+  <form class="form-inline" action="/action_page.php">
+    <div class="form-group">
+      <label for="text1">Delete meetings more than </label>
+      <input type="number" class="form-control" maxlength="2" size="2">
+      <label for="text2"> days old</label>
+    </div>
+    <button type="submit" class="btn btn-danger">Delete Schedule</button>
+  </form>
+</div>
+
+<div class="container">
+  <form class="form-inline" action="/action_page.php">
+    <div class="form-group">
+      <label for="text1">Retrive list of meeting schedules created int he past </label>
+      <input type="number" class="form-control" maxlength="2" size="2">
+      <label for="text2"> hours</label>
+    </div>
+    <button type="submit" class="btn btn-info">Retrive Schedule</button>
+  </form>
+</div>
+
+</body>
+</html>
