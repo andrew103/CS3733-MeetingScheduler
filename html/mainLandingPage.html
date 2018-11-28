@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Team Cursa Meeting Scheduler</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+  .fakeimg {
+      height: 20px;
+      background: #aaa;
+  }
+  </style>
+</head>
+<body>
+
+<div class="jumbotron text-center" style="margin-bottom:0">
+  <h1>Team Cursa Meeting Scheduler</h1>
+  <p>This is the main landing page for Organizer, Participant and System Administrator</p> 
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4">
+      <h2>System Administrator</h2>
+      <h5>Input login info in the text box below:</h5>
+      <div class="form-group">
+        <label for="usr">Username:</label>
+        <input type="text" class="form-control" id="usr">
+      </div>
+      <div class="form-group">
+        <label for="pwd">Password:</label>
+        <input type="password" class="form-control" id="pwd">
+      </div>
+      <button type="button" class="btn btn-primary">Login</button>
+      <hr class="hidden-sm hidden-md hidden-lg">
+    </div>
+    <div class="col-sm-4">
+    <h2>Organizer</h2>
+      <h5>Input schedule code below to access existing schedule:</h5>
+      <div class="form-group">
+        <label for="pwd">Schedule Code:</label>
+        <input type="password" class="form-control" id="pwd">
+      </div>
+      <button type="button" class="btn btn-info">Access Schedule</button>
+      <h5>Click the botton below to create new schedule</h5>
+      <button type="button" class="btn btn-success">Create New Schedule</button>
+    </div>
+    <div class="col-sm-4">
+    <h2>Participant</h2>
+      <h5>Input schedule code to access existing schedule below:</h5>
+      <div class="form-group">
+        <label for="pwd">Schedule Code:</label>
+        <input type="password" class="form-control" id="pwd">
+      </div>
+      <button type="button" class="btn btn-info">Access Schedule</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
