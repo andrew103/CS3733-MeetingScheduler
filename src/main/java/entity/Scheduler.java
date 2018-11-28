@@ -29,7 +29,6 @@ public class Scheduler
 		schedules.add(s);
 	}
 	
-	//Test
 	public ArrayList<Schedule> requestOldSchedules(int days)
 	{
 		ArrayList<Schedule> sched = new ArrayList<Schedule>();
