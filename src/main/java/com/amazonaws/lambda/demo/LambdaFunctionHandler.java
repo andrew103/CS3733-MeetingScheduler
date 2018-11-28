@@ -22,7 +22,15 @@ public class LambdaFunctionHandler implements RequestHandler<S3Event, String> {
     @Override
     public String handleRequest(S3Event event, Context context) {
         context.getLogger().log("Received event: " + event);
-
+        
+        try { 
+        	return "test + recieved event" + context;
+        }
+        catch(Exception e){
+        	return "400, something broke";
+        }
+        
+/*
         // Get the object from the event and show its content type
         String bucket = event.getRecords().get(0).getS3().getBucket().getName();
         String key = event.getRecords().get(0).getS3().getObject().getKey();
@@ -37,6 +45,6 @@ public class LambdaFunctionHandler implements RequestHandler<S3Event, String> {
                 "Error getting object %s from bucket %s. Make sure they exist and"
                 + " your bucket is in the same region as this function.", key, bucket));
             throw e;
-        }
+        }*/
     }
 }

@@ -6,12 +6,23 @@ public class Scheduler
 {
 	private ArrayList<Schedule> schedules;
 	
-	public Scheduler()
+	//Ensuring only one instance of scheduler exists
+	private static Scheduler instance;
+	
+	static {
+		instance = new Scheduler();
+	}
+	
+	private Scheduler()
 	{
 		
 	}
 	
-	public void createSchedule(Schedule s)
+    public static Scheduler getInstance() {
+        return instance;
+    }
+	
+	public void addSchedule(Schedule s)
 	{
 		schedules.add(s);
 	}
