@@ -15,7 +15,7 @@ public class Scheduler
 		instance = new Scheduler();
 	}
 	
-	private Scheduler()
+	public Scheduler()
 	{
 		
 	}
