@@ -2,18 +2,19 @@ package entity;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class Schedule 
 {
 	ArrayList<Day> days;
-	Date startDate;
-	Date endDate;
+	GregorianCalendar startDate;
+	GregorianCalendar endDate;
 	int meetingDuration;
 	String organizerCode;
 	String scheduleName;
 	String shareCode;
 	
-	public Schedule(String name, Date startDate, Date endDate, String shareCode)
+	public Schedule(String name, GregorianCalendar startDate, GregorianCalendar endDate, String shareCode)
 	{
 		this.scheduleName = name;
 		this.startDate = startDate;
@@ -21,12 +22,12 @@ public class Schedule
 		this.shareCode = shareCode;
 	}
 	
-	public Date getStartDate()
+	public GregorianCalendar getStartDate()
 	{
 		return startDate;
 	}
 	
-	public Date getEndDate()
+	public GregorianCalendar getEndDate()
 	{
 		return startDate;
 	}

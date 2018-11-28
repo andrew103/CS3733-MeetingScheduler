@@ -1,7 +1,8 @@
 package entity;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 public class Scheduler 
 {
@@ -29,15 +30,13 @@ public class Scheduler
 	}
 	
 	
-	//TODO
 	public ArrayList<Schedule> requestOldSchedules(int days)
 	{
 		ArrayList<Schedule> sched = new ArrayList<Schedule>();
-		Date current = new Date();
+		GregorianCalendar current = new GregorianCalendar();
 		for (Schedule schedule : schedules)
 		{
-			//If schedule is more than 'days' days old, return it
-			if (current.getDate() - schedule.getStartDate().getDate() <= days)
+			if (current.getTime().getTime() - schedule.getStartDate().getTime().getTime() <= TimeUnit.DAYS.toMillis(days))
 			{
 				sched.add(schedule);
 			}
@@ -47,10 +46,10 @@ public class Scheduler
 	
 	public void deleteOldSchedules(int days)
 	{
-		Date current = new Date();
+		GregorianCalendar current = new GregorianCalendar();
 		for (Schedule schedule : schedules)
 		{
-			if (current.getDate() - schedule.getStartDate().getDate() <= days)
+			if (current.getTime().getTime() - schedule.getStartDate().getTime().getTime() <= TimeUnit.DAYS.toMillis(days))
 			{
 				schedules.remove(schedule);
 			}
@@ -60,10 +59,10 @@ public class Scheduler
 	public ArrayList<Schedule> requestNewSchedules(int hours) 
 	{
 		ArrayList<Schedule> sched = new ArrayList<Schedule>();
-		Date current = new Date();
+		GregorianCalendar current = new GregorianCalendar();
 		for (Schedule schedule : schedules)
 		{
-			if (current.getDate() - schedule.getStartDate().getDate() <= hours)
+			if (current.getTime().getTime() - schedule.getStartDate().getTime().getTime() <= TimeUnit.HOURS.toMillis(hours))
 			{
 				sched.add(schedule);
 			}
