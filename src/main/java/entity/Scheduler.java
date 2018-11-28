@@ -17,7 +17,7 @@ public class Scheduler
 	
 	public Scheduler()
 	{
-		
+		schedules = new ArrayList<Schedule>();
 	}
 	
     public static Scheduler getInstance() {
@@ -36,7 +36,7 @@ public class Scheduler
 		GregorianCalendar current = new GregorianCalendar();
 		for (Schedule schedule : schedules)
 		{
-			if (current.getTime().getTime() - schedule.getStartDate().getTime().getTime() <= TimeUnit.DAYS.toMillis(days))
+			if (current.getTimeInMillis() - schedule.getStartDate().getTimeInMillis() >= TimeUnit.DAYS.toMillis(days))
 			{
 				sched.add(schedule);
 			}
@@ -49,7 +49,7 @@ public class Scheduler
 		GregorianCalendar current = new GregorianCalendar();
 		for (Schedule schedule : schedules)
 		{
-			if (current.getTime().getTime() - schedule.getStartDate().getTime().getTime() <= TimeUnit.DAYS.toMillis(days))
+			if (current.getTimeInMillis() - schedule.getStartDate().getTimeInMillis() <= TimeUnit.DAYS.toMillis(days))
 			{
 				schedules.remove(schedule);
 			}
@@ -61,8 +61,8 @@ public class Scheduler
 		ArrayList<Schedule> sched = new ArrayList<Schedule>();
 		GregorianCalendar current = new GregorianCalendar();
 		for (Schedule schedule : schedules)
-		{
-			if (current.getTime().getTime() - schedule.getStartDate().getTime().getTime() <= TimeUnit.HOURS.toMillis(hours))
+		{		
+			if (Math.abs(current.getTimeInMillis() - schedule.getStartDate().getTimeInMillis()) <= TimeUnit.HOURS.toMillis(hours))
 			{
 				sched.add(schedule);
 			}
