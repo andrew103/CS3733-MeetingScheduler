@@ -32,7 +32,7 @@ class CreateScheduleRequest {
 	}
 	
 	public String toString() {
-		return "Creating schedule " + scheduleName + " from " + sd + " to " + ed +
-				"\n Meetings start at " + startTime + " ends at " + endTime + " for " + meetingDuration + " minutes each.";
+		return "Creating schedule " + this.scheduleName + " from " + this.sd + " to " + this.ed +
+				"\n Meetings start at " + this.startTime + " ends at " + this.endTime + " for " + this.meetingDuration + " minutes each.";
 	}
 }
