@@ -19,6 +19,9 @@ public class Schedule
 	private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 	public Schedule(String name, GregorianCalendar startDate, GregorianCalendar endDate, int duration, int startTime, int endTime) {
+		/*
+		 * Use this constructor when creating new schedules
+		 */
 		this.scheduleName = name;
 		this.startDate = startDate;
 		this.endDate = endDate;
@@ -28,7 +31,21 @@ public class Schedule
 		this.organizerCode = randomAlphaNumeric(10);
 		this.shareCode = randomAlphaNumeric(10);
 	}
-	
+
+	public Schedule(String name, GregorianCalendar startDate, GregorianCalendar endDate, int duration, int startTime, int endTime, String organizerCode, String shareCode) {
+		/*
+		 * Use this constructor when dealing with existing schedules
+		 */
+		this.scheduleName = name;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.meetingDuration = duration;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.organizerCode = organizerCode;
+		this.shareCode = shareCode;
+	}
+
 	public static String randomAlphaNumeric(int count) {
 		StringBuilder builder = new StringBuilder();
 		while (count-- != 0) {
@@ -37,6 +54,10 @@ public class Schedule
 		}
 
 		return builder.toString();
+	}
+	
+	public void addDay(Day day) {
+		this.days.add(day);
 	}
 	
 	public GregorianCalendar getStartDate()	{

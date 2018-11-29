@@ -67,7 +67,7 @@ public class SchedulerDAO {
         		calendarCurrent.add(Calendar.DAY_OF_MONTH, 1);
         	}
         	
-        	query = "SELECT dayDate FROM Day WHERE scheduleID = ?";
+        	query = "SELECT dayDate FROM Day WHERE scheduleID = ?;";
         	ps = conn.prepareStatement(query);
         	ps.setInt(1, schedID);
         	resultSet = ps.executeQuery();
@@ -95,8 +95,26 @@ public class SchedulerDAO {
     
     public boolean getSchedule(String shareCode) throws Exception {
     	try {
-        	String query = "";
+        	String query = "SELECT * FROM Schedule WHERE shareCode = ?;";
         	PreparedStatement ps = conn.prepareStatement(query);
+        	ps.setString(1, shareCode);
+        	ResultSet resultSet1 = ps.executeQuery();
+
+        	resultSet1.next();
+        	GregorianCalendar startDate = new GregorianCalendar();
+        	startDate.setTime(resultSet1.getDate("startDate"));
+        	GregorianCalendar endDate = new GregorianCalendar();
+        	endDate.setTime(resultSet1.getDate("endDate"));
+        	Schedule schedule = new Schedule(resultSet1.getString("scheduleName"),
+        									 startDate,
+        									 endDate,
+        									 resultSet1.getInt("meetingDuration"),
+        									 resultSet1.getInt("startTime"),
+        									 resultSet1.getInt("endTime"),
+        									 resultSet1.getString("organizerCode"),
+        									 resultSet1.getString("shareCode"));
+        	
+        	
 
         	ps.close();
         	return true;
