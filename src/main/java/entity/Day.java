@@ -18,9 +18,13 @@ public class Day
 		{
 			if (slot.m.getMeetingCode() == code)
 			{
-				slot.m = null; 
+				slot.m =d null; 
 			}
 		}
+	}
+	
+	public void addTimeslot(Timeslot timeslot) {
+		this.timeSlots.add(timeslot);
 	}
 	
 	public ArrayList<Timeslot> getTimeSlots() {

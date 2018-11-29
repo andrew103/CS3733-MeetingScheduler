@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.GregorianCalendar;
 
 import entity.Day;
-import entity.Meeting;
 import entity.Schedule;
 import entity.Timeslot;
 import entity.Scheduler;
@@ -93,7 +92,7 @@ public class SchedulerDAO {
     	}
     }
     
-    public boolean getSchedule(String shareCode) throws Exception {
+    public Schedule getSchedule(String shareCode) throws Exception {
     	try {
         	String query = "SELECT * FROM Schedule WHERE shareCode = ?;";
         	PreparedStatement ps = conn.prepareStatement(query);
@@ -114,10 +113,37 @@ public class SchedulerDAO {
         									 resultSet1.getString("organizerCode"),
         									 resultSet1.getString("shareCode"));
         	
+        	query = "SELECT * FROM Day WHERE scheduleID = ?;";
+        	ps = conn.prepareStatement(query);
+        	ps.setInt(1, resultSet1.getInt("scheduleID"));
+        	ResultSet resultSet2 = ps.executeQuery();
+        	while (resultSet2.next()) {
+        		Day day = new Day(resultSet2.getInt("dayStartTime"), resultSet2.getInt("dayEndTime"));
+        		
+        		query = "SELECT * FROM Timeslot WHERE dayDate = ?;";
+        		ps = conn.prepareStatement(query);
+        		ps.setDate(1, resultSet2.getDate("dayDate"));
+        		ResultSet resultSet3 = ps.executeQuery();
+        		while (resultSet3.next()) {
+        			resultSet3.getString("participantInfo")
+        			if (resultSet3.wasNull()) {
+            			Timeslot timeslot = new Timeslot(resultSet3.getBoolean("available"), resultSet3.getInt("startTime"));
+            			day.addTimeslot(timeslot);
+        			}
+        			else {
+            			Timeslot timeslot = new Timeslot(resultSet3.getBoolean("available"), resultSet3.getInt("startTime"), resultSet3.getString("participantInfo"), resultSet3.getString("meetingCode"));
+            			day.addTimeslot(timeslot);
+        			}        			
+        		}
+        		
+        		schedule.addDay(day);
+        		resultSet3.close();
+        	}
         	
-
+        	resultSet2.close();
+        	resultSet1.close();
         	ps.close();
-        	return true;
+        	return schedule;
     	} catch (Exception e) {
     		throw new Exception("Failed to get schedule: " + e.getMessage());    		
     	}
