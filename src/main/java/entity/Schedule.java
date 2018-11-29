@@ -16,7 +16,7 @@ public class Schedule
 	String scheduleName;
 	String shareCode;
 	
-	//
+	
 	public Schedule(String name, GregorianCalendar startDate, GregorianCalendar endDate, String shareCode, int duration, int startTime, int endTime)
 	{
 		this.scheduleName = name;
