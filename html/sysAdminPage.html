@@ -22,28 +22,38 @@
 </div>
 
 <div class="container">
-  <form class="form-inline" onsubmit="handleDelete()">
+  <form class="form-inline">
     <div class="form-group">
       <label for="text1">Delete meetings more than </label>
       <input type="number" class="form-control" maxlength="2" size="2">
       <label for="text2"> days old</label>
     </div>
-    <button type="submit" class="btn btn-danger">Delete Schedule</button>
+    <button type="submit" id ="deleteButton" class="btn btn-danger">Delete Schedules</button>
   </form>
 </div>
 
 <div class="container">
-  <form class="form-inline" onsubmit="handleRetrieve()">
+  <form class="form-inline">
     <div class="form-group">
-      <label for="text1">Retrive list of meeting schedules created int he past </label>
+      <label for="text1">Retrieve schedules created in the past</label>
       <input type="number" class="form-control" maxlength="2" size="2">
       <label for="text2"> hours</label>
     </div>
-    <button type="submit" class="btn btn-info">Retrive Schedule</button>
+    <button type="submit" id="retrieveButton" class="btn btn-info">Retrive Schedules</button>
   </form>
 </div>
 
 <script>
+
+document.getElementById("deleteButton").addEventListener("click", function(event){
+    event.preventDefault();
+   handleDelete();
+});
+
+document.getElementById("retrieveButton").addEventListener("click", function(event){
+    event.preventDefault();
+   handleRetrieve();
+});
     function handleDelete(){
         
         var num = document.getElementsByClassName('form-control')[0].value;
