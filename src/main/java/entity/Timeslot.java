@@ -4,19 +4,29 @@ public class Timeslot
 {
 	private boolean available;
 	private int startTime;
-	Meeting m = null;
+	private String participantInfo;
+	private String meetingCode;
 	
 	public Timeslot(boolean available, int startTime) {
 		this.available = available;
 		this.startTime = startTime;
+		this.participantInfo = "";
+		this.meetingCode = "";
 	}
-	
-	public void addMeeting(Meeting m) {
-		this.m = m;
+
+	public Timeslot(boolean available, int startTime, String participantInfo, String meetingCode) {
+		this.available = available;
+		this.startTime = startTime;
+		this.participantInfo = participantInfo;
+		this.meetingCode = meetingCode;
+	}
+
+	public void addMeeting() {
+//		this.m = m;
 	}
 	
 	public void removeMeeting() {
-		this.m = null;
+//		this.m = null;
 	}
 	
 	public boolean isAvailable() {
