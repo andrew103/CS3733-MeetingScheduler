@@ -15,8 +15,7 @@ public class Scheduler
 		instance = new Scheduler();
 	}
 	
-	public Scheduler()
-	{
+	public Scheduler() {
 		schedules = new ArrayList<Schedule>();
 	}
 	
@@ -24,14 +23,12 @@ public class Scheduler
         return instance;
     }
 	
-	public void addSchedule(Schedule s)
-	{
+	public void addSchedule(Schedule s)	{
 		schedules.add(s);
 	}
 	
 	
-	public ArrayList<Schedule> requestOldSchedules(int days)
-	{
+	public ArrayList<Schedule> requestOldSchedules(int days) {
 		ArrayList<Schedule> sched = new ArrayList<Schedule>();
 		GregorianCalendar current = new GregorianCalendar();
 		for (Schedule schedule : schedules)
@@ -44,8 +41,7 @@ public class Scheduler
 		return sched;
 	}
 	
-	public void deleteOldSchedules(int days)
-	{
+	public void deleteOldSchedules(int days) {
 		GregorianCalendar current = new GregorianCalendar();
 		for (Schedule schedule : schedules)
 		{
@@ -56,8 +52,7 @@ public class Scheduler
 		}
 	}
 	
-	public ArrayList<Schedule> requestNewSchedules(int hours) 
-	{
+	public ArrayList<Schedule> requestNewSchedules(int hours) {
 		ArrayList<Schedule> sched = new ArrayList<Schedule>();
 		GregorianCalendar current = new GregorianCalendar();
 		for (Schedule schedule : schedules)
@@ -71,8 +66,7 @@ public class Scheduler
 		
 	}
 	
-	public Schedule retrieveSchedule(String shareCode)
-	{
+	public Schedule retrieveSchedule(String shareCode) {
 		for (Schedule s : schedules)
 		{
 			if (s.getShareCode().equals(shareCode))

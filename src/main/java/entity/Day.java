@@ -8,14 +8,12 @@ public class Day
 	int dayEnd;
 	ArrayList<Timeslot> timeSlots;
 	
-	public Day(int start, int end)
-	{
+	public Day(int start, int end) {
 		this.dayStart = start;
 		this.dayEnd = end;
 	}
 	
-	public void cancelMeeting(String code)
-	{
+	public void cancelMeeting(String code) {
 		for (Timeslot slot: timeSlots)
 		{
 			if (slot.m.getMeetingCode() == code)
@@ -25,8 +23,7 @@ public class Day
 		}
 	}
 	
-	public ArrayList<Timeslot> getTimeSlots()
-	{
+	public ArrayList<Timeslot> getTimeSlots() {
 		return timeSlots;
 	}
 	

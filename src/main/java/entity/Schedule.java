@@ -15,9 +15,10 @@ public class Schedule
 	String organizerCode;
 	String scheduleName;
 	String shareCode;
-	
-	public Schedule(String name, GregorianCalendar startDate, GregorianCalendar endDate, int duration, int startTime, int endTime)
-	{
+
+	private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+	public Schedule(String name, GregorianCalendar startDate, GregorianCalendar endDate, int duration, int startTime, int endTime) {
 		this.scheduleName = name;
 		this.startDate = startDate;
 		this.endDate = endDate;
@@ -28,38 +29,33 @@ public class Schedule
 		this.shareCode = randomAlphaNumeric(10);
 	}
 	
-	private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	public static String randomAlphaNumeric(int count) {
-	StringBuilder builder = new StringBuilder();
-	while (count-- != 0) {
-	int character = (int)(Math.random()*ALPHA_NUMERIC_STRING.length());
-	builder.append(ALPHA_NUMERIC_STRING.charAt(character));
-	}
-	return builder.toString();
+		StringBuilder builder = new StringBuilder();
+		while (count-- != 0) {
+			int character = (int)(Math.random()*ALPHA_NUMERIC_STRING.length());
+			builder.append(ALPHA_NUMERIC_STRING.charAt(character));
+		}
+
+		return builder.toString();
 	}
 	
-	public GregorianCalendar getStartDate()
-	{
+	public GregorianCalendar getStartDate()	{
 		return startDate;
 	}
 	
-	public GregorianCalendar getEndDate()
-	{
+	public GregorianCalendar getEndDate() {
 		return startDate;
 	}
 	
-	public String getOrganizerCode()
-	{
+	public String getOrganizerCode() {
 		return organizerCode;
 	}
 	
-	public String getScheduleName()
-	{
+	public String getScheduleName()	{
 		return scheduleName;
 	}
 	
-	public String getShareCode()
-	{
+	public String getShareCode() {
 		return shareCode;
 	}
 	
@@ -75,8 +71,7 @@ public class Schedule
 		return endTime;
 	}
 	
-	public ArrayList<Day> getDays()
-	{
+	public ArrayList<Day> getDays()	{
 		return days;
 	}
 }
