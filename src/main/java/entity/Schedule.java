@@ -65,7 +65,7 @@ public class Schedule
 	}
 	
 	public GregorianCalendar getEndDate() {
-		return startDate;
+		return endDate;
 	}
 	
 	public String getOrganizerCode() {

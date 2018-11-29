@@ -14,13 +14,13 @@ public class Day
 	}
 	
 	public void cancelMeeting(String code) {
-		for (Timeslot slot: timeSlots)
-		{
-			if (slot.m.getMeetingCode() == code)
-			{
-				slot.m =d null; 
-			}
-		}
+//		for (Timeslot slot: timeSlots)
+//		{
+//			if (slot.m.getMeetingCode() == code)
+//			{
+//				slot.m =d null; 
+//			}
+//		}
 	}
 	
 	public void addTimeslot(Timeslot timeslot) {
