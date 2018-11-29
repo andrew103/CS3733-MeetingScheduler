@@ -9,9 +9,9 @@ public class Schedule
 	ArrayList<Day> days;
 	GregorianCalendar startDate;
 	GregorianCalendar endDate;
-	int meetingDuration;
 	int startTime;
 	int endTime;
+	int meetingDuration;
 	String organizerCode;
 	String scheduleName;
 	String shareCode;

@@ -22,7 +22,7 @@
 </div>
 
 <div class="container">
-  <form class="form-inline" action="/action_page.php">
+  <form class="form-inline" onsubmit="handleDelete()">
     <div class="form-group">
       <label for="text1">Delete meetings more than </label>
       <input type="number" class="form-control" maxlength="2" size="2">
@@ -33,7 +33,7 @@
 </div>
 
 <div class="container">
-  <form class="form-inline" action="/action_page.php">
+  <form class="form-inline" onsubmit="handleRetrieve()">
     <div class="form-group">
       <label for="text1">Retrive list of meeting schedules created int he past </label>
       <input type="number" class="form-control" maxlength="2" size="2">
@@ -43,5 +43,35 @@
   </form>
 </div>
 
+<script>
+    function handleDelete(){
+        
+        var num = document.getElementsByClassName('form-control')[0].value;
+        //TODO: put stuff in schedules using num and/or admin credentials
+        //TODO, parsing a list of schedules
+        if(num){
+            if(confirm("hit or miss? I guess they never miss HUH"))
+                window.alert("you got a boyfriend I bet he doesn't kiss ya MWAH")
+        }
+        else{
+            window.alert("Number of days cannot be empty");
+        }
+    }
+
+    function handleRetrieve(){
+        var num = document.getElementsByClassName('form-control')[1].value;
+
+        schedules = "";
+        //TODO: put stuff in schedules using num and/or admin credentials
+        //TODO, parsing a list of schedules
+
+        if(num){
+            window.alert("Here are the schedules created in the last " + num + " hour(s):\n" + schedules);
+        }
+        else{
+            window.alert("Number of hours cannot be empty");
+        }
+    }
+</script>
 </body>
 </html>
