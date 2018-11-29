@@ -1,6 +1,7 @@
 package com.amazonaws.lambda.demo;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.S3Event;
 import com.amazonaws.services.s3.AmazonS3;
@@ -11,6 +12,7 @@ import com.amazonaws.services.s3.model.S3Object;
 public class LambdaFunctionHandler implements RequestHandler<S3Event, String> {
 
     private AmazonS3 s3 = AmazonS3ClientBuilder.standard().build();
+    public LambdaLogger logger = null;
 
     public LambdaFunctionHandler() {}
 
@@ -22,7 +24,7 @@ public class LambdaFunctionHandler implements RequestHandler<S3Event, String> {
     @Override
     public String handleRequest(S3Event event, Context context) {
         context.getLogger().log("Received event: " + event);
-        
+  
         try { 
         	return "test + recieved event" + context;
         }
