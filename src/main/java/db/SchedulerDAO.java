@@ -2,7 +2,9 @@ package db;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.GregorianCalendar;
 
 import entity.Day;
 import entity.Meeting;
@@ -26,12 +28,15 @@ public class SchedulerDAO {
     	try {
         	String query = "INSERT INTO Schedule (scheduleID, shareCode, organizerCode, scheduleName, meetingDuration, startDate, endDate, startTime, endTime) values(NULL, ?, ?, ?, ?, ?, ?, ?, ?);";
         	PreparedStatement ps = conn.prepareStatement(query);
+        	Date startDate = new Date(schedule.getStartDate().getTimeInMillis());
+        	Date endDate = new Date(schedule.getEndDate().getTimeInMillis());
+        	
         	ps.setString(1, schedule.getShareCode());
         	ps.setString(2, schedule.getOrganizerCode());
         	ps.setString(3, schedule.getScheduleName());
         	ps.setInt(4, schedule.getDuration());
-        	ps.setDate(5, schedule.getStartDate());
-        	ps.setDate(6, schedule.getEndDate());
+        	ps.setDate(5, startDate);
+        	ps.setDate(6, endDate);
         	ps.setInt(7, schedule.getStartTime());
         	ps.setInt(8, schedule.getEndTime());
         	ps.execute();
@@ -42,6 +47,43 @@ public class SchedulerDAO {
         	ResultSet resultSet = ps.executeQuery();
         	resultSet.next();
         	int schedID = resultSet.getInt("scheduleID");
+        	resultSet.close();
+        	
+        	GregorianCalendar calendarCurrent = schedule.getStartDate();
+        	GregorianCalendar calendarEnd = schedule.getEndDate();
+        	while(calendarCurrent != calendarEnd) {
+        		if (calendarCurrent.DAY_OF_WEEK != calendarCurrent.SUNDAY || calendarCurrent.DAY_OF_WEEK != calendarCurrent.SATURDAY) {
+            		Date currentDate = new Date(calendarCurrent.getTimeInMillis());
+            		
+            		query = "INSERT INTO Day (dayDate, dayStartTime, dayEndTime, scheduleID) values(?, ?, ?, ?);";
+            		ps = conn.prepareStatement(query);
+            		ps.setDate(1, currentDate);
+            		ps.setInt(2, schedule.getStartTime());
+            		ps.setInt(3, schedule.getEndTime());
+            		ps.setInt(4, schedID);
+            		ps.execute();        			
+        		}
+        		
+        		calendarCurrent.add(Calendar.DAY_OF_MONTH, 1);
+        	}
+        	
+        	query = "SELECT dayDate FROM Day WHERE scheduleID = ?";
+        	ps = conn.prepareStatement(query);
+        	ps.setInt(1, schedID);
+        	resultSet = ps.executeQuery();
+        	while (resultSet.next()) {
+            	int currentTime = schedule.getStartTime();
+            	int endTime = schedule.getEndTime();
+        		while (currentTime != endTime) {
+        			query = "INSERT INTO Timeslot (startTime, available, participantInfo, meetingCode, dayDate) values(?, true, NULL, NULL, ?);";
+        			ps = conn.prepareStatement(query);
+        			ps.setInt(1, currentTime);
+        			ps.setDate(2, resultSet.getDate("dayDate"));
+        			ps.execute();
+        			
+        			currentTime = currentTime + schedule.getDuration();
+        		}
+        	}
         	resultSet.close();
         	
         	ps.close();
