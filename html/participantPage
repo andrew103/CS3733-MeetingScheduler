@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Team Cursa Meeting Scheduler/Participant</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+  .fakeimg {
+      height: 20px;
+      background: #aaa;
+  }
+  </style>
+</head>
+<body>
+
+<div class="jumbotron text-center" style="margin-bottom:0">
+  <h1>Team Cursa Meeting Scheduler</h1>
+  <p>This is the Participant view</p> 
+</div>
+
+<div class="container">
+	<div class="row">
+    	<div class="col-sm-6">
+        	<label for="schedule name">Schedule Name: </label>
+        </div>
+        <div class="col-sm-6">
+          <form class="form-inline" action="/action_page.php">
+              <label for="week of">Week of: </label>
+              <input type="date" class="form-control" maxlength="2" size="2">
+          </form>
+        </div>
+    </div>
+    <div class="row">
+    	<div class="col-sm-1">
+    	     <button type="button" class="btn btn-primary">&lsaquo;&lsaquo;</button>
+        </div>
+        <div class="col-sm-10">
+         <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Times</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="info">10:00 AM</td>
+                <td class="success">Available</td>
+                <td class="danger">Taken</td>
+                <td class="success">Available</td>
+                <td class="danger">Taken</td>
+                <td class="danger">Taken</td>
+              </tr>
+              <tr>
+                <td class="info">11:00 AM</td>
+                <td class="success">Available</td>
+                <td class="danger">Taken</td>
+                <td class="danger">Taken</td>
+                <td class="success">Available</td>
+                <td class="danger">Taken</td>
+              </tr>  
+              <tr>
+                <td class="info">12:00 PM</td>
+                <td class="danger">Taken</td>
+                <td class="success">Available</td>
+                <td class="success">Available</td>
+                <td class="success">Available</td>
+                <td class="success">Available</td>
+              </tr> 
+              <tr>
+                <td class="info">1:00 PM</td>
+                <td class="success">Available</td>
+                <td class="danger">Taken</td>
+                <td class="success">Available</td>
+                <td class="danger">Taken</td>
+                <td class="danger">Taken</td>
+              </tr>
+              <tr>
+                <td class="info">2:00 PM</td>
+                <td class="success">Available</td>
+                <td class="danger">Taken</td>
+                <td class="danger">Taken</td>
+                <td class="success">Available</td>
+                <td class="danger">Taken</td>
+              </tr>  
+              <tr>
+                <td class="info">3:00 PM</td>
+                <td class="danger">Taken</td>
+                <td class="success">Available</td>
+                <td class="success">Available</td>
+                <td class="success">Available</td>
+                <td class="success">Available</td>
+              </tr> 
+            </tbody>
+          </table>
+        </div>
+        <div class="col-sm-1">
+    	     <button type="button" class="btn btn-primary">&rsaquo;&rsaquo;</button>
+        </div>
+    </div>
+    <div class="row">
+        <button type="button" class="btn btn-success btn-block">Search for open time slots</button>
+    </div>
+</div>
+
+</body>
+</html>
