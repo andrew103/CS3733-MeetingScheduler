@@ -22,4 +22,11 @@ public class SchedulerDAO {
     	}
     }
 
+    public boolean createSchedule(Schedule schedule) {
+    	return true;
+    }
+    
+    public boolean getSchedule(String shareCode) {
+    	return true;
+    }
 }
