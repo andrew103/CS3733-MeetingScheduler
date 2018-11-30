@@ -24,13 +24,17 @@ public class testModel extends TestCase{
 		SchedulerDAO dao = new SchedulerDAO();
 		GregorianCalendar start = new GregorianCalendar(2018, 11, 20);
 		GregorianCalendar end = new GregorianCalendar(2018, 11, 27);
-		Schedule schedule = new Schedule("R's Office Hours", start, end, 60, 1000, 1700);
+		Schedule schedule = new Schedule("R's Office Hours", start, end, 45, 1000, 1730);
 		
 		try {
 			assertTrue(dao.createSchedule(schedule));
 			assertEquals(dao.getSchedule(schedule.getShareCode()).getOrganizerCode(), schedule.getOrganizerCode());
+			
+			Schedule db_schedule = dao.getSchedule(schedule.getShareCode());
+			System.out.println(db_schedule.getStartTime());
+			System.out.println(db_schedule.getEndTime());
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("That hasn't gone well: " + e.getMessage());
 		}
 	}
 }
