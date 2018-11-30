@@ -37,8 +37,8 @@ public class SchedulerDAO {
         	ps.setInt(4, schedule.getDuration());
         	ps.setDate(5, startDate);
         	ps.setDate(6, endDate);
-        	ps.setInt(7, schedule.getStartTime());
-        	ps.setInt(8, schedule.getEndTime());
+        	ps.setLong(7, convertTimeToDB(schedule.getStartTime()));
+        	ps.setLong(8, convertTimeToDB(schedule.getEndTime()));
         	ps.execute();
         	        	
         	query = "SELECT scheduleID FROM Schedule WHERE shareCode = ?;";
@@ -58,10 +58,10 @@ public class SchedulerDAO {
             		query = "INSERT INTO Day (dayID, dayDate, dayStartTime, dayEndTime, scheduleID) values(NULL, ?, ?, ?, ?);";
             		ps = conn.prepareStatement(query);
             		ps.setDate(1, currentDate);
-            		ps.setInt(2, schedule.getStartTime());
-            		ps.setInt(3, schedule.getEndTime());
+            		ps.setLong(2, convertTimeToDB(schedule.getStartTime()));
+            		ps.setLong(3, convertTimeToDB(schedule.getEndTime()));
             		ps.setInt(4, schedID);
-            		ps.execute();        			
+            		ps.execute();
         		}
         		
         		calendarCurrent.add(Calendar.DAY_OF_MONTH, 1);
@@ -72,18 +72,18 @@ public class SchedulerDAO {
         	ps.setInt(1, schedID);
         	resultSet = ps.executeQuery();
         	while (resultSet.next()) {
-            	int currentTime = schedule.getStartTime();
-            	int endTime = schedule.getEndTime();
-        		while (currentTime != endTime && currentTime < endTime) {
+            	long currentTime = convertTimeToDB(schedule.getStartTime());
+            	long endTime = convertTimeToDB(schedule.getEndTime());
+        		while (currentTime < endTime) {
         			query = "INSERT INTO Timeslot (startTime, available, participantInfo, meetingCode, dayDate, scheduleID, dayID) values(?, true, NULL, NULL, ?, ?, ?);";
         			ps = conn.prepareStatement(query);
-        			ps.setInt(1, currentTime);
+        			ps.setLong(1, currentTime);
         			ps.setDate(2, resultSet.getDate("dayDate"));
         			ps.setInt(3, schedID);
         			ps.setInt(4, resultSet.getInt("dayID"));
         			ps.execute();
         			
-        			currentTime = currentTime + schedule.getDuration();
+        			currentTime = currentTime + schedule.getDuration()*60*1000;
         		}
         	}
         	resultSet.close();
@@ -111,8 +111,8 @@ public class SchedulerDAO {
         									 startDate,
         									 endDate,
         									 resultSet1.getInt("meetingDuration"),
-        									 resultSet1.getInt("startTime"),
-        									 resultSet1.getInt("endTime"),
+        									 convertTimeToMilitary(resultSet1.getLong("startTime")),
+        									 convertTimeToMilitary(resultSet1.getLong("endTime")),
         									 resultSet1.getString("organizerCode"),
         									 resultSet1.getString("shareCode"));
         	
@@ -121,7 +121,7 @@ public class SchedulerDAO {
         	ps.setInt(1, resultSet1.getInt("scheduleID"));
         	ResultSet resultSet2 = ps.executeQuery();
         	while (resultSet2.next()) {
-        		Day day = new Day(resultSet2.getInt("dayStartTime"), resultSet2.getInt("dayEndTime"));
+        		Day day = new Day(convertTimeToMilitary(resultSet2.getLong("dayStartTime")), convertTimeToMilitary(resultSet2.getLong("dayEndTime")));
         		
         		query = "SELECT * FROM Timeslot WHERE dayDate = ?;";
         		ps = conn.prepareStatement(query);
@@ -130,11 +130,11 @@ public class SchedulerDAO {
         		while (resultSet3.next()) {
         			resultSet3.getString("participantInfo");
         			if (resultSet3.wasNull()) {
-            			Timeslot timeslot = new Timeslot(resultSet3.getBoolean("available"), resultSet3.getInt("startTime"));
+            			Timeslot timeslot = new Timeslot(resultSet3.getBoolean("available"), convertTimeToMilitary(resultSet3.getLong("startTime")));
             			day.addTimeslot(timeslot);
         			}
         			else {
-            			Timeslot timeslot = new Timeslot(resultSet3.getBoolean("available"), resultSet3.getInt("startTime"), resultSet3.getString("participantInfo"), resultSet3.getString("meetingCode"));
+            			Timeslot timeslot = new Timeslot(resultSet3.getBoolean("available"), convertTimeToMilitary(resultSet3.getLong("startTime")), resultSet3.getString("participantInfo"), resultSet3.getString("meetingCode"));
             			day.addTimeslot(timeslot);
         			} 
         		}
@@ -150,5 +150,33 @@ public class SchedulerDAO {
     	} catch (Exception e) {
     		throw new Exception("Failed to get schedule: " + e.getMessage());
     	}
+    }
+    
+    private long convertTimeToDB(int inputTime) {
+    	long millisTime = 0;
+    	
+    	String inputTimeStr = Integer.toString(inputTime);
+    	String inputHours = inputTimeStr.substring(0, 2);
+    	String inputMin = inputTimeStr.substring(2);
+    	
+    	millisTime = Integer.valueOf(inputHours)*3600*1000 + Integer.valueOf(inputMin)*60*1000;
+    	return millisTime;
+    }
+
+    private int convertTimeToMilitary(long inputMillis) {
+    	int militaryTime = 0;
+    	
+    	long rawMinutes = inputMillis/(1000*60);
+    	long hours = rawMinutes/60;
+    	long mins = rawMinutes%60;
+    	
+    	if (mins == 0) {
+        	militaryTime = Integer.valueOf(Long.toString(hours) + "00");    		
+    	}
+    	else {
+        	militaryTime = Integer.valueOf(Long.toString(hours) + Long.toString(mins));    		
+    	}
+
+    	return militaryTime;
     }
 }
