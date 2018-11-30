@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Team Cursa Meeting Scheduler/Organizer</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -16,20 +15,15 @@
 </head>
 <body>
 
-<div class="jumbotron text-center" style="margin-bottom:0">
-  <h1>Team Cursa Meeting Scheduler</h1>
-  <p>This is the Organizer view</p> 
-</div>
-
 <div class="container">
 	<div class="row">
     	<div class="col-sm-6">
-        	<label for="schedule name">Schedule Name: </label>
+            <label for="schedule_name" id = "name">Schedule name</label>
         </div>
         <div class="col-sm-6">
           <form class="form-inline" action="/action_page.php">
               <label for="week of">Week of: </label>
-              <input type="date" class="form-control" maxlength="2" size="2">
+              <input id = "weekDate" type="week" class="form-control" maxlength="2" size="2" >
           </form>
         </div>
     </div>
@@ -38,7 +32,7 @@
     	     <button type="button" class="btn btn-primary">&lsaquo;&lsaquo;</button>
         </div>
         <div class="col-sm-10">
-         <table class="table table-bordered table-hover">
+         <table id = "scheduleTable" class="table table-bordered table-hover">
             <thead>
               <tr>
                 <th>Times</th>
@@ -49,7 +43,8 @@
                 <th>Friday</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody></tbody>
+            <!--         <tbody>
               <tr>
                 <td class="info">10:00 AM</td>
                 <td class="success">Available</td>
@@ -57,6 +52,7 @@
                 <td class="success">Available</td>
                 <td class="warning">Scheduled</td>
                 <td style="background-color:gray">closed</td>
+
               </tr>
               <tr>
                 <td class="info">11:00 AM</td>
@@ -115,6 +111,7 @@
                 <td class="success">Open all slots</td>
               </tr>
             </tbody>
+            -->
           </table>
         </div>
         <div class="col-sm-1">
@@ -123,9 +120,9 @@
     </div>
     <div class="row">
         <div class="btn-group">
-          <input type="date" class="btn btn-default">
+          <input type="time" class="btn btn-default">
           <button type="button" class="btn btn-success">Open all slots at this time</button>
-          <button type="button" class="btn btn-danger">Clost all slots at this time</button>
+          <button type="button" class="btn btn-danger">Close all slots at this time</button>
         </div>    
     </div>
         <div class="row">
@@ -137,6 +134,6 @@
     </div>
     <button type="button" class="btn btn-danger">Delete Schedule</button>
 </div>
-
 </body>
+<script src="js/scheduleLoader.js"></script>
 </html>
