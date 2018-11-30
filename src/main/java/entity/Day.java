@@ -11,6 +11,7 @@ public class Day
 	public Day(int start, int end) {
 		this.dayStart = start;
 		this.dayEnd = end;
+		this.timeSlots = new ArrayList<Timeslot>();
 	}
 	
 	public void cancelMeeting(String code) {
@@ -24,7 +25,7 @@ public class Day
 	}
 	
 	public void addTimeslot(Timeslot timeslot) {
-		this.timeSlots.add(timeslot);
+		timeSlots.add(timeslot);
 	}
 	
 	public ArrayList<Timeslot> getTimeSlots() {

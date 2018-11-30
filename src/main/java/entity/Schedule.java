@@ -30,6 +30,7 @@ public class Schedule
 		this.endTime = endTime;
 		this.organizerCode = randomAlphaNumeric(10);
 		this.shareCode = randomAlphaNumeric(10);
+		this.days = new ArrayList<Day>();
 	}
 
 	public Schedule(String name, GregorianCalendar startDate, GregorianCalendar endDate, int duration, int startTime, int endTime, String organizerCode, String shareCode) {
@@ -44,6 +45,7 @@ public class Schedule
 		this.endTime = endTime;
 		this.organizerCode = organizerCode;
 		this.shareCode = shareCode;
+		this.days = new ArrayList<Day>();
 	}
 
 	public static String randomAlphaNumeric(int count) {

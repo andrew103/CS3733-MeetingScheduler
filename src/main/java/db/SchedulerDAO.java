@@ -55,7 +55,7 @@ public class SchedulerDAO {
         		if (calendarCurrent.DAY_OF_WEEK != calendarCurrent.SUNDAY || calendarCurrent.DAY_OF_WEEK != calendarCurrent.SATURDAY) {
             		Date currentDate = new Date(calendarCurrent.getTimeInMillis());
             		
-            		query = "INSERT INTO Day (dayDate, dayStartTime, dayEndTime, scheduleID) values(?, ?, ?, ?);";
+            		query = "INSERT INTO Day (dayID, dayDate, dayStartTime, dayEndTime, scheduleID) values(NULL, ?, ?, ?, ?);";
             		ps = conn.prepareStatement(query);
             		ps.setDate(1, currentDate);
             		ps.setInt(2, schedule.getStartTime());
@@ -67,7 +67,7 @@ public class SchedulerDAO {
         		calendarCurrent.add(Calendar.DAY_OF_MONTH, 1);
         	}
         	
-        	query = "SELECT dayDate FROM Day WHERE scheduleID = ?;";
+        	query = "SELECT dayID, dayDate FROM Day WHERE scheduleID = ?;";
         	ps = conn.prepareStatement(query);
         	ps.setInt(1, schedID);
         	resultSet = ps.executeQuery();
@@ -75,10 +75,12 @@ public class SchedulerDAO {
             	int currentTime = schedule.getStartTime();
             	int endTime = schedule.getEndTime();
         		while (currentTime != endTime && currentTime < endTime) {
-        			query = "INSERT INTO Timeslot (startTime, available, participantInfo, meetingCode, dayDate) values(?, true, NULL, NULL, ?);";
+        			query = "INSERT INTO Timeslot (startTime, available, participantInfo, meetingCode, dayDate, scheduleID, dayID) values(?, true, NULL, NULL, ?, ?, ?);";
         			ps = conn.prepareStatement(query);
         			ps.setInt(1, currentTime);
         			ps.setDate(2, resultSet.getDate("dayDate"));
+        			ps.setInt(3, schedID);
+        			ps.setInt(4, resultSet.getInt("dayID"));
         			ps.execute();
         			
         			currentTime = currentTime + schedule.getDuration();
@@ -134,20 +136,19 @@ public class SchedulerDAO {
         			else {
             			Timeslot timeslot = new Timeslot(resultSet3.getBoolean("available"), resultSet3.getInt("startTime"), resultSet3.getString("participantInfo"), resultSet3.getString("meetingCode"));
             			day.addTimeslot(timeslot);
-        			}        			
+        			} 
         		}
         		
         		schedule.addDay(day);
         		resultSet3.close();
         	}
-        	System.out.println("After resultset2");
         	
         	resultSet2.close();
         	resultSet1.close();
         	ps.close();
         	return schedule;
     	} catch (Exception e) {
-    		throw new Exception("Failed to get schedule: " + e.getMessage());    		
+    		throw new Exception("Failed to get schedule: " + e.getMessage());
     	}
     }
 }

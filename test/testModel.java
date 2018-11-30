@@ -28,9 +28,9 @@ public class testModel extends TestCase{
 		
 		try {
 			assertTrue(dao.createSchedule(schedule));
-			assertEquals(dao.getSchedule(schedule.getShareCode()).getOrganizerCode(), schedule.getOrganizerCode());
+			assertEquals(dao.getSchedule(schedule.getShareCode()).getOrganizerCode(), schedule.getOrganizerCode());			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("That hasn't gone well: " + e.getMessage());
 		}
 	}
 }
