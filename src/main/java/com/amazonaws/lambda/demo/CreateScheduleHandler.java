@@ -23,6 +23,7 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.google.gson.Gson;
 
 import entity.Schedule;
+import db.SchedulerDAO;
 
 
 /**
@@ -89,6 +90,13 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 //		}
 //	}
 
+	boolean createSchedule(Schedule schedule) throws Exception {
+		if (logger != null) { logger.log("in createConstant"); }
+
+		SchedulerDAO dao = new SchedulerDAO();		
+		return dao.createSchedule(schedule);
+	}	
+	
 	@Override
 	public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
 		LambdaLogger logger = context.getLogger();
@@ -145,8 +153,19 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 			String shareCode = createdSchedule.getShareCode();
 			
 			// compute proper response
-			CreateScheduleResponse resp = new CreateScheduleResponse(secretCode, shareCode, 200);
-	        responseJson.put("body", new Gson().toJson(resp));  
+			CreateScheduleResponse resp;
+			try {
+				if (createSchedule(createdSchedule)) {
+					resp = new CreateScheduleResponse(secretCode, shareCode, 200);					
+				}
+				else {
+					resp = new CreateScheduleResponse("The new schedule couldn't be created", 422);					
+				}
+			} catch (Exception e) {
+				resp = new CreateScheduleResponse("Something went wrong in the database", 422);					
+			}
+	        
+			responseJson.put("body", new Gson().toJson(resp));  
 		}
 		
         logger.log("end result:" + responseJson.toJSONString());
