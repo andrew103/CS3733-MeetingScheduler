@@ -163,7 +163,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 //			System.out.println(Integer.valueOf(req.ed.substring(5, 7)));
 //			System.out.println(Integer.valueOf(req.ed.substring(8)));
 
-			Schedule createdSchedule = new Schedule(req.scheduleName, req.startDate, req.endDate, req.meetingDuration, req.startTime, req.endTime);
+			Schedule createdSchedule = new Schedule(req.scheduleName, req.sd, req.ed, req.meetingDuration, req.startTime, req.endTime);
 			String secretCode = createdSchedule.getOrganizerCode();
 			String shareCode = createdSchedule.getShareCode();
 			

@@ -6,20 +6,20 @@ import java.util.GregorianCalendar;
 class CreateScheduleRequest {
 	String scheduleName;
 	int meetingDuration;
-	GregorianCalendar startDate;
-	GregorianCalendar endDate;
+	GregorianCalendar sd;
+	GregorianCalendar ed;
 	int startTime;
 	int endTime;
-	String sd;
-	String ed;
+	String startDate;
+	String endDate;
 	
-	public CreateScheduleRequest(String name, int duration, String sd, String ed, int st, int et) {
+	public CreateScheduleRequest(String name, int duration, String startDate, String endDate, int st, int et) {
 		this.scheduleName = name;
 		this.meetingDuration = duration;
-		this.startDate = parseDate(sd);
-		this.endDate = parseDate(ed);
-		this.sd = sd;
-		this.ed = ed;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.sd = parseDate(endDate);
+		this.ed = parseDate(endDate);
 		this.startTime = st;
 		this.endTime = et;
 	}
