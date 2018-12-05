@@ -4,35 +4,42 @@ package com.amazonaws.lambda.demo;
 import java.util.GregorianCalendar;
 
 class CreateScheduleRequest {
-	String scheduleName;
+	String name;
 	int meetingDuration;
-	GregorianCalendar sd;
-	GregorianCalendar ed;
+	GregorianCalendar startDate;
+	GregorianCalendar endDate;
 	int startTime;
 	int endTime;
-	String startDate;
-	String endDate;
+	String sd;
+	String ed;
 	
-	public CreateScheduleRequest(String name, int duration, String startDate, String endDate, int st, int et) {
-		this.scheduleName = name;
+	public CreateScheduleRequest(String name, int duration, String sd, String ed, int st, int et) {
+		this.name = name;
 		this.meetingDuration = duration;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.sd = parseDate(endDate);
-		this.ed = parseDate(endDate);
+		this.sd = sd;
+		this.ed = ed;
 		this.startTime = st;
 		this.endTime = et;
 	}
 	
 	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
-		int year = Integer.valueOf(date.substring(0, 4));
-		int month = Integer.valueOf(date.substring(5, 7));
-		int day = Integer.valueOf(date.substring(8));
+		int year = Integer.parseInt(date.substring(0, 3));
+		int month = Integer.parseInt(date.substring(5, 6));
+		int day = Integer.parseInt(date.substring(8, 9));
 		return new GregorianCalendar(year, month, day);
 	}
 	
 	public String toString() {
-		return "Creating schedule " + this.scheduleName + " from " + this.sd + " to " + this.ed +
+		return "Creating schedule " + this.name + " from " + this.sd + " to " + this.ed +
 				"\n Meetings start at " + this.startTime + " ends at " + this.endTime + " for " + this.meetingDuration + " minutes each.";
 	}
+	
+	public GregorianCalendar getStartDate() {
+		return(parseDate(sd));
+	}
+	
+	public GregorianCalendar getEndDate() {
+		return(parseDate(ed));
+	}
+	
 }

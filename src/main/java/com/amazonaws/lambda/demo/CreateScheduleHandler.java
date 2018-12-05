@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.Calendar;
 import java.util.Scanner;
 
 import org.json.simple.JSONObject;
@@ -22,7 +21,6 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import entity.Schedule;
 import db.SchedulerDAO;
@@ -93,8 +91,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 //	}
 
 	boolean createSchedule(Schedule schedule) throws Exception {
-		//if (logger != null) { logger.log("in createConstant"); }
-
+		logger.log("im in here");
 		SchedulerDAO dao = new SchedulerDAO();		
 		return dao.createSchedule(schedule);
 	}	
@@ -147,39 +144,35 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 		}
 
 		if (!processed) {
-			logger.log(body);
 			CreateScheduleRequest req = new Gson().fromJson(body, CreateScheduleRequest.class);
 			logger.log(req.toString());
-			System.out.println(req.scheduleName);
-			System.out.println(req.meetingDuration);
-			System.out.println(req.startDate);
-			System.out.println(req.endDate);
-			System.out.println(req.startTime);
-			System.out.println(req.endTime);
-			System.out.println(req.sd);
-			System.out.println(req.ed);
-//			System.out.println(req.startDate.get(Calendar.MONTH));
-//			System.out.println(Integer.valueOf(req.ed.substring(0, 4)));
-//			System.out.println(Integer.valueOf(req.ed.substring(5, 7)));
-//			System.out.println(Integer.valueOf(req.ed.substring(8)));
 
-			Schedule createdSchedule = new Schedule(req.scheduleName, req.sd, req.ed, req.meetingDuration, req.startTime, req.endTime);
+			Schedule createdSchedule = new Schedule(req.name, req.getStartDate(), req.getEndDate(), req.meetingDuration, req.startTime, req.endTime);
 			String secretCode = createdSchedule.getOrganizerCode();
 			String shareCode = createdSchedule.getShareCode();
-			
+			logger.log("finished initing\n");
+
 			// compute proper response
 			CreateScheduleResponse resp;
 			try {
+				logger.log("about to if\n");
 				if (createSchedule(createdSchedule)) {
-					resp = new CreateScheduleResponse(secretCode, shareCode, 200);					
+					logger.log("about to create a proper response\n");
+					resp = new CreateScheduleResponse(secretCode, shareCode, 200);	
+					logger.log("created a proper response\n");
 				}
 				else {
-					resp = new CreateScheduleResponse("The new schedule couldn't be created", 402);					
+					logger.log("could not create a schedule\n");
+					resp = new CreateScheduleResponse("The new schedule couldn't be created", 422);					
+					logger.log("could not create a schedule\n");
+
 				}
 			} catch (Exception e) {
+				logger.log("got an exception "+ e.getMessage());
 				resp = new CreateScheduleResponse("Something went wrong in the database", 422);					
 			}
-	        
+			logger.log("to creating the response");
+
 			responseJson.put("body", new Gson().toJson(resp));  
 		}
 		
