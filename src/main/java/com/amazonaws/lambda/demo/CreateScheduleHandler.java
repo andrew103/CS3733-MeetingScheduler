@@ -93,7 +93,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 //	}
 
 	boolean createSchedule(Schedule schedule) throws Exception {
-		if (logger != null) { logger.log("in createConstant"); }
+		//if (logger != null) { logger.log("in createConstant"); }
 
 		SchedulerDAO dao = new SchedulerDAO();		
 		return dao.createSchedule(schedule);
