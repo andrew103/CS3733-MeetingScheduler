@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+  .fakeimg {
+      height: 20px;
+      background: #aaa;
+  }
+  </style>
+</head>
+<body>
+
+<div class="container">
+	<div class="row">
+    	<div class="col-sm-6">
+            <label for="schedule_name" id = "name">Schedule name</label>
+        </div>
+        <div class="col-sm-6">
+              <label for="week of">Week of: </label>
+              <input id = "weekDate" type="date" class="form-control" maxlength="2" size="2" onchange="dateSelect()">
+
+        </div>
+    </div>
+    <div class="row">
+    	<div class="col-sm-1">
+    	     <button type="button" class="btn btn-primary">&lsaquo;&lsaquo;</button>
+        </div>
+        <div class="col-sm-10">
+         <table id = "scheduleTable" class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Times</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="col-sm-1">
+    	     <button type="button" class="btn btn-primary">&rsaquo;&rsaquo;</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="btn-group">
+          <input type="time" class="btn btn-default">
+          <button type="button" class="btn btn-success">Open all slots at this time</button>
+          <button type="button" class="btn btn-danger">Close all slots at this time</button>
+        </div>    
+    </div>
+        <div class="row">
+        <div class="btn-group">
+          <input type="date" class="btn btn-default">
+          <button type="button" class="btn btn-info">Extend start date</button>
+          <button type="button" class="btn btn-info">Extend end date</button>
+        </div>    
+    </div>
+    <button type="button" class="btn btn-danger">Delete Schedule</button>
+</div>
+</body>
+<script src="js/scheduleLoader.js"></script>
+</html>
