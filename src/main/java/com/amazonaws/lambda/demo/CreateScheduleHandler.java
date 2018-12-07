@@ -98,8 +98,10 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 	
 	@Override
 	public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
+		
 		LambdaLogger logger = context.getLogger();
 		logger.log("Loading Java Lambda handler of RequestStreamHandler");
+
 
 		JSONObject headerJson = new JSONObject();
 		headerJson.put("Content-Type",  "application/json");  // not sure if needed anymore?
