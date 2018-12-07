@@ -1,4 +1,4 @@
-package com.amazonaws.lambda.demo;
+package com.amazonaws.lambda.createSchedule;
 
 import java.io.BufferedReader;
 import java.io.IOException;
