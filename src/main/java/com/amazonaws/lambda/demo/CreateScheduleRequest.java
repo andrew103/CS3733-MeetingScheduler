@@ -23,9 +23,9 @@ class CreateScheduleRequest {
 	}
 	
 	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
-		int year = Integer.parseInt(date.substring(0, 3));
-		int month = Integer.parseInt(date.substring(5, 6));
-		int day = Integer.parseInt(date.substring(8, 9));
+		int year = Integer.parseInt(date.substring(0, 4));
+		int month = Integer.parseInt(date.substring(5, 7));
+		int day = Integer.parseInt(date.substring(8));
 		return new GregorianCalendar(year, month, day);
 	}
 	
