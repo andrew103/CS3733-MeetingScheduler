@@ -91,7 +91,6 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 //	}
 
 	boolean createSchedule(Schedule schedule) throws Exception {
-		logger.log("im in here");
 		SchedulerDAO dao = new SchedulerDAO();		
 		return dao.createSchedule(schedule);
 	}	
