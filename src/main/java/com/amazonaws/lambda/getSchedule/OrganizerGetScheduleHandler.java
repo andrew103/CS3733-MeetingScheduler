@@ -1,4 +1,4 @@
-package com.amazonaws.lambda.demo;
+package com.amazonaws.lambda.getSchedule;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +30,7 @@ import db.SchedulerDAO;
  * Found gson JAR file from
  * https://repo1.maven.org/maven2/com/google/code/gson/gson/2.6.2/gson-2.6.2.jar
  */
-public class CreateScheduleHandler implements RequestStreamHandler {
+public class OrganizerGetScheduleHandler implements RequestStreamHandler {
 
 	public LambdaLogger logger = null;
 
@@ -39,61 +39,8 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 			.withRegion("us-east-2").build();
 
 	boolean useRDS = true;
-	
-//	// not yet connected to RDS, so comment this out...
-//	public double loadConstant(String arg) {
-//		if (useRDS) {
-//			double val = 0;
-//			try {
-//				val = loadValueFromRDS(arg);
-//				return val;
-//			} catch (Exception e) {
-//				return 0;
-//			}
-//		}
-//		
-//		return loadValueFromBucket(arg);
-//	}
-//
-//	/** Load from RDS, if it exists
-//	 * 
-//	 * @throws Exception 
-//	 */
-//	double loadValueFromRDS(String arg) throws Exception {
-//		if (logger != null) { logger.log("in loadValue"); }
-//		ConstantsDAO dao = new ConstantsDAO();
-//		Constant constant = dao.getConstant(arg);
-//		return constant.value;
-//	}
-//	
-//	/** Load up S3 Bucket with given key and interpret contents as double. */
-//	double loadValueFromBucket(String arg) {
-//		if (logger != null) { logger.log("load from bucket:" + arg); }
-//		try {
-//			S3Object pi = s3.getObject("cs3733/constants", arg);
-//			if (pi == null) {
-//				return 0;
-//			} else {
-//				S3ObjectInputStream pis = pi.getObjectContent();
-//				Scanner sc = new Scanner(pis);
-//				String val = sc.nextLine();
-//				sc.close();
-//				try { pis.close(); } catch (IOException e) { }
-//				try {
-//					return Double.valueOf(val);
-//				} catch (NumberFormatException nfe) {
-//					return 0.0;
-//				}
-//			}
-//		} catch (SdkClientException sce) {
-//			return 0;
-//		}
-//	}
 
-	boolean createSchedule(Schedule schedule) throws Exception {
-		SchedulerDAO dao = new SchedulerDAO();		
-		return dao.createSchedule(schedule);
-	}	
+
 	
 	@Override
 	public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
@@ -108,7 +55,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 		JSONObject responseJson = new JSONObject();
 		responseJson.put("headers", headerJson);
 
-		CreateScheduleResponse response = null;
+		GetScheduleResponse response = null;
 		
 		// extract body from incoming HTTP POST request. If any error, then return 422 error
 		String body;
@@ -124,7 +71,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 			String method = (String) event.get("httpMethod");
 			if (method != null && method.equalsIgnoreCase("OPTIONS")) {
 				logger.log("Options request");
-				response = new CreateScheduleResponse("Option", "schedule not created", 200);  // OPTIONS needs a 200 response
+				response = new GetScheduleResponse("Requested options", 200);  // OPTIONS needs a 200 response
 		        responseJson.put("body", new Gson().toJson(response));
 		        processed = true;
 		        body = null;
@@ -136,43 +83,40 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 			}
 		} catch (ParseException pe) {
 			logger.log(pe.toString());
-			response = new CreateScheduleResponse("Failure", "schedule not created", 422);  // unable to process input
+			response = new GetScheduleResponse("Unable to parse input",400);  // unable to process input
 	        responseJson.put("body", new Gson().toJson(response));
 	        processed = true;
 	        body = null;
 		}
 
-		if (!processed) {
-			CreateScheduleRequest req = new Gson().fromJson(body, CreateScheduleRequest.class);
+		if (!processed) 
+		{
+			GetScheduleRequest req = new Gson().fromJson(body, GetScheduleRequest.class);
 			logger.log(req.toString());
-
-			Schedule createdSchedule = new Schedule(req.name, req.getStartDate(), req.getEndDate(), req.meetingDuration, req.startTime, req.endTime);
-			String secretCode = createdSchedule.getOrganizerCode();
-			String shareCode = createdSchedule.getShareCode();
-			logger.log("finished initing\n");
-
+			
+			logger.log("***"+req.toString()+"***");
 			// compute proper response
-			CreateScheduleResponse resp;
-			try {
-				logger.log("about to if\n");
-				if (createSchedule(createdSchedule)) {
-					logger.log("about to create a proper response\n");
-					resp = new CreateScheduleResponse(secretCode, shareCode, 200);	
-					logger.log("created a proper response\n");
+			GetScheduleResponse resp;
+				try{
+					SchedulerDAO dao = new SchedulerDAO();	
+					try {
+						Schedule s =  dao.getSchedule(req.shareCode);	
+						logger.log(" ***we found a schedule*** ");
+						resp = new GetScheduleResponse(s);
+						logger.log("\nname:" + s.getScheduleName());
+					}
+					catch(Exception e)
+					{
+						logger.log("Could not find a schedule");
+						resp = new GetScheduleResponse("The schedule was not found", 404);
+					}
 				}
-				else {
-					logger.log("could not create a schedule\n");
-					resp = new CreateScheduleResponse("The new schedule couldn't be created", 422);					
-					logger.log("could not create a schedule\n");
-
+				catch(Exception e){
+					logger.log("DAO could not connect to database" + e.getMessage());
+					resp = new GetScheduleResponse(req.shareCode, 500);					
 				}
-			} catch (Exception e) {
-				logger.log("got an exception "+ e.getMessage());
-				resp = new CreateScheduleResponse("Something went wrong in the database", 422);					
-			}
-			logger.log("to creating the response");
 
-			responseJson.put("body", new Gson().toJson(resp));  
+				responseJson.put("body", new Gson().toJson(resp));
 		}
 		
         logger.log("end result:" + responseJson.toJSONString());

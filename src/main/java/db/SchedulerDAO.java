@@ -95,6 +95,7 @@ public class SchedulerDAO {
     	}
     }
     
+    //TODO return null if not found
     public Schedule getSchedule(String shareCode) throws Exception {
     	try {
         	String query = "SELECT * FROM Schedule WHERE shareCode = ?;";
