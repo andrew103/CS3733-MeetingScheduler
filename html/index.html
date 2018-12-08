@@ -1,16 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>Team Cursa Meeting Scheduler</title>
+<head runat="server">
+  <title>Team Cursa Meeting Scheduler/index</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
   <style>
-  .fakeimg {
-      height: 20px;
-      background: #aaa;
+  .modal-header, h4, .close {
+      background-color: #5cb85c;
+      color:white !important;
+      text-align: center;
+      font-size: 30px;
+  }
+  .modal-body {
+      background-color: #ffffff
+  }
+  .modal-footer {
+      background-color: #f9f9f9;
   }
   </style>
 </head>
@@ -45,36 +54,58 @@
       </div>
       <button type="button" class="btn btn-info">Access Schedule</button>
 
-      <div>
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <input type="text" class="form-control" id="name">
-      </div>
-      <div class="form-group">
-        <label for="pwd">Meeting Duration:</label>
-        <input type="duration" class="form-control" id="duration">
-      </div>
-      <div class="form-group">
-        <label for="pwd">Start Date:</label>
-        <input type="date" class="form-control" id="sd">
-      </div>
-      <div class="form-group">
-        <label for="pwd">End Date:</label>
-        <input type="date" class="form-control" id="ed">
-      </div>
-      <div class="form-group">
-        <label for="pwd">Start time:</label>
-        <input type="number" class="form-control" id="st">
-
-      <div class="form-group">
-        <label for="pwd">End time:</label>
-        <input type="number" class="form-control" id="et">
-      </div>
-
-        
       <h5>Click the botton below to create new schedule</h5>
-      <button type="button" class="btn btn-success" onclick="createSchedule()">Create New Schedule</button>
+      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modelCreate">Create New Schedule</button>
+
+      <div id="modelCreate" class="modal fade" role="dialog" >
+        <div class="modal-dialog">
+          <div class="model-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Create New Schedule</h4>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name">
+              </div>
+              <div class="form-group dropdown">
+                <label for="pwd">Meeting Duration (minutes):</label>
+                <select class="form-control" id="duration">
+                  <option>15</option>
+                  <option>20</option>
+                  <option>30</option>
+                  <option>60</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="pwd">Start Date:</label>
+                <input type="date" class="form-control" id="sd">
+              </div>
+              <div class="form-group">
+                <label for="pwd">End Date:</label>
+                <input type="date" class="form-control" id="ed">
+              </div>
+              <div class="form-group">
+                <label for="pwd">Start time:</label>
+                <select id="st" ></select>
+                <!-- <input type="number" class="form-control" placeholder="1000" min="0800" max="2000" id="st"> -->
+              </div>
+              <div class="form-group">
+                <label for="pwd">End time:</label>
+                <select id="et" ></select>
+                <!-- <input type="number" class="form-control" placeholder="1600" min="0800" max="2000" id="et"> -->
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" onclick="createSchedule()"><span class="glyphicon glyphicon-check"></span> Create</button>
+              <button type="submit" class="btn btn-danger pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+            </div>
+          </div>
+        </div>
       </div>
+
+
     </div>
     <div class="col-sm-4">
     <h2>Participant</h2>
@@ -89,22 +120,42 @@
 </div>
 
 </body>
+<script>
+    function populate(selector) {
+        var select = $(selector);
+        var hours, minutes, ampm;
+        for (var i = 0; i <= 1450; i += 60) {
+            hours = Math.floor(i / 60);
+            if (hours < 10) {
+                hours = '0' + hours; // adding leading zero to hours portion
+            }
+            //add the value to dropdownlist
+            select.append($('<option></option>')
+                .attr('value', hours)
+                .text(hours + "00"));
+        }
+    }
+    //Calling the function on pageload
+    window.onload = function (e) {
+      populate('#et');
+      populate('#st');
+    }
+</script>
 
 <script>
     function createSchedule(){
         var Name = document.getElementById("name").value;
-
         var Duration = document.getElementById("duration").value;
         var StartTime = document.getElementById("st").value;
         var EndTime = document.getElementById("et").value;
         var StartDate = document.getElementById("sd").value;
         var EndDate = document.getElementById("ed").value;
-        
+
         if(Name && Duration && StartTime && EndTime && StartDate && EndDate)
         {
             id = "test"
             alert("created schedule, now redirecting")
-            
+            // TODO: add redirection with database stuff, also display serect code
         }
         else{
             alert("Fields cannot be blank")

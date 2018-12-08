@@ -143,7 +143,6 @@ schedule = {
   ]
 }
 
-
 //Fetches the url paramaters and sets them to the variable
 var urlParams;
 (window.onpopstate = function () {
@@ -160,7 +159,7 @@ var urlParams;
 
 
 
-//**INITIALIZATION CODE**
+
 //TODO, add check for valid id
 if(urlParams["id"]){
 
@@ -188,7 +187,7 @@ if(urlParams["id"]){
 
     console.log(scheduleTable)
 
-    updateSchedule(schedule["startDate"], urlParams["id"])
+    updateSchedule(schedule["startDate"])
 }
 else{
     //TODO: redirect to homepage and delete this alert
@@ -196,30 +195,13 @@ else{
 
     //TODO, make this the pre-signed url
     //window.location.href = "index.html";
+
 }
 
-function changeDate(value){
-    console.log("input"+value)
-    weekDate = document.getElementById("weekDate").value;
-    date = new Date(weekDate);
-    console.log(date);
-    date.setDate(date.getDate()+parseInt(value,10)); //parse input text into int
-    if (value != 0){
-      date.setDate(date.getDate()+1); //need to add one for formatDate()
-      document.getElementById("weekDate").value = formatDate(date);
-    }
-    updateSchedule(date, urlParams["id"]);
+function dateSelect(){
+    updateSchedule(document.getElementById("weekDate").value);
 }
 
-function returnDate(value){
-  console.log("input"+value)
-  weekDate = document.getElementById("weekDate").value;
-  date = new Date(weekDate);
-  console.log(date);
-  date.setDate(date.getDate()+parseInt(value,10)+1); //parse input text into int
-  console.log(formatDate(date));
-  return formatDate(date);
-}
 
 function formatDate(date) {
     var d = new Date(date),
@@ -233,44 +215,28 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
-function showDayTime(cellIndex, rowIndex){
-  //TODO get actual meeting time from JSON
-  switch(cellIndex){
-    case 1:
-      day = "Monday";
-      date = returnDate(0); //base reference
-      break;
-    case 2:
-      day = "Tuesday";
-      date = returnDate(1);
-      break;
-    case 3:
-      day = "Wednesday";
-      date = returnDate(2);
-      break;
-    case 4:
-      day = "Thursday";
-      date = returnDate(3);
-      break;
-    case 5:
-      day = "Friday";
-      date = returnDate(4);
-      break;
-    default:
-      day = "Invalid day of week";
-  }
-  days = schedule["days"];
-  for (i = 0; i < days.length; i++){
-    if (days[i]["date"] == date){
-      time = days[i]["timeslots"][rowIndex]["startTime"];
-      break;
-    }
-  }
-  return date+", "+day+" at "+time;
+function lastWeek(){
+  value = document.getElementById("weekDate").value;
+  date = new Date(value);
+  console.log(date);
+  date.setDate(date.getDate() - 6); /// I HAVE NO IDEA WHY THIS ISN'T 7
+  updateSchedule(date);
+  document.getElementById("weekDate").value = formatDate(date);
 }
 
+function nextWeek(){
+  value = document.getElementById("weekDate").value;
+  date = new Date(value);
+  console.log(date);
+  date.setDate(date.getDate() + 8); /// I HAVE NO IDEA WHY THIS ISN'T 7
+  updateSchedule(date);
+  document.getElementById("weekDate").value = formatDate(date);
+}
+
+
 //takes in a start date, finds the appropriate sunday and populates the schedule
-function updateSchedule(startDate, organizerView){
+function updateSchedule(startDate){
+
 
     startDate = new Date(startDate);
 
@@ -305,23 +271,18 @@ function updateSchedule(startDate, organizerView){
             for(y = 0; y < timeslots.length; y++){
                 if(timeslots[y]["isClosed"]){
                     if(timeslots[y]["participantInfo"]){
-                        if (organizerView == 1){
-                          scheduleTable.rows[y].cells[x].innerHTML = 'Booked by:' + timeslots[y]["participantInfo"];
-                        }
-                        else {
-                          scheduleTable.rows[y].cells[x].innerHTML = 'Taken';
-                        }
+                        scheduleTable.rows[y].cells[x].innerHTML = 'Taken';
                         scheduleTable.rows[y].cells[x].style.backgroundColor = '#ffff99';
                     }
                     else{
-                        scheduleTable.rows[y].cells[x].innerHTML = 'Closed';
+                        scheduleTable.rows[y].cells[x].innerHTML = 'Unavailable';
                         scheduleTable.rows[y].cells[x].style.backgroundColor = '#ff4d4d';
                     }
 
                 }
 
                 else{
-                    scheduleTable.rows[y].cells[x].innerHTML = 'Open';
+                    scheduleTable.rows[y].cells[x].innerHTML = 'Available';
                     scheduleTable.rows[y].cells[x].style.backgroundColor = '#66ff99';
                 }
             }
@@ -330,7 +291,7 @@ function updateSchedule(startDate, organizerView){
         else{
             for(y = 0; y < days[0]["timeslots"].length; y++){
                 scheduleTable.rows[y].cells[x].innerHTML = 'Not on schedule';
-                scheduleTable.rows[y].cells[x].style.backgroundColor = "gray";
+                scheduleTable.rows[y].cells[x].style.backgroundColor = 'gray';
             }
         }
     }
