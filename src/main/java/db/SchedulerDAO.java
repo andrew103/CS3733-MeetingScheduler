@@ -95,7 +95,6 @@ public class SchedulerDAO {
     	}
     }
     
-    //TODO return null if not found
     public Schedule getSchedule(String shareCode) throws Exception {
     	try {
         	String query = "SELECT * FROM Schedule WHERE shareCode = ?;";
@@ -182,4 +181,105 @@ public class SchedulerDAO {
 
     	return militaryTime;
     }
+
+	public boolean deleteSchedule(String scheduleCode, String secretCode) throws Exception {
+		try {
+			
+			//Remove schedule from database
+			String query = "SELECT * FROM Schedule WHERE secretCode = ?;";
+        	PreparedStatement ps = conn.prepareStatement(query);
+        	ps.setString(1, secretCode);
+        	ResultSet resultSet1 = ps.executeQuery();
+        	resultSet1.next();
+        	
+        	int scheduleID = resultSet1.getInt("scheduleID");
+        	query = "DELETE FROM Timeslot WHERE scheduleID = ?";
+        	ps = conn.prepareStatement(query);
+        	ps.setInt(1, scheduleID);
+        	
+        	query = "DELETE FROM Day WHERE scheduleID = ?";
+        	ps = conn.prepareStatement(query);
+        	ps.setInt(1, scheduleID);
+
+        	query = "DELETE FROM Schedule WHERE scheduleID = ?";
+        	ps = conn.prepareStatement(query);
+        	ps.setInt(1, scheduleID);
+			return true;
+		}
+		catch(Exception e){
+			throw new Exception("***FUCK IT FAILED: " + e.getMessage()+ "***");
+		}
+	}
+
+	public boolean openOrCloseTimeSlot(String scheduleCode, int time, GregorianCalendar day) throws Exception {
+		
+		try {
+			
+			//Remove schedule from database
+			String query = "SELECT * FROM Schedule WHERE scheduleCode = ?;";
+        	PreparedStatement ps = conn.prepareStatement(query);
+        	ps.setString(1, scheduleCode);
+        	ResultSet resultSet1 = ps.executeQuery();
+        	resultSet1.next();
+        	
+        	int scheduleID = resultSet1.getInt("scheduleID");
+        	int startTime = resultSet1.getInt("startTime");
+        	Date meetingDay = resultSet1.getDate("dayDate");
+        	
+        	
+        	query = "DELETE FROM Timeslot WHERE scheduleID = ?";
+        	ps = conn.prepareStatement(query);
+        	ps.setInt(1, scheduleID);
+        	
+        	query = "DELETE FROM Day WHERE scheduleID = ?";
+        	ps = conn.prepareStatement(query);
+        	ps.setInt(1, scheduleID);
+
+        	query = "DELETE FROM Schedule WHERE scheduleID = ?";
+        	ps = conn.prepareStatement(query);
+        	ps.setInt(1, scheduleID);
+			return true;
+		}
+		catch(Exception e){
+			throw new Exception("***FUCK IT FAILED: " + e.getMessage()+ "***");
+		}
+	}
+
+	public boolean cancelMeeting(String scheduleCode, String secretCode, int time, String day) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	public boolean getSchedule(String scheduleCode, String secretCode) {
+		//Organizer getSchedule method - takes both scheduleCode and secretCode
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	public boolean openAllSlotsDay(String scheduleCode, String secretCode, String date) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	public boolean closeAllSlotsDay(String scheduleCode, String secretCode, String date) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	public boolean openAllTimeSlotsTime(String scheduleCode, String secretCode, int time) {
+		//System.out.println("MOVEBITCHGETOUTTHEWAY");
+		return true;
+	}
+
+	public boolean closeAllTimeSlotsTime(String scheduleCode, String secretCode, int time) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	
+	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
+		int year = Integer.parseInt(date.substring(0, 3));
+		int month = Integer.parseInt(date.substring(5, 6));
+		int day = Integer.parseInt(date.substring(8, 9));
+		return new GregorianCalendar(year, month, day);
+	}
 }
