@@ -38,57 +38,6 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 	private AmazonS3 s3 = AmazonS3ClientBuilder.standard()
 			.withRegion("us-east-2").build();
 
-	boolean useRDS = true;
-	
-//	// not yet connected to RDS, so comment this out...
-//	public double loadConstant(String arg) {
-//		if (useRDS) {
-//			double val = 0;
-//			try {
-//				val = loadValueFromRDS(arg);
-//				return val;
-//			} catch (Exception e) {
-//				return 0;
-//			}
-//		}
-//		
-//		return loadValueFromBucket(arg);
-//	}
-//
-//	/** Load from RDS, if it exists
-//	 * 
-//	 * @throws Exception 
-//	 */
-//	double loadValueFromRDS(String arg) throws Exception {
-//		if (logger != null) { logger.log("in loadValue"); }
-//		ConstantsDAO dao = new ConstantsDAO();
-//		Constant constant = dao.getConstant(arg);
-//		return constant.value;
-//	}
-//	
-//	/** Load up S3 Bucket with given key and interpret contents as double. */
-//	double loadValueFromBucket(String arg) {
-//		if (logger != null) { logger.log("load from bucket:" + arg); }
-//		try {
-//			S3Object pi = s3.getObject("cs3733/constants", arg);
-//			if (pi == null) {
-//				return 0;
-//			} else {
-//				S3ObjectInputStream pis = pi.getObjectContent();
-//				Scanner sc = new Scanner(pis);
-//				String val = sc.nextLine();
-//				sc.close();
-//				try { pis.close(); } catch (IOException e) { }
-//				try {
-//					return Double.valueOf(val);
-//				} catch (NumberFormatException nfe) {
-//					return 0.0;
-//				}
-//			}
-//		} catch (SdkClientException sce) {
-//			return 0;
-//		}
-//	}
 
 	boolean createSchedule(Schedule schedule) throws Exception {
 		SchedulerDAO dao = new SchedulerDAO();		
@@ -154,21 +103,17 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 			// compute proper response
 			CreateScheduleResponse resp;
 			try {
-				logger.log("about to if\n");
 				if (createSchedule(createdSchedule)) {
-					logger.log("about to create a proper response\n");
 					resp = new CreateScheduleResponse(secretCode, shareCode, 200);	
 					logger.log("created a proper response\n");
 				}
 				else {
 					logger.log("could not create a schedule\n");
 					resp = new CreateScheduleResponse("The new schedule couldn't be created", 422);					
-					logger.log("could not create a schedule\n");
-
 				}
 			} catch (Exception e) {
 				logger.log("got an exception "+ e.getMessage());
-				resp = new CreateScheduleResponse("Something went wrong in the database", 422);					
+				resp = new CreateScheduleResponse("Something went wrong in the database", 500);					
 			}
 			logger.log("to creating the response");
 

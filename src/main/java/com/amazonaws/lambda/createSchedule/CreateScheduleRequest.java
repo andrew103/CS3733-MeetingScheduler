@@ -3,7 +3,7 @@ package com.amazonaws.lambda.createSchedule;
 
 import java.util.GregorianCalendar;
 
-class CreateScheduleRequest {
+public class CreateScheduleRequest {
 	String name;
 	int meetingDuration;
 	GregorianCalendar startDate;
