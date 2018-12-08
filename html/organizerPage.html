@@ -151,17 +151,8 @@
 <script type="text/javascript">
   var table = $('#scheduleTable');
   table.on("click", "td", cellClick); //attaches the handler on the whole table, but filter the events by the "td" selector
-  var dt = table.dataTable;
-  function cellClick(x) {
-    td = $(x.target).closest('td');
-    cellText = td.text();
-    cellIndex = td.index();
-    rowIndex = td.parent().index();
-    console.log("clicking row: "+rowIndex+" cell: "+cellIndex+" text: "+cellText);
-    processCell(cellText, cellIndex, rowIndex);
-  }
 
-  function processCell(cellText, cellIndex, rowIndex){
+  function processCell(cellText, cellIndex, rowIndex){//organizer version
     switch(cellText){
       case "Open":
         stringDisp = "Time slot open on "+showDayTime(cellIndex, rowIndex);

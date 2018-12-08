@@ -188,7 +188,7 @@ if(urlParams["id"]){
 
     console.log(scheduleTable)
 
-    updateSchedule(schedule["startDate"], urlParams["id"])
+    updateSchedule(schedule["startDate"], urlParams["view"])
 }
 else{
     //TODO: redirect to homepage and delete this alert
@@ -196,6 +196,15 @@ else{
 
     //TODO, make this the pre-signed url
     //window.location.href = "index.html";
+}
+
+function cellClick(x) {
+  td = $(x.target).closest('td');
+  cellText = td.text();
+  cellIndex = td.index();
+  rowIndex = td.parent().index();
+  console.log("clicking row: "+rowIndex+" cell: "+cellIndex+" text: "+cellText);
+  processCell(cellText, cellIndex, rowIndex);
 }
 
 function changeDate(value){
@@ -208,7 +217,7 @@ function changeDate(value){
       date.setDate(date.getDate()+1); //need to add one for formatDate()
       document.getElementById("weekDate").value = formatDate(date);
     }
-    updateSchedule(date, urlParams["id"]);
+    updateSchedule(date, urlParams["view"]);
 }
 
 function returnDate(value){

@@ -12,6 +12,18 @@
       height: 20px;
       background: #ffffff;
   }
+  .modal-header, h4, .close {
+      background-color: #696969;
+      color:white !important;
+      text-align: center;
+      font-size: 30px;
+  }
+  .modal-body {
+      background-color: #ffffff
+  }
+  .modal-footer {
+      background-color: #f9f9f9;
+  }
   </style>
 </head>
 <body>
@@ -61,6 +73,49 @@
     </div>
 </div>
 
+<!-- Cancel Meeting Modal -->
+<div id="scheduleMeeting" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cancel a scheduled meeting</h4>
+      </div>
+      <div class="modal-body">
+        <p id="scheduleMeetingText"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-left">Cancel Scheduled Meeting</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 <script src="js/scheduleLoader.js"></script>
+<script type="text/javascript">
+  var table = $('#scheduleTable');
+  table.on("click", "td", cellClick); //attaches the handler on the whole table, but filter the events by the "td" selector
+
+  function processCell(cellText, cellIndex, rowIndex){//organizer version
+    switch(cellText){
+      case "Open":
+        stringDisp = "Time slot open on "+showDayTime(cellIndex, rowIndex);
+        document.getElementById("scheduleMeetingText").innerHTML=stringDisp;
+        $("#scheduleMeeting").modal();
+        break;
+      case "Closed":
+        stringDisp = "Time slot closed on "+showDayTime(cellIndex, rowIndex);
+        alert(stringDisp);
+        break;
+      case "Not on schedule":
+        break;
+      default: //there is a meeting scheduled but not visiable to participant
+        stringDisp = "Time slot unavailable on "+showDayTime(cellIndex, rowIndex)+". "+cellText;
+        alert(stringDisp);
+    }
+  }
+
+</script>
 </html>
