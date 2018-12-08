@@ -156,13 +156,13 @@ public class SchedulerDAO {
     
     public Schedule organizerGetSchedule(String secretCode) throws Exception {
     	try {
-    		String query = "SELECT scheduleCode FROM Schedule WHERE organizerCode=?";
+    		String query = "SELECT shareCode FROM Schedule WHERE organizerCode=?";
         	PreparedStatement ps = conn.prepareStatement(query);
         	ps.setString(1, secretCode);
         	ResultSet resultSet = ps.executeQuery();
         	resultSet.next();
         	
-        	return getSchedule(resultSet.getString("scheduleCode"));
+        	return getSchedule(resultSet.getString("shareCode"));
         	
     	} catch (Exception e) {
     		throw new Exception("Failed to get the organizer's schedule: " + e.getMessage());
