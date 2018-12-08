@@ -302,14 +302,57 @@ public class SchedulerDAO {
 		return true;
 	}
 
-	public boolean openAllTimeSlotsTime(String scheduleCode, String secretCode, int time) {
+	public boolean openAllTimeSlotsTime(String scheduleCode, String secretCode, int time) throws Exception {
 		//System.out.println("MOVEBITCHGETOUTTHEWAY");
-		return true;
+		try {
+			String query = "SELECT scheduleID FROM Schedule WHERE organizerCode=?";
+	    	PreparedStatement ps = conn.prepareStatement(query);
+	    	ps.setString(1, secretCode);
+	    	ResultSet resultSet = ps.executeQuery();
+	    	resultSet.next();		
+			
+	    	int schedID = resultSet.getInt("scheduleID");
+	    	
+	    	query = "UPDATE Timeslot SET available=1 WHERE scheduleID=? AND startTime=?";
+	    	ps = conn.prepareStatement(query);
+	    	ps.setInt(1, schedID);
+	    	ps.setLong(2, convertTimeToDB(time));
+	    	ps.executeUpdate();
+	    	
+	    	resultSet.close();
+	    	ps.close();
+	    	
+			return true;
+	    	
+		} catch (Exception e) {
+			throw new Exception("Couldn't open timeslots at specified time " + e.getMessage());
+		}
 	}
 
-	public boolean closeAllTimeSlotsTime(String scheduleCode, String secretCode, int time) {
-		// TODO Auto-generated method stub
-		return true;
+	public boolean closeAllTimeSlotsTime(String scheduleCode, String secretCode, int time) throws Exception {
+		try {
+			String query = "SELECT scheduleID FROM Schedule WHERE organizerCode=?";
+	    	PreparedStatement ps = conn.prepareStatement(query);
+	    	ps.setString(1, secretCode);
+	    	ResultSet resultSet = ps.executeQuery();
+	    	resultSet.next();		
+			
+	    	int schedID = resultSet.getInt("scheduleID");
+	    	
+	    	query = "UPDATE Timeslot SET available=0 WHERE scheduleID=? AND startTime=?";
+	    	ps = conn.prepareStatement(query);
+	    	ps.setInt(1, schedID);
+	    	ps.setLong(2, convertTimeToDB(time));
+	    	ps.executeUpdate();
+	    	
+	    	resultSet.close();
+	    	ps.close();
+	    	
+			return true;
+	    	
+		} catch (Exception e) {
+			throw new Exception("Couldn't open timeslots at specified time " + e.getMessage());
+		}
 	}
 	
 	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
