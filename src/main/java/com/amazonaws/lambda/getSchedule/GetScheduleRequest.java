@@ -2,16 +2,16 @@ package com.amazonaws.lambda.getSchedule;
 
 public class GetScheduleRequest {
 	
-	String scheduleCode;
+	String shareCode;
 	
-	public GetScheduleRequest(String scheduleCode)
+	public GetScheduleRequest(String shareCode)
 	{
-		this.scheduleCode = scheduleCode;
+		this.shareCode = shareCode;
 	}
 	
 	public String toString()
 	{
-		return "Getting Schedule with code" + scheduleCode;
+		return "Getting Schedule with code" + shareCode;
 	}
 
 }

@@ -100,7 +100,7 @@ public class OrganizerGetScheduleHandler implements RequestStreamHandler {
 				try{
 					SchedulerDAO dao = new SchedulerDAO();	
 					try {
-						Schedule s =  dao.getSchedule(req.scheduleCode);	
+						Schedule s =  dao.getSchedule(req.shareCode);	
 						logger.log(" ***we found a schedule*** ");
 						resp = new GetScheduleResponse(s);
 						logger.log("\nname:" + s.getScheduleName());
@@ -113,7 +113,7 @@ public class OrganizerGetScheduleHandler implements RequestStreamHandler {
 				}
 				catch(Exception e){
 					logger.log("DAO could not connect to database" + e.getMessage());
-					resp = new GetScheduleResponse(req.scheduleCode, 500);					
+					resp = new GetScheduleResponse(req.shareCode, 500);					
 				}
 
 				responseJson.put("body", new Gson().toJson(resp));

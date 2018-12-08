@@ -10,7 +10,7 @@ public class GetScheduleResponse {
 	
 	public GetScheduleResponse(Schedule s) {
 		this.schedule = s;
-		this.httpCode = 400;
+		this.httpCode = 200;
 		this.message = "Found Schedule";
 	}
 	
