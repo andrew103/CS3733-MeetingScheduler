@@ -1,24 +1,32 @@
 package com.amazonaws.lambda.getSchedule;
 
+import entity.Schedule;
+
 public class GetScheduleResponse {
 	
-	String scheduleCode;
-	String secretCode;
-	int httpCode; 
+	Schedule schedule;
+	int httpCode;
+	String message;
 	
-	public GetScheduleResponse(String scheduleCode, String secretCode, int hc) {
-		this.scheduleCode = scheduleCode;
-		this.secretCode = secretCode;
-		this.httpCode = hc;
+	public GetScheduleResponse(Schedule s) {
+		this.schedule = s;
+		this.httpCode = 400;
+		this.message = "Found Schedule";
 	}
-
-	public GetScheduleResponse(String message, int code) {
-		System.out.println(message);
-		this.httpCode = 200;
+	
+	public GetScheduleResponse(String message, int httpCode) {
+		this.httpCode = httpCode;
+		this.schedule = null;
+		this.message = message;
 	}
+	
+	
 	
 	public String toString() {
-		return "I'm trying to get" + scheduleCode + "here is the secret code" + secretCode;
+		if(schedule == null) {
+			return "Did not get schedule, error code: " + httpCode;
+		}
+		return "I got a schedule with name " + schedule.getScheduleName();
 	}
 
 }

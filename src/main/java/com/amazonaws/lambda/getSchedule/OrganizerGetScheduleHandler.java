@@ -39,56 +39,7 @@ public class OrganizerGetScheduleHandler implements RequestStreamHandler {
 			.withRegion("us-east-2").build();
 
 	boolean useRDS = true;
-	
-//	// not yet connected to RDS, so comment this out...
-//	public double loadConstant(String arg) {
-//		if (useRDS) {
-//			double val = 0;
-//			try {
-//				val = loadValueFromRDS(arg);
-//				return val;
-//			} catch (Exception e) {
-//				return 0;
-//			}
-//		}
-//		
-//		return loadValueFromBucket(arg);
-//	}
-//
-//	/** Load from RDS, if it exists
-//	 * 
-//	 * @throws Exception 
-//	 */
-//	double loadValueFromRDS(String arg) throws Exception {
-//		if (logger != null) { logger.log("in loadValue"); }
-//		ConstantsDAO dao = new ConstantsDAO();
-//		Constant constant = dao.getConstant(arg);
-//		return constant.value;
-//	}
-//	
-//	/** Load up S3 Bucket with given key and interpret contents as double. */
-//	double loadValueFromBucket(String arg) {
-//		if (logger != null) { logger.log("load from bucket:" + arg); }
-//		try {
-//			S3Object pi = s3.getObject("cs3733/constants", arg);
-//			if (pi == null) {
-//				return 0;
-//			} else {
-//				S3ObjectInputStream pis = pi.getObjectContent();
-//				Scanner sc = new Scanner(pis);
-//				String val = sc.nextLine();
-//				sc.close();
-//				try { pis.close(); } catch (IOException e) { }
-//				try {
-//					return Double.valueOf(val);
-//				} catch (NumberFormatException nfe) {
-//					return 0.0;
-//				}
-//			}
-//		} catch (SdkClientException sce) {
-//			return 0;
-//		}
-//	}
+
 
 	
 	@Override
@@ -120,7 +71,7 @@ public class OrganizerGetScheduleHandler implements RequestStreamHandler {
 			String method = (String) event.get("httpMethod");
 			if (method != null && method.equalsIgnoreCase("OPTIONS")) {
 				logger.log("Options request");
-				response = new GetScheduleResponse("Option", 200);  // OPTIONS needs a 200 response
+				response = new GetScheduleResponse("Requested options", 200);  // OPTIONS needs a 200 response
 		        responseJson.put("body", new Gson().toJson(response));
 		        processed = true;
 		        body = null;
@@ -132,7 +83,7 @@ public class OrganizerGetScheduleHandler implements RequestStreamHandler {
 			}
 		} catch (ParseException pe) {
 			logger.log(pe.toString());
-			response = new GetScheduleResponse("Failure", 400);  // unable to process input
+			response = new GetScheduleResponse("Unable to parse input",400);  // unable to process input
 	        responseJson.put("body", new Gson().toJson(response));
 	        processed = true;
 	        body = null;
@@ -148,23 +99,24 @@ public class OrganizerGetScheduleHandler implements RequestStreamHandler {
 			GetScheduleResponse resp;
 				try{
 					SchedulerDAO dao = new SchedulerDAO();	
-					Schedule s =  dao.getSchedule(req.scheduleCode);	
-					if(s != null) {
-						//TODO
-						logger.log(" ***something did happen*** ");
- 
+					try {
+						Schedule s =  dao.getSchedule(req.scheduleCode);	
+						logger.log(" ***we found a schedule*** ");
+						resp = new GetScheduleResponse(s);
+						logger.log("\nname:" + s.getScheduleName());
 					}
-					else {
+					catch(Exception e)
+					{
 						logger.log("Could not find a schedule");
-						resp = new GetScheduleResponse("The schedule was not found", 400);
+						resp = new GetScheduleResponse("The schedule was not found", 404);
 					}
 				}
 				catch(Exception e){
-					logger.log("DAO probably threw an exception:" + e.getMessage());
+					logger.log("DAO could not connect to database" + e.getMessage());
 					resp = new GetScheduleResponse(req.scheduleCode, 500);					
 				}
 
- 
+				responseJson.put("body", new Gson().toJson(resp));
 		}
 		
         logger.log("end result:" + responseJson.toJSONString());
