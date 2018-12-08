@@ -15,7 +15,8 @@ function processCell(cellText, cellIndex, rowIndex){//organizer version
     case "Not on schedule":
       break;
     default: //there is a meeting scheduled but not visiable to participant
-      stringDisp = "Time slot unavailable on "+showDayTime(cellIndex, rowIndex)+". "+cellText;
-      alert(stringDisp);
+      stringDisp = "Time slot has a scheduled meeting on "+showDayTime(cellIndex, rowIndex)+".";
+      document.getElementById("cancelMeetingText").innerHTML=stringDisp;
+      $("#cancelMeeting").modal();
   }
 }
