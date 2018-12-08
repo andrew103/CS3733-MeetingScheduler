@@ -186,7 +186,7 @@ public class SchedulerDAO {
 		try {
 			
 			//Remove schedule from database
-			String query = "SELECT * FROM Schedule WHERE secretCode = ?;";
+			String query = "SELECT * FROM Schedule WHERE secretCode = ?";
         	PreparedStatement ps = conn.prepareStatement(query);
         	ps.setString(1, secretCode);
         	ResultSet resultSet1 = ps.executeQuery();
@@ -196,14 +196,20 @@ public class SchedulerDAO {
         	query = "DELETE FROM Timeslot WHERE scheduleID = ?";
         	ps = conn.prepareStatement(query);
         	ps.setInt(1, scheduleID);
+        	ps.executeQuery();
         	
         	query = "DELETE FROM Day WHERE scheduleID = ?";
         	ps = conn.prepareStatement(query);
         	ps.setInt(1, scheduleID);
+        	ps.executeQuery();
 
         	query = "DELETE FROM Schedule WHERE scheduleID = ?";
         	ps = conn.prepareStatement(query);
         	ps.setInt(1, scheduleID);
+        	ps.executeQuery();
+        	
+        	resultSet1.close();
+        	ps.close();
 			return true;
 		}
 		catch(Exception e){
@@ -214,39 +220,69 @@ public class SchedulerDAO {
 	public boolean openOrCloseTimeSlot(String scheduleCode, int time, GregorianCalendar day) throws Exception {
 		
 		try {
-			
+			//UPDATE tableName SET colname = ? WHERE schedId = ? AND dayID = ? AND dayDate = ? --Retrieves timeslots
 			//Remove schedule from database
-			String query = "SELECT * FROM Schedule WHERE scheduleCode = ?;";
+			String query = "SELECT * FROM Schedule WHERE secretCode = ?";
         	PreparedStatement ps = conn.prepareStatement(query);
         	ps.setString(1, scheduleCode);
         	ResultSet resultSet1 = ps.executeQuery();
         	resultSet1.next();
         	
+        	Date startDate = new Date(day.getTimeInMillis());
         	int scheduleID = resultSet1.getInt("scheduleID");
-        	int startTime = resultSet1.getInt("startTime");
-        	Date meetingDay = resultSet1.getDate("dayDate");
-        	
-        	
-        	query = "DELETE FROM Timeslot WHERE scheduleID = ?";
+        	query = "SELECT * FROM Day WHERE scheduleID = ? AND dayDate = ?";
         	ps = conn.prepareStatement(query);
-        	ps.setInt(1, scheduleID);
+        	ps.setString(1, scheduleCode);
+        	ps.setDate(2, startDate);
+        	ResultSet resultSet2 = ps.executeQuery();
+        	resultSet2.next();
         	
-        	query = "DELETE FROM Day WHERE scheduleID = ?";
-        	ps = conn.prepareStatement(query);
+        	int dayID = resultSet2.getInt("dayID");
+        	
+        	query = "SELECT * FROM Timeslot WHERE scheduleID = ? AND dayID = ? AND dayDate = ?";
+        	ps  =conn.prepareStatement(query);
         	ps.setInt(1, scheduleID);
-
-        	query = "DELETE FROM Schedule WHERE scheduleID = ?";
-        	ps = conn.prepareStatement(query);
-        	ps.setInt(1, scheduleID);
+        	ps.setInt(2, dayID);
+        	ps.setDate(3, startDate);
+        	ResultSet resultSet3 = ps.executeQuery();
+        	resultSet3.next();
+        	
+        	if (resultSet3.getInt("available")==1)
+        	{
+        		query = "UPDATE Timeslot SET available = ? WHERE scheduleID = ? AND dayID = ? AND dayDate = ?";
+            	ps = conn.prepareStatement(query);
+            	ps.setInt(1, 0);
+            	ps.setInt(2, scheduleID);
+            	ps.setInt(3, dayID);
+            	ps.setDate(4, startDate);
+            	ps.executeQuery();
+        	}
+        	else
+        	{
+        		query = "UPDATE Timeslot SET available = ? WHERE scheduleID = ? AND dayID = ? AND dayDate = ?";
+            	ps = conn.prepareStatement(query);
+            	ps.setInt(1, 1);
+            	ps.setInt(2, scheduleID);
+            	ps.setInt(3, dayID);
+            	ps.setDate(4, startDate);
+            	ps.executeQuery();
+        	}
+        	resultSet1.close();
+        	resultSet2.close();
+        	resultSet3.close();
+        	ps.close();
 			return true;
 		}
 		catch(Exception e){
+			
 			throw new Exception("***FUCK IT FAILED: " + e.getMessage()+ "***");
 		}
 	}
 
 	public boolean cancelMeeting(String scheduleCode, String secretCode, int time, String day) {
+		
 		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
