@@ -165,8 +165,9 @@ var urlParams;
 if(urlParams["id"]){
 
     //TODO update schedule to be from id
+    console.log(document.getElementById("name"));
     document.getElementById("name").innerText = schedule["name"];
-
+    console.log(document.getElementById("weekDate"));
     document.getElementById("weekDate").value = schedule["startDate"];
     //Populating an empty schedule so the updateSchedule function can fill it in
 
