@@ -1,34 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <title>Team Cursa Meeting Scheduler/organizer</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
-  .fakeimg {
+  .emptyspace{
       height: 20px;
-      background: #aaa;
+      background: #ffffff;
+  }
+  .modal-header, h4, .close {
+      background-color: #696969;
+      color:white !important;
+      text-align: center;
+      font-size: 30px;
+  }
+  .modal-body {
+      background-color: #ffffff
+  }
+  .modal-footer {
+      background-color: #f9f9f9;
   }
   </style>
 </head>
 <body>
 
+  <div class="jumbotron text-center" style="margin-bottom:0">
+    <h1>Team Cursa Meeting Scheduler</h1>
+    <p>This is the Organizer view</p>
+  </div>
+
 <div class="container">
 	<div class="row">
     	<div class="col-sm-6">
-            <label for="schedule_name" id = "name">Schedule name</label>
-        </div>
-        <div class="col-sm-6">
-              <label for="week of">Week of: </label>
-              <input id = "weekDate" type="date" class="form-control" maxlength="2" size="2" onchange="dateSelect()">
-
-        </div>
+        <label for="schedule_name" id = "name">Schedule name</label>
+      </div>
+      <div class="col-sm-6">
+        <form class="form-inline" action="/action_page.php">
+            <label for="week of">Week of: </label>
+            <input id = "weekDate" type="date" class="form-control" onchange="changeDate('0')">
+        </form>
+      </div>
     </div>
+    <div class="emptyspace"></div>
     <div class="row">
     	<div class="col-sm-1">
-    	     <button type="button" class="btn btn-primary">&lsaquo;&lsaquo;</button>
+    	     <button type="button" class="btn btn-primary" onclick="changeDate('-7')">&lsaquo;&lsaquo;last week</button>
         </div>
         <div class="col-sm-10">
          <table id = "scheduleTable" class="table table-bordered table-hover">
@@ -46,25 +66,122 @@
           </table>
         </div>
         <div class="col-sm-1">
-    	     <button type="button" class="btn btn-primary">&rsaquo;&rsaquo;</button>
+    	     <button type="button" class="btn btn-primary" onclick="changeDate('7')">next week&rsaquo;&rsaquo;</button>
         </div>
     </div>
     <div class="row">
+      <div class="col-sm-6">
         <div class="btn-group">
           <input type="time" class="btn btn-default">
           <button type="button" class="btn btn-success">Open all slots at this time</button>
           <button type="button" class="btn btn-danger">Close all slots at this time</button>
-        </div>    
-    </div>
-        <div class="row">
+        </div>
+      </div>
+      <div class="col-sm-6">
         <div class="btn-group">
           <input type="date" class="btn btn-default">
           <button type="button" class="btn btn-info">Extend start date</button>
           <button type="button" class="btn btn-info">Extend end date</button>
-        </div>    
+        </div>
+      </div>
     </div>
-    <button type="button" class="btn btn-danger">Delete Schedule</button>
+    <div class="emptyspace"></div>
+    <button type="button" class="btn btn-danger btn-block">Delete Entire Schedule</button>
 </div>
+
+<!-- Cancel Meeting Modal -->
+<div id="cancelMeeting" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cancel a scheduled meeting</h4>
+      </div>
+      <div class="modal-body">
+        <p id="cancelMeetingText"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-left">Cancel Scheduled Meeting</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Open Slot Modal -->
+<div id="openSlot" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Open a closed time slot</h4>
+      </div>
+      <div class="modal-body">
+        <p id="openSlotText"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success pull-left">Open Time Slot</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Close Slot Modal -->
+<div id="closeSlot" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Close an open time slot</h4>
+      </div>
+      <div class="modal-body">
+        <p id="closeSlotText"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-left">Close Time Slot</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 <script src="js/scheduleLoader.js"></script>
+<script type="text/javascript">
+  var table = $('#scheduleTable');
+  table.on("click", "td", cellClick); //attaches the handler on the whole table, but filter the events by the "td" selector
+  var dt = table.dataTable;
+  function cellClick(x) {
+    td = $(x.target).closest('td');
+    cellText = td.text();
+    cellIndex = td.index();
+    rowIndex = td.parent().index();
+    console.log("clicking row: "+rowIndex+" cell: "+cellIndex+" text: "+cellText);
+    processCell(cellText, cellIndex, rowIndex);
+  }
+
+  function processCell(cellText, cellIndex, rowIndex){
+    switch(cellText){
+      case "Open":
+        stringDisp = "Time slot open on "+showDayTime(cellIndex, rowIndex);
+        document.getElementById("closeSlotText").innerHTML=stringDisp;
+        $("#closeSlot").modal();
+        break;
+      case "Closed":
+        stringDisp = "Time slot closed on "+showDayTime(cellIndex, rowIndex);
+        document.getElementById("openSlotText").innerHTML=stringDisp;
+        $("#openSlot").modal();
+        break;
+      case "Not on schedule":
+        break;
+      default: //there is a meeting scheduled
+        stringDisp = "Meeting scheduled on "+showDayTime(cellIndex, rowIndex)+". "+cellText;
+        document.getElementById("cancelMeetingText").innerHTML=stringDisp;
+        $("#cancelMeeting").modal();
+    }
+  }
+
+</script>
+
 </html>
