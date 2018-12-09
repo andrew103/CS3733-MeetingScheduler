@@ -208,7 +208,7 @@ function showDayTime(cellIndex, rowIndex){
     }
     days = schedule["days"];
     for (i = 0; i < days.length; i++){
-        if (days[i]["date"] == date){
+        if (days[i]["dateStr"] == date){
             time = days[i]["timeSlots"][rowIndex]["startTime"];
             break;
         }
