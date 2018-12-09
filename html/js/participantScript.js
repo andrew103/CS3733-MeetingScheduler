@@ -50,7 +50,7 @@ function searchOpenTS(searchReturn){
   if (year != null && year != ""){
     //if year input is not empty, do second search
     for(i=0;i<current.length;i++){
-      if (current[i]["dateStr"].substring(0,4) != year){
+      if (current[i]["date"].substring(0,4) != year){
         current.splice(i,1); //remove unmatched TS from current list
         i --; //list shortens by 1
       }
@@ -60,7 +60,7 @@ function searchOpenTS(searchReturn){
   if (month != null && month != ""){
     //if month input is not empty, do third search
     for(i=0;i<current.length;i++){
-      if (current[i]["dateStr"].substring(5,7) != month){
+      if (current[i]["date"].substring(5,7) != month){
         current.splice(i,1); //remove unmatched TS from current list
         i --; //list shortens by 1
       }
@@ -70,7 +70,7 @@ function searchOpenTS(searchReturn){
   if (dayOfMonth != null && dayOfMonth != ""){
     //if dayOfMonth input is not empty, do forth search
     for(i=0;i<current.length;i++){
-      if (current[i]["dateStr"].substring(8) != dayOfMonth){
+      if (current[i]["date"].substring(8) != dayOfMonth){
         current.splice(i,1); //remove unmatched TS from current list
         i --; //list shortens by 1
       }
@@ -98,11 +98,12 @@ function searchOpenTS(searchReturn){
   var txt;
   for(i=0;i<current.length;i++){
     for(j=0;j<current[i]["timeslots"].length;j++){
-      txt = (current[i]["dateStr"]+" at "+current[i]["timeslots"][j]["startTime"]);
+      txt = (current[i]["date"]+" at "+current[i]["timeslots"][j]["startTime"]);
       //sr.append($('<br>'));
       sr.append($('<h5></h5>').text(txt));
       sr.append($('<button></button>')
                 .attr('class',"btn btn-success")
+                .attr('onclick', "scheduleOpenTS()")
                 .text("schedule"));
       sr.append($('<br>'));
     }
@@ -115,6 +116,17 @@ function searchOpenTS(searchReturn){
   }
 }
 
+function scheduleOpenTS(){ //different from schedule meeting
+  alert("add schedule openTS functionality");
+}
+
+function scheduleMeeting(){
+  alert("add schedule meeting functionality");
+}
+
+function cancelMeeting(){
+  alert("add cancel meeting functionality");
+}
 
 function populateTS(selector) {
     var select = $(selector);

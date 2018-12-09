@@ -36,3 +36,23 @@ window.onload = function (e) {
   populate('#et');
   populate('#st');
 }
+
+function organizerLoad(){
+    code = document.getElementById("organizerScheduleCode").value;
+    if(code){
+        window.location.href = organizerWebsite + "?secretCode=" + code
+    }
+    else{
+        alert("Schedule Code cannot be blank")
+    }
+}
+
+function participantLoad(){
+    code = document.getElementById("participantScheduleCode").value;
+    if(code){
+        window.location.href = participantWebsite + "?shareCode=" + code
+    }
+    else{
+        alert("Schedule Code cannot be blank")
+    }
+}
