@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.GregorianCalendar;
 import java.util.Scanner;
 
 import org.json.simple.JSONObject;
@@ -90,9 +91,17 @@ public class OpenAllSlotsDayHandler implements RequestStreamHandler {
 //		}
 //	}
 
-	boolean openAllSlotsDay(String scheduleCode, String secretCode, String date) throws Exception {
+	boolean openAllSlotsDay(String scheduleCode, String secretCode, String day) throws Exception {
 		SchedulerDAO dao = new SchedulerDAO();	
+		GregorianCalendar date = parseDate(day);  
 		return dao.openAllSlotsDay(scheduleCode, secretCode, date);	
+	}
+	
+	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
+		int year = Integer.parseInt(date.substring(0, 4));
+		int month = Integer.parseInt(date.substring(5, 7));
+		int day = Integer.parseInt(date.substring(8));
+		return new GregorianCalendar(year, month-1, day);
 	}
 	
 	@Override
