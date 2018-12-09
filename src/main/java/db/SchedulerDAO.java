@@ -270,6 +270,66 @@ public class SchedulerDAO {
 		}
 	}
 
+	public boolean createMeeting(String scheduleCode, String secretCode, String participantInfo, String meetingCode, int time, GregorianCalendar day) throws Exception {
+		try {
+			//UPDATE tableName SET colname = ? WHERE schedId = ? AND dayID = ? AND dayDate = ? --Retrieves timeslots
+			//Remove schedule from database
+			String query = "SELECT * FROM Schedule WHERE organizerCode = ?";
+        	PreparedStatement ps = conn.prepareStatement(query);
+        	ps.setString(1, secretCode);
+        	ResultSet resultSet1 = ps.executeQuery();
+        	resultSet1.next();
+        	int scheduleID = resultSet1.getInt("scheduleID");
+        	Date startDate = new Date(day.getTimeInMillis());
+        	long startTime = convertTimeToDB(time);
+        	System.out.println(startTime);
+        	
+        	
+        	query = "SELECT * FROM Day WHERE scheduleID = ? AND dayDate = ?";
+        	ps = conn.prepareStatement(query);
+        	ps.setInt(1, scheduleID);
+        	ps.setDate(2, startDate);
+        	ResultSet resultSet2 = ps.executeQuery();
+        	resultSet2.next();
+        	int dayID = resultSet2.getInt("dayID");
+        	
+        	query = "SELECT * FROM Timeslot WHERE scheduleID = ? AND dayID = ? AND startTime = ?";
+        	ps  =conn.prepareStatement(query);
+        	ps.setInt(1, scheduleID);
+        	ps.setInt(2, dayID);
+        	ps.setLong(3, startTime);
+        	ResultSet resultSet3 = ps.executeQuery();
+        	resultSet3.next();
+        	
+        	if (resultSet3.getInt("available")==1)
+        	{
+            	//Create new timeslot+meeting
+        		query = "UPDATE Timeslot SET available = ?, participantInfo = ?, meetingCode = ? WHERE scheduleID = ? AND dayID =? AND startTime = ?";
+            	ps = conn.prepareStatement(query);
+            	ps.setInt(1, 0);
+            	ps.setString(2, participantInfo);
+            	ps.setString(3, meetingCode);
+            	ps.setInt(4, scheduleID);
+            	ps.setInt(5, dayID);
+            	ps.setLong(6, startTime);
+            	ps.executeUpdate();
+        	}
+        	else
+        	{
+        		System.out.println("A meeting already exists at that time");
+        	}
+        	resultSet1.close();
+        	resultSet2.close();
+        	resultSet3.close();
+        	ps.close();
+			return true;
+		}
+		catch(Exception e){
+			
+			throw new Exception("***FUCK IT FAILED: " + e.getMessage()+ "***");
+		}
+	}
+	
 	public boolean cancelMeeting(String scheduleCode, String secretCode, int time, GregorianCalendar day) throws Exception {
 		try {
 			//UPDATE tableName SET colname = ? WHERE schedId = ? AND dayID = ? AND dayDate = ? --Retrieves timeslots
@@ -321,6 +381,52 @@ public class SchedulerDAO {
         	resultSet1.close();
         	resultSet2.close();
         	resultSet3.close();
+        	ps.close();
+			return true;
+		}
+		catch(Exception e){
+			
+			throw new Exception("***FUCK IT FAILED: " + e.getMessage()+ "***");
+		}
+
+	}
+	
+	public boolean cancelMeetingParticipant(String scheduleCode, String meetingCode) throws Exception {
+		try {
+			//UPDATE tableName SET colname = ? WHERE schedId = ? AND dayID = ? AND dayDate = ? --Retrieves timeslots
+			//Remove schedule from database
+			String query = "SELECT * FROM Schedule WHERE shareCode = ?";
+        	PreparedStatement ps = conn.prepareStatement(query);
+        	ps.setString(1, scheduleCode);
+        	ResultSet resultSet1 = ps.executeQuery();
+        	resultSet1.next();
+        	int scheduleID = resultSet1.getInt("scheduleID");
+        	
+        	query = "SELECT * FROM Timeslot WHERE scheduleID = ? AND meetingCode = ?";
+        	ps  =conn.prepareStatement(query);
+        	ps.setInt(1, scheduleID);
+        	ps.setString(2, meetingCode);
+        	ResultSet resultSet2 = ps.executeQuery();
+        	resultSet2.next();
+        	
+        	if (resultSet2.getInt("available")==0)
+        	{
+            	//Create new timeslot+meeting
+        		query = "UPDATE Timeslot SET available = ?, participantInfo = ?, meetingCode = ? WHERE scheduleID = ? AND meetingCode = ?";
+            	ps = conn.prepareStatement(query);
+            	ps.setInt(1, 1);
+            	ps.setString(2, null);
+            	ps.setString(3, null);
+            	ps.setInt(4, scheduleID);
+            	ps.setString(5, meetingCode);
+            	ps.executeUpdate();
+        	}
+        	else
+        	{
+        		System.out.println("No meeting to cancel at that time");
+        	}
+        	resultSet1.close();
+        	resultSet2.close();
         	ps.close();
 			return true;
 		}
