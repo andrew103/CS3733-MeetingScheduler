@@ -1,4 +1,4 @@
-package com.amazonaws.lambda.createMeeting;
+package com.amazonaws.lambda.cancelMeetingParticipant;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,7 +31,7 @@ import db.SchedulerDAO;
  * Found gson JAR file from
  * https://repo1.maven.org/maven2/com/google/code/gson/gson/2.6.2/gson-2.6.2.jar
  */
-public class CreateMeetingHandler implements RequestStreamHandler {
+public class CancelMeetingParticipantHandler implements RequestStreamHandler {
 
 	public LambdaLogger logger = null;
 
@@ -41,10 +41,9 @@ public class CreateMeetingHandler implements RequestStreamHandler {
 
 	boolean useRDS = true;
 
-	boolean createMeeting(String scheduleCode, String secretCode, String participantInfo, String meetingCode, int time, String day) throws Exception {
+	boolean cancelMeetingParticipant(String scheduleCode, String meetingCode) throws Exception {
 		SchedulerDAO dao = new SchedulerDAO();	
-		GregorianCalendar date = parseDate(day);
-		return dao.createMeeting(scheduleCode, secretCode, participantInfo, meetingCode, time, date);	
+		return dao.cancelMeetingParticipant(scheduleCode, meetingCode);	
 	}
 	
 	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
@@ -67,7 +66,7 @@ public class CreateMeetingHandler implements RequestStreamHandler {
 		JSONObject responseJson = new JSONObject();
 		responseJson.put("headers", headerJson);
 
-		CreateMeetingResponse response = null;
+		CancelMeetingParticipantResponse response = null;
 		
 		// extract body from incoming HTTP POST request. If any error, then return 422 error
 		String body;
@@ -83,7 +82,7 @@ public class CreateMeetingHandler implements RequestStreamHandler {
 			String method = (String) event.get("httpMethod");
 			if (method != null && method.equalsIgnoreCase("OPTIONS")) {
 				logger.log("Options request");
-				response = new CreateMeetingResponse("Option", 200);  // OPTIONS needs a 200 response
+				response = new CancelMeetingParticipantResponse("Option", 200);  // OPTIONS needs a 200 response
 		        responseJson.put("body", new Gson().toJson(response));
 		        processed = true;
 		        body = null;
@@ -95,7 +94,7 @@ public class CreateMeetingHandler implements RequestStreamHandler {
 			}
 		} catch (ParseException pe) {
 			logger.log(pe.toString());
-			response = new CreateMeetingResponse("Failure", 400);  // unable to process input
+			response = new CancelMeetingParticipantResponse("Failure", 400);  // unable to process input
 	        responseJson.put("body", new Gson().toJson(response));
 	        processed = true;
 	        body = null;
@@ -103,34 +102,31 @@ public class CreateMeetingHandler implements RequestStreamHandler {
 
 		if (!processed) 
 		{
-			CreateMeetingRequest req = new Gson().fromJson(body, CreateMeetingRequest.class);
+			CancelMeetingParticipantRequest req = new Gson().fromJson(body, CancelMeetingParticipantRequest.class);
 			logger.log(req.toString());
 			
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
-			CreateMeetingResponse resp;
+			CancelMeetingParticipantResponse resp;
 			logger.log(" ***Request made succ*** ");
 			try {
 				logger.log(" **** In the Try loop *** ");
 				logger.log(req.scheduleCode);
-				logger.log(req.secretCode);
-				logger.log(req.day);
-				logger.log(req.printTime());
-				boolean del = createMeeting(req.scheduleCode, req.secretCode, req.participantInfo, req.meetingCode, req.time, req.day);
+				boolean del = cancelMeetingParticipant(req.scheduleCode, req.meetingCode);
 				if (del) {
 					logger.log(" *** It definitely worked right? probably. *** ");
-					resp = new CreateMeetingResponse(req.scheduleCode, req.secretCode, req.time, req.day, req.participantInfo, req.meetingCode, 200);					
+					resp = new CancelMeetingParticipantResponse(req.scheduleCode, req.meetingCode, 200);					
 				}
 				else {
 					logger.log(" *** fuck it failed *** ");
-					resp = new CreateMeetingResponse("The meeting could not be deleted", 400);					
+					resp = new CancelMeetingParticipantResponse("The meeting could not be deleted", 400);					
 					}
 				logger.log("WTF");
 				} 
 			catch (Exception e) 
 			{
 				logger.log(" ***EXCEPTION*** " + e);
-				resp = new CreateMeetingResponse("Something went wrong in the database", 400);					
+				resp = new CancelMeetingParticipantResponse("Something went wrong in the database", 400);					
 			}
 	        
 			logger.log(" ***something did happen*** ");
