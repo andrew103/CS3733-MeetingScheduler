@@ -168,34 +168,6 @@ public class SchedulerDAO {
     		throw new Exception("Failed to get the organizer's schedule: " + e.getMessage());
     	}
     }
-    
-    private long convertTimeToDB(int inputTime) {
-    	long millisTime = 0;
-    	
-    	String inputTimeStr = Integer.toString(inputTime);
-    	String inputHours = inputTimeStr.substring(0, 2);
-    	String inputMin = inputTimeStr.substring(2);
-    	
-    	millisTime = Integer.valueOf(inputHours)*3600*1000 + Integer.valueOf(inputMin)*60*1000;
-    	return millisTime;
-    }
-
-    private int convertTimeToMilitary(long inputMillis) {
-    	int militaryTime = 0;
-    	
-    	long rawMinutes = inputMillis/(1000*60);
-    	long hours = rawMinutes/60;
-    	long mins = rawMinutes%60;
-    	
-    	if (mins == 0) {
-        	militaryTime = Integer.valueOf(Long.toString(hours) + "00");    		
-    	}
-    	else {
-        	militaryTime = Integer.valueOf(Long.toString(hours) + Long.toString(mins));    		
-    	}
-
-    	return militaryTime;
-    }
 
 	public boolean deleteSchedule(String scheduleCode, String secretCode) throws Exception {
 		try {
@@ -440,17 +412,88 @@ public class SchedulerDAO {
 
 	}
 
-	public boolean openAllTimeSlotsTime(String scheduleCode, String secretCode, int time) {
+	public boolean openAllTimeSlotsTime(String scheduleCode, String secretCode, int time) throws Exception {
 		//System.out.println("MOVEBITCHGETOUTTHEWAY");
-		return true;
+		try {
+			String query = "SELECT scheduleID FROM Schedule WHERE organizerCode=?";
+	    	PreparedStatement ps = conn.prepareStatement(query);
+	    	ps.setString(1, secretCode);
+	    	ResultSet resultSet = ps.executeQuery();
+	    	resultSet.next();		
+			
+	    	int schedID = resultSet.getInt("scheduleID");
+	    	
+	    	query = "UPDATE Timeslot SET available=1 WHERE scheduleID=? AND startTime=?";
+	    	ps = conn.prepareStatement(query);
+	    	ps.setInt(1, schedID);
+	    	ps.setLong(2, convertTimeToDB(time));
+	    	ps.executeUpdate();
+	    	
+	    	resultSet.close();
+	    	ps.close();
+	    	
+			return true;
+	    	
+		} catch (Exception e) {
+			throw new Exception("Couldn't open timeslots at specified time " + e.getMessage());
+		}
 	}
 
-	public boolean closeAllTimeSlotsTime(String scheduleCode, String secretCode, int time) {
-		// TODO Auto-generated method stub
-		return true;
+	public boolean closeAllTimeSlotsTime(String scheduleCode, String secretCode, int time) throws Exception {
+		try {
+			String query = "SELECT scheduleID FROM Schedule WHERE organizerCode=?";
+	    	PreparedStatement ps = conn.prepareStatement(query);
+	    	ps.setString(1, secretCode);
+	    	ResultSet resultSet = ps.executeQuery();
+	    	resultSet.next();		
+			
+	    	int schedID = resultSet.getInt("scheduleID");
+	    	
+	    	query = "UPDATE Timeslot SET available=0 WHERE scheduleID=? AND startTime=?";
+	    	ps = conn.prepareStatement(query);
+	    	ps.setInt(1, schedID);
+	    	ps.setLong(2, convertTimeToDB(time));
+	    	ps.executeUpdate();
+	    	
+	    	resultSet.close();
+	    	ps.close();
+	    	
+			return true;
+	    	
+		} catch (Exception e) {
+			throw new Exception("Couldn't open timeslots at specified time " + e.getMessage());
+		}
 	}
-	
-	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
+    
+    private long convertTimeToDB(int inputTime) {
+    	long millisTime = 0;
+    	
+    	String inputTimeStr = Integer.toString(inputTime);
+    	String inputHours = inputTimeStr.substring(0, 2);
+    	String inputMin = inputTimeStr.substring(2);
+    	
+    	millisTime = Integer.valueOf(inputHours)*3600*1000 + Integer.valueOf(inputMin)*60*1000;
+    	return millisTime;
+    }
+
+    private int convertTimeToMilitary(long inputMillis) {
+    	int militaryTime = 0;
+    	
+    	long rawMinutes = inputMillis/(1000*60);
+    	long hours = rawMinutes/60;
+    	long mins = rawMinutes%60;
+    	
+    	if (mins == 0) {
+        	militaryTime = Integer.valueOf(Long.toString(hours) + "00");    		
+    	}
+    	else {
+        	militaryTime = Integer.valueOf(Long.toString(hours) + Long.toString(mins));    		
+    	}
+
+    	return militaryTime;
+    }
+
+    public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
 		int year = Integer.parseInt(date.substring(0, 3));
 		int month = Integer.parseInt(date.substring(5, 6));
 		int day = Integer.parseInt(date.substring(8, 9));
