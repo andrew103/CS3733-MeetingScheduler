@@ -13,8 +13,8 @@ public class Schedule
 	ArrayList<Day> days;
 	GregorianCalendar startDate;
 	GregorianCalendar endDate;
-	String sDateStr;
-	String eDateStr;
+	String startDateStr;
+	String endDateStr;
 	int startTime;
 	int endTime;
 	int meetingDuration;
@@ -68,10 +68,10 @@ public class Schedule
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 
 		fmt.setCalendar(this.startDate);
-	    this.sDateStr = fmt.format(this.startDate.getTime());
+	    this.startDateStr = fmt.format(this.startDate.getTime());
 
 		fmt.setCalendar(this.endDate);
-	    this.eDateStr = fmt.format(this.endDate.getTime());
+	    this.endDateStr = fmt.format(this.endDate.getTime());
 	}
 	
 	public void addDay(Day day) {
@@ -124,8 +124,8 @@ public class Schedule
      
 		obj.put("startDate", fmt.format(this.startDate.getTime()));
 		obj.put("endDate", fmt.format(this.endDate.getTime()));
-		obj.put("sDateStr", this.sDateStr);
-		obj.put("eDateStr", this.eDateStr);
+		obj.put("sDateStr", this.startDateStr);
+		obj.put("eDateStr", this.endDateStr);
 		obj.put("meetingDurating", this.meetingDuration);
 		obj.put("name", this.scheduleName);
 		obj.put("days", daysJSON);
