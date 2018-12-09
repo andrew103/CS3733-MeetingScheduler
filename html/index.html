@@ -1,153 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
-<head runat="server">
-  <title>Team Cursa Meeting Scheduler/index</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
-  <link rel="stylesheet" href="modal.css">
+    <head runat="server">
+        <title>Team Cursa Meeting Scheduler/index</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+        <link rel="stylesheet" href="modal.css">
 
-</head>
-<body>
+    </head>
+    <body>
 
-<div class="jumbotron text-center" style="margin-bottom:0">
-  <h1>Meeting Scheduler</h1>
-</div>
-
-<div class="container">
-  <div class="row">
-    <div class="col-sm-4">
-      <h2>System Administrator</h2>
-      <h5>Input login info in the text box below:</h5>
-      <div class="form-group">
-        <label for="usr">Username:</label>
-        <input type="text" class="form-control" id="usr">
-      </div>
-      <div class="form-group">
-        <label for="pwd">Password:</label>
-        <input type="password" class="form-control" id="pwd">
-      </div>
-      <button type="button" class="btn btn-primary">Login</button>
-      <hr class="hidden-sm hidden-md hidden-lg">
-    </div>
-    <div class="col-sm-4">
-    <h2>Organizer</h2>
-      <h5>Input schedule code below to access existing schedule:</h5>
-      <div class="form-group">
-        <label for="pwd">Schedule Code:</label>
-        <input type="password" class="form-control" id="pwd">
-      </div>
-      <button type="button" class="btn btn-info">Access Schedule</button>
-
-      <h5>Click the botton below to create new schedule</h5>
-      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modelCreate">Create New Schedule</button>
-
-      <div id="modelCreate" class="modal fade" role="dialog" >
-        <div class="modal-dialog">
-          <div class="model-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">Create New Schedule</h4>
-            </div>
-            <div class="modal-body">
-              <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" class="form-control" id="name">
-              </div>
-              <div class="form-group dropdown">
-                <label for="pwd">Meeting Duration (minutes):</label>
-                <select class="form-control" id="duration">
-                  <option>15</option>
-                  <option>20</option>
-                  <option>30</option>
-                  <option>60</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="pwd">Start Date:</label>
-                <input type="date" class="form-control" id="sd">
-              </div>
-              <div class="form-group">
-                <label for="pwd">End Date:</label>
-                <input type="date" class="form-control" id="ed">
-              </div>
-              <div class="form-group">
-                <label for="pwd">Start time:</label>
-                <select id="st" ></select>
-                <!-- <input type="number" class="form-control" placeholder="1000" min="0800" max="2000" id="st"> -->
-              </div>
-              <div class="form-group">
-                <label for="pwd">End time:</label>
-                <select id="et" ></select>
-                <!-- <input type="number" class="form-control" placeholder="1600" min="0800" max="2000" id="et"> -->
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-success" onclick="createSchedule()"><span class="glyphicon glyphicon-check"></span> Create</button>
-              <button type="submit" class="btn btn-danger pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
-            </div>
-          </div>
+        <div class="jumbotron text-center" style="margin-bottom:0">
+            <h1>Meeting Scheduler</h1>
         </div>
-      </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <h2>System Administrator</h2>
+                    <h5>Input login info in the text box below:</h5>
+                    <div class="form-group">
+                        <label for="usr">Username:</label>
+                        <input type="text" class="form-control" id="usr">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Password:</label>
+                        <input type="password" class="form-control" id="pwd">
+                    </div>
+                    <button type="button" class="btn btn-primary">Login</button>
+                    <hr class="hidden-sm hidden-md hidden-lg">
+                </div>
+                <div class="col-sm-4">
+                    <h2>Organizer</h2>
+                    <h5>Input schedule code below to access existing schedule:</h5>
+                    <div class="form-group">
+                        <label for="pwd">Schedule Code:</label>
+                        <input type="password" class="form-control" id="organizerScheduleCode">
+                    </div>
+                    <button type="button" onclick="organizerLoad()" class="btn btn-info">Access Schedule</button>
+
+                    <h5>Click the botton below to create new schedule</h5>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modelCreate">Create New Schedule</button>
+
+                    <div id="modelCreate" class="modal fade" role="dialog" >
+                        <div class="modal-dialog">
+                            <div class="model-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Create New Schedule</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="name">Name:</label>
+                                        <input type="text" class="form-control" id="name">
+                                    </div>
+                                    <div class="form-group dropdown">
+                                        <label for="pwd">Meeting Duration (minutes):</label>
+                                        <select class="form-control" id="duration">
+                                            <option>15</option>
+                                            <option>20</option>
+                                            <option>30</option>
+                                            <option>60</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pwd">Start Date:</label>
+                                        <input type="date" class="form-control" id="sd">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pwd">End Date:</label>
+                                        <input type="date" class="form-control" id="ed">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pwd">Start time:</label>
+                                        <select id="st" ></select>
+                                        <!-- <input type="number" class="form-control" placeholder="1000" min="0800" max="2000" id="st"> -->
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pwd">End time:</label>
+                                        <select id="et" ></select>
+                                        <!-- <input type="number" class="form-control" placeholder="1600" min="0800" max="2000" id="et"> -->
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-success" onclick="createSchedule()"><span class="glyphicon glyphicon-check"></span> Create</button>
+                                    <button type="submit" class="btn btn-danger pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
 
-    </div>
-    <div class="col-sm-4">
-    <h2>Participant</h2>
-      <h5>Input schedule code to access existing schedule below:</h5>
-      <div class="form-group">
-        <label for="pwd">Schedule Code:</label>
-        <input type="password" class="form-control" id="pwd">
-      </div>
-      <button type="button" class="btn btn-info">Access Schedule</button>
-    </div>
-  </div>
-</div>
+                </div>
+                <div class="col-sm-4">
+                    <h2>Participant</h2>
+                    <h5>Input schedule code to access existing schedule below:</h5>
+                    <div class="form-group">
+                        <label for="pwd">Schedule Code:</label>
+                        <input type="password" class="form-control" id="pwd">
+                    </div>
+                    <button type="button" class="btn btn-info">Access Schedule</button>
+                </div>
+            </div>
+        </div>
 
-</body>
-<script>
-    function populate(selector) {
-        var select = $(selector);
-        var hours, minutes, ampm;
-        for (var i = 0; i <= 1450; i += 60) {
-            hours = Math.floor(i / 60);
-            if (hours < 10) {
-                hours = '0' + hours; // adding leading zero to hours portion
+    </body>
+
+    <script>
+        function organizerLoad(){
+            code = document.getElementById("organizerScheduleCode").value;
+            if(code){
+                window.location.pathname = 'scheduler-storage/html/organizerPage.html\?id=' + code;
             }
-            //add the value to dropdownlist
-            select.append($('<option></option>')
-                .attr('value', hours)
-                .text(hours + "00"));
-        }
-    }
-    //Calling the function on pageload
-    window.onload = function (e) {
-      populate('#et');
-      populate('#st');
-    }
-</script>
+            else{
+                alert("Schedule Code cannot be blank")
+            }
 
-<script>
-    function createSchedule(){
-        var Name = document.getElementById("name").value;
-        var Duration = document.getElementById("duration").value;
-        var StartTime = document.getElementById("st").value;
-        var EndTime = document.getElementById("et").value;
-        var StartDate = document.getElementById("sd").value;
-        var EndDate = document.getElementById("ed").value;
+        }
+    </script>
 
-        if(Name && Duration && StartTime && EndTime && StartDate && EndDate)
-        {
-            id = "test"
-            alert("created schedule, now redirecting")
-            // TODO: add redirection with database stuff, also display serect code
+
+
+    <script>
+        function populate(selector) {
+            var select = $(selector);
+            var hours, minutes, ampm;
+            for (var i = 0; i <= 1450; i += 60) {
+                hours = Math.floor(i / 60);
+                if (hours < 10) {
+                    hours = '0' + hours; // adding leading zero to hours portion
+                }
+                //add the value to dropdownlist
+                select.append($('<option></option>')
+                    .attr('value', hours)
+                    .text(hours + "00"));
+            }
         }
-        else{
-            alert("Fields cannot be blank")
+//Calling the function on pageload
+window.onload = function (e) {
+    populate('#et');
+    populate('#st');
+}
+    </script>
+
+    <script>
+        function createSchedule(){
+            var Name = document.getElementById("name").value;
+            var Duration = document.getElementById("duration").value;
+            var StartTime = document.getElementById("st").value;
+            var EndTime = document.getElementById("et").value;
+            var StartDate = document.getElementById("sd").value;
+            var EndDate = document.getElementById("ed").value;
+
+            if(Name && Duration && StartTime && EndTime && StartDate && EndDate)
+            {
+                id = "test"
+                alert("created schedule, now redirecting")
+                // TODO: add redirection with database stuff, also display serect code
+            }
+            else{
+                alert("Fields cannot be blank")
+            }
         }
-    }
-</script>
+    </script>
 </html>
