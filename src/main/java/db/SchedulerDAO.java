@@ -116,6 +116,7 @@ public class SchedulerDAO {
         									 resultSet1.getString("organizerCode"),
         									 resultSet1.getString("shareCode"));
         	
+        	schedule.makeDateStr();
         	query = "SELECT * FROM Day WHERE scheduleID = ?;";
         	ps = conn.prepareStatement(query);
         	ps.setInt(1, resultSet1.getInt("scheduleID"));
@@ -124,6 +125,7 @@ public class SchedulerDAO {
         		GregorianCalendar date = new GregorianCalendar();
         		date.setTime(resultSet2.getDate("dayDate"));
         		Day day = new Day(convertTimeToMilitary(resultSet2.getLong("dayStartTime")), convertTimeToMilitary(resultSet2.getLong("dayEndTime")), date);
+        		day.makeDateStr();
         		//Day day = new Day(resultSet2.getInt("dayStartTime"), resultSet2.getInt("dayEndTime"), new GregorianCalendar());//Calendar Placeholder - Fix later
         		query = "SELECT * FROM Timeslot WHERE dayDate = ?;";
         		ps = conn.prepareStatement(query);

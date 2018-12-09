@@ -13,6 +13,8 @@ public class Schedule
 	ArrayList<Day> days;
 	GregorianCalendar startDate;
 	GregorianCalendar endDate;
+	String sDateStr;
+	String eDateStr;
 	int startTime;
 	int endTime;
 	int meetingDuration;
@@ -60,6 +62,16 @@ public class Schedule
 		}
 
 		return builder.toString();
+	}
+	
+	public void makeDateStr() {
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+
+		fmt.setCalendar(this.startDate);
+	    this.sDateStr = fmt.format(this.startDate.getTime());
+
+		fmt.setCalendar(this.endDate);
+	    this.eDateStr = fmt.format(this.endDate.getTime());
 	}
 	
 	public void addDay(Day day) {
@@ -112,6 +124,8 @@ public class Schedule
      
 		obj.put("startDate", fmt.format(this.startDate.getTime()));
 		obj.put("endDate", fmt.format(this.endDate.getTime()));
+		obj.put("sDateStr", this.sDateStr);
+		obj.put("eDateStr", this.eDateStr);
 		obj.put("meetingDurating", this.meetingDuration);
 		obj.put("name", this.scheduleName);
 		obj.put("days", daysJSON);
