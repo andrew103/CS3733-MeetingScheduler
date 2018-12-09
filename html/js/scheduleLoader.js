@@ -13,7 +13,7 @@ schedule = {
         {
           "isClosed": true,
           "startTime": 1200,
-          "participantInfo":""
+          "participantInfo":"You got a boyfriend?"
         },
         {
           "isClosed": false,
@@ -65,7 +65,7 @@ schedule = {
       "dayEnd": 1300,
       "timeslots": [
         {
-          "isClosed": true,
+          "isClosed": false,
           "startTime": 1200,
           "participantInfo":""
         },
@@ -77,7 +77,7 @@ schedule = {
         {
           "isClosed": true,
           "startTime": 1230,
-          "participantInfo":"You got a boyfriend?"
+          "participantInfo":""
         },
         {
           "isClosed": false,
@@ -92,22 +92,22 @@ schedule = {
       "dayEnd": 1300,
       "timeslots": [
         {
-          "isClosed": true,
+          "isClosed": false,
           "startTime": 1200,
           "participantInfo":""
         },
         {
-          "isClosed": false,
+          "isClosed": true,
           "startTime": 1215,
           "participantInfo":""
         },
         {
-          "isClosed": true,
+          "isClosed": false,
           "startTime": 1230,
-          "participantInfo":"I bet he doesnt kiss yah MWAH"
+          "participantInfo":""
         },
         {
-          "isClosed": false,
+          "isClosed": true,
           "startTime": 1245,
           "participantInfo":""
         }
@@ -134,7 +134,7 @@ schedule = {
           "participantInfo":"He gonna find another girl and he wont miss YAH"
         },
         {
-          "isClosed": false,
+          "isClosed": true,
           "startTime": 1245,
           "participantInfo":""
         }
@@ -300,7 +300,7 @@ function updateSchedule(startDate, organizerView){
         for(y = 0; y < days.length; y++){
 
             var difference = Math.ceil((new Date(days[y]["date"]) - prevSunday)/(1000*60*60*24));
-            console.log(difference)
+            //console.log(difference)
             if(difference == x){
                 index = y
                 found = true;

@@ -22,8 +22,85 @@ function processCell(cellText, cellIndex, rowIndex){//organizer version
 }
 
 function searchOpenTS(){
-   alert("need to add functionality");
+  var current=Array.from(schedule["days"]);
+  // current = current.concat(schedule["days"]); //keeps track of current list of time slots after filter
+  console.log(schedule["days"]);
+
+  dayOfWeek = document.getElementById("dayOfWeek").value;
+  console.log(current);
+
+  if (dayOfWeek != null && dayOfWeek != ""){
+    //if dayOfWeek input is not empty, do first search
+    index = 0; //index tracks "current" list, which shortens when day gets removed
+    for(i=0;i<schedule["days"].length;i++){//i tracks a static list "days"
+      if (i%5 != dayOfWeek){//assume first day starts monday,
+        current.splice(index,1); //remove unmatched TS from current list
+      }
+      else index ++;
+    }
+  }
+  year = document.getElementById("year").value;
+  if (year != null && year != ""){
+    //if year input is not empty, do second search
+    for(i=0;i<current.length;i++){
+      if (current[i]["date"].substring(0,4) != year){
+        current.splice(i,1); //remove unmatched TS from current list
+        i --; //list shortens by 1
+      }
+    }
+  }
+  month = document.getElementById("month").value;
+  if (month != null && month != ""){
+    //if month input is not empty, do third search
+    for(i=0;i<current.length;i++){
+      if (current[i]["date"].substring(5,7) != month){
+        current.splice(i,1); //remove unmatched TS from current list
+        i --; //list shortens by 1
+      }
+    }
+  }
+  dayOfMonth = document.getElementById("dayOfMonth").value;
+  if (dayOfMonth != null && dayOfMonth != ""){
+    //if dayOfMonth input is not empty, do forth search
+    for(i=0;i<current.length;i++){
+      if (current[i]["date"].substring(8) != dayOfMonth){
+        current.splice(i,1); //remove unmatched TS from current list
+        i --; //list shortens by 1
+      }
+    }
+  }
+  console.log(current);
+  timeSlot = document.getElementById("timeSlot").value;
+  if (timeSlot != null && timeSlot != ""){
+    //if timeSlot input is not empty, do last search
+    for(i=0;i<current.length;i++){
+      for(j=0;j<current[i]["timeslots"].length;j++){
+        if (current[i]["timeslots"][j]["startTime"] != timeSlot || current[i]["timeslots"][j]["isClosed"] == true){
+          current[i]["timeslots"].splice(j,1); //remove unmatched TS from current list
+          j --; //list shortens by 1
+        }
+      }
+      if (current[i]["timeslots"].length ==0){
+        current.splice(i,1); //if all timeslots in a day are removed, delete day
+        i --;
+      }
+    }
+  }
+  console.log(current);
+
+  var returnString=[];
+  for(i=0;i<current.length;i++){
+    for(j=0;j<current[i]["timeslots"].length;j++){
+      returnString.push(current[i]["date"]+" at "+current[i]["timeslots"][j]["startTime"]);
+    }
+  }
+  if (returnString.length == 0){
+    alert("no time slot matches search criteria")
+  }
+  else alert(returnString);
+  returnString = [];
 }
+
 
 function populateTS(selector) {
     var select = $(selector);
