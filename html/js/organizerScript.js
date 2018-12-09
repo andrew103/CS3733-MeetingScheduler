@@ -21,3 +21,14 @@ function processCell(cellText, cellIndex, rowIndex){//organizer version
       $("#cancelMeeting").modal();
   }
 }
+
+function deleteSchedule(){
+  var msg = prompt("Confirm deleting the entire schedule by typing 'YES'", "Are you sure about that?");
+  var txt;
+  if (msg == "YES" || msg == "yes" || msg == "Yes") {
+    txt = "The entire schedule is cancled";
+  } else {
+    txt = "Input not recognized, failed to cancle schedule";
+  }
+  alert(txt);
+}

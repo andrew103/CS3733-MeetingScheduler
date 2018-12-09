@@ -1,6 +1,3 @@
-
-
-
 //Fetches the url paramaters and sets them to the variable
 var urlParams;
 (window.onpopstate = function () {
@@ -211,7 +208,7 @@ function showDayTime(cellIndex, rowIndex){
     }
     days = schedule["days"];
     for (i = 0; i < days.length; i++){
-        if (days[i]["date"] == date){
+        if (days[i]["dateStr"] == date){
             time = days[i]["timeSlots"][rowIndex]["startTime"];
             break;
         }
