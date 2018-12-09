@@ -21,14 +21,21 @@ function processCell(cellText, cellIndex, rowIndex){//organizer version
   }
 }
 
-function searchOpenTS(){
-  var current=Array.from(schedule["days"]);
-  // current = current.concat(schedule["days"]); //keeps track of current list of time slots after filter
-  console.log(schedule["days"]);
+function searchOpenTS(searchReturn){
+  prevSearch = document.getElementById("searchReturn").getElementsByTagName("h5");
+  btn = document.getElementById("searchReturn").getElementsByTagName("button")
+  br = document.getElementById("searchReturn").getElementsByTagName("br")
+  while (prevSearch.length){
+    document.getElementById("searchReturn").removeChild(prevSearch[0]);
+    document.getElementById("searchReturn").removeChild(btn[0]);
+    document.getElementById("searchReturn").removeChild(br[0]);
+  }
+
+  var current=[];
+  var deepCopy  = jQuery.extend(true,{},schedule)
+  current = current.concat(deepCopy["days"]); //keeps track of current list of time slots after filter
 
   dayOfWeek = document.getElementById("dayOfWeek").value;
-  console.log(current);
-
   if (dayOfWeek != null && dayOfWeek != ""){
     //if dayOfWeek input is not empty, do first search
     index = 0; //index tracks "current" list, which shortens when day gets removed
@@ -69,7 +76,6 @@ function searchOpenTS(){
       }
     }
   }
-  console.log(current);
   timeSlot = document.getElementById("timeSlot").value;
   if (timeSlot != null && timeSlot != ""){
     //if timeSlot input is not empty, do last search
@@ -88,17 +94,25 @@ function searchOpenTS(){
   }
   console.log(current);
 
-  var returnString=[];
+  var sr = $(searchReturn);
+  var txt;
   for(i=0;i<current.length;i++){
     for(j=0;j<current[i]["timeslots"].length;j++){
-      returnString.push(current[i]["date"]+" at "+current[i]["timeslots"][j]["startTime"]);
+      txt = (current[i]["date"]+" at "+current[i]["timeslots"][j]["startTime"]);
+      //sr.append($('<br>'));
+      sr.append($('<h5></h5>').text(txt));
+      sr.append($('<button></button>')
+                .attr('class',"btn btn-success")
+                .text("schedule"));
+      sr.append($('<br>'));
     }
   }
-  if (returnString.length == 0){
-    alert("no time slot matches search criteria")
+  if (current.length == 0){
+    alert("no time slot matches search criteria");
   }
-  else alert(returnString);
-  returnString = [];
+  else {
+    $("#returnTimeSlot").modal();
+  }
 }
 
 
@@ -109,8 +123,6 @@ function populateTS(selector) {
     for (var i = 0; i < timeslots.length; i ++) {
         time = timeslots[i]["startTime"];
         //add the value to dropdownlist
-        select.append($('<option></option>')
-            .attr('value', time)
-            .text(time));
+        select.append($('<option></option>').attr('value', time).text(time));
     }
 }
