@@ -1,6 +1,3 @@
-
-
-
 //Fetches the url paramaters and sets them to the variable
 var urlParams;
 (window.onpopstate = function () {
