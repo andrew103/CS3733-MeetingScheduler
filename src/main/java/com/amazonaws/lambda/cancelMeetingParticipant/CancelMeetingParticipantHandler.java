@@ -1,4 +1,4 @@
-package com.amazonaws.lambda.getSchedule;
+package com.amazonaws.lambda.cancelMeetingParticipant;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.GregorianCalendar;
 import java.util.Scanner;
 
 import org.json.simple.JSONObject;
@@ -30,7 +31,7 @@ import db.SchedulerDAO;
  * Found gson JAR file from
  * https://repo1.maven.org/maven2/com/google/code/gson/gson/2.6.2/gson-2.6.2.jar
  */
-public class OrganizerGetScheduleHandler implements RequestStreamHandler {
+public class CancelMeetingParticipantHandler implements RequestStreamHandler {
 
 	public LambdaLogger logger = null;
 
@@ -40,7 +41,17 @@ public class OrganizerGetScheduleHandler implements RequestStreamHandler {
 
 	boolean useRDS = true;
 
-
+	boolean cancelMeetingParticipant(String scheduleCode, String meetingCode) throws Exception {
+		SchedulerDAO dao = new SchedulerDAO();	
+		return dao.cancelMeetingParticipant(scheduleCode, meetingCode);	
+	}
+	
+	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
+		int year = Integer.parseInt(date.substring(0, 4));
+		int month = Integer.parseInt(date.substring(5, 7));
+		int day = Integer.parseInt(date.substring(8));
+		return new GregorianCalendar(year, month-1, day);
+	}
 	
 	@Override
 	public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
@@ -55,7 +66,7 @@ public class OrganizerGetScheduleHandler implements RequestStreamHandler {
 		JSONObject responseJson = new JSONObject();
 		responseJson.put("headers", headerJson);
 
-		GetScheduleResponse response = null;
+		CancelMeetingParticipantResponse response = null;
 		
 		// extract body from incoming HTTP POST request. If any error, then return 422 error
 		String body;
@@ -71,7 +82,7 @@ public class OrganizerGetScheduleHandler implements RequestStreamHandler {
 			String method = (String) event.get("httpMethod");
 			if (method != null && method.equalsIgnoreCase("OPTIONS")) {
 				logger.log("Options request");
-				response = new GetScheduleResponse("Requested options", 200);  // OPTIONS needs a 200 response
+				response = new CancelMeetingParticipantResponse("Option", 200);  // OPTIONS needs a 200 response
 		        responseJson.put("body", new Gson().toJson(response));
 		        processed = true;
 		        body = null;
@@ -83,7 +94,7 @@ public class OrganizerGetScheduleHandler implements RequestStreamHandler {
 			}
 		} catch (ParseException pe) {
 			logger.log(pe.toString());
-			response = new GetScheduleResponse("Unable to parse input",400);  // unable to process input
+			response = new CancelMeetingParticipantResponse("Failure", 400);  // unable to process input
 	        responseJson.put("body", new Gson().toJson(response));
 	        processed = true;
 	        body = null;
@@ -91,45 +102,36 @@ public class OrganizerGetScheduleHandler implements RequestStreamHandler {
 
 		if (!processed) 
 		{
-			GetScheduleRequest req = new Gson().fromJson(body, GetScheduleRequest.class);
-			GetScheduleResponse resp;
-			logger.log("***"+req.toString()+"***");
-
-			// compute proper response
-			try{
-				SchedulerDAO dao = new SchedulerDAO();	
-				try {
-					if (req.secretCode.length() > 0 && req.shareCode.length() > 0) {
-						resp = new GetScheduleResponse("Cannot pass in both a secret code and a share code", 400);
-					}
-					else if (req.secretCode.length() == 0 && req.shareCode.length() == 0) {
-						resp = new GetScheduleResponse("Must pass in a code", 400);
-					}
-					else {
-						Schedule s;
-						if (req.secretCode.length() > 0) {
-							s = dao.organizerGetSchedule(req.secretCode);
-						}
-						else {
-							s =  dao.getSchedule(req.shareCode);							
-						}
-						logger.log(" ***we found a schedule*** ");
-						resp = new GetScheduleResponse(s);
-						logger.log("\nname:" + s.getScheduleName());						
-					}
-				}
-				catch(Exception e)
-				{
-					logger.log("Could not find a schedule");
-					resp = new GetScheduleResponse("The schedule was not found", 404);
-				}
-			}
-			catch(Exception e){
-				logger.log("DAO could not connect to database" + e.getMessage());
-				resp = new GetScheduleResponse(req.shareCode, 500);					
-			}	
+			CancelMeetingParticipantRequest req = new Gson().fromJson(body, CancelMeetingParticipantRequest.class);
+			logger.log(req.toString());
 			
-			responseJson.put("body", new Gson().toJson(resp));
+			logger.log("***"+req.toString()+"***");
+			// compute proper response
+			CancelMeetingParticipantResponse resp;
+			logger.log(" ***Request made succ*** ");
+			try {
+				logger.log(" **** In the Try loop *** ");
+				logger.log(req.scheduleCode);
+				boolean del = cancelMeetingParticipant(req.scheduleCode, req.meetingCode);
+				if (del) {
+					logger.log(" *** It definitely worked right? probably. *** ");
+					resp = new CancelMeetingParticipantResponse(req.scheduleCode, req.meetingCode, 200);					
+				}
+				else {
+					logger.log(" *** fuck it failed *** ");
+					resp = new CancelMeetingParticipantResponse("The meeting could not be deleted", 400);					
+					}
+				logger.log("WTF");
+				} 
+			catch (Exception e) 
+			{
+				logger.log(" ***EXCEPTION*** " + e);
+				resp = new CancelMeetingParticipantResponse("Something went wrong in the database", 400);					
+			}
+	        
+			logger.log(" ***something did happen*** ");
+			logger.log(resp.toString());
+			responseJson.put("body", new Gson().toJson(resp));  
 		}
 		
         logger.log("end result:" + responseJson.toJSONString());
