@@ -26,7 +26,7 @@ function loadSchedule(init){
     postReq["secretCode"] = urlParams["secretCode"]
     console.log("JS of req:" + JSON.stringify(postReq))
     var xhr = new XMLHttpRequest();
-    xhr.open("POST",organizer_getSchedule2,true);
+    xhr.open("POST",organizer_getSchedule,true);
 
     console.log("PostReq:" + JSON.stringify(postReq));
 
