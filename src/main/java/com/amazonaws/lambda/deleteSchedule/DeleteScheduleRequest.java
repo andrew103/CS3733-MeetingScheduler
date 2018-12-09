@@ -1,4 +1,4 @@
-package com.amazonaws.lambda.deleteScheduleHandler;
+package com.amazonaws.lambda.deleteSchedule;
 
 import java.util.GregorianCalendar;
 
