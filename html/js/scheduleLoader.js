@@ -20,8 +20,10 @@ var urlParams;
 var schedule;
 
 var postReq = {}
-function loadSchedule(){
-    postReq["shareCode"] = urlParams["id"]
+function loadSchedule(init){
+
+    postReq["shareCode"] = ""
+    postReq["secretCode"] = urlParams["secretCode"]
     console.log("JS of req:" + JSON.stringify(postReq))
     var xhr = new XMLHttpRequest();
     xhr.open("POST",organizer_getSchedule2,true);
@@ -31,73 +33,124 @@ function loadSchedule(){
     xhr.send(JSON.stringify(postReq));
 
     xhr.onloadend=function() {
-        console.log(xhr);
+        //console.log(xhr);
+
+        var found;
         console.log(xhr.request);
         if (xhr.readyState == XMLHttpRequest.DONE) {
             console.log ("XHR:" + xhr.responseText);
-            ret = JSON.parse(result)
-            console.log("ret")
-            if(status == 200){
-                schedule = ret["schedule"]
-                return true;
+            ret = JSON.parse(xhr.responseText)
+            console.log(ret)
+            if(ret["httpCode"] == 200){
+                schedule = ret["schedule"];
+                console.log(schedule);
+                found = true;
             }
             else {
                 console.log("could not retrieve schedule, got status" + status)
-                return false;
+                found = false;
             }
         } else {
             console.log("Could not get req")
-            return false;
+            found = false;
         }
+        initSchedule(found);
     }
 }
+
+
+loadSchedule(true);
+function convertDate(date) {
+    return [ date["year"],
+        ("0" + (date["month"]+1)).slice(-2),
+        ("0" + date["dayOfMonth"]).slice(-2) ].join("-");
+}
+
 
 //**INITIALIZATION CODE**
+function init(foundSchedule){
+    if(foundSchedule){
 
-foundSchedule = loadSchedule();
-if(foundSchedule){
-    console.log(foundSchedule)
+        document.getElementById("name").innerText = schedule["name"];
+        document.getElementById("weekDate").value = convertDate(schedule["startDate"]);
+        //Populating an empty schedule so the updateSchedule function can fill it in
 
-    document.getElementById("name").innerText = schedule["name"];
+        var scheduleTable = document.getElementById("scheduleTable").getElementsByTagName('tbody')[0];
 
-    document.getElementById("weekDate").value = schedule["startDate"];
-    //Populating an empty schedule so the updateSchedule function can fill it in
+        var firstDay = schedule["days"][0]
+        var duration = schedule["meetingDuration"];
+        for(i = 0; i < firstDay["timeSlots"].length; i++)
+        {
+            var row = scheduleTable.insertRow(i);
+            timeCell = row.insertCell(0)
 
-    var scheduleTable = document.getElementById("scheduleTable").getElementsByTagName('tbody')[0];
+            timeCell.innerHTML = firstDay["timeSlots"][i]["startTime"]
 
-    var firstDay = schedule["days"][0]
-    var duration = schedule["meetingDuration"];
-    for(i = 0; i < firstDay["timeslots"].length; i++)
-    {
-        var row = scheduleTable.insertRow(i);
-        timeCell = row.insertCell(0)
-
-        timeCell.innerHTML = firstDay["timeslots"][i]["startTime"]
-
-        for(j = 0; j < 5; j++){
-            row.insertCell(j+1)
+            for(j = 0; j < 5; j++){
+                row.insertCell(j+1)
+            }
         }
+
+        console.log(scheduleTable)
+
+        updateSchedule(schedule["startDate"], urlParams["view"])
     }
+    else{
 
-    console.log(scheduleTable)
+        alert("Invalid id")
 
-    updateSchedule(schedule["startDate"], urlParams["view"])
+        //TODO, make this the pre-signed url
+        //window.location.href = "index.html";
+    }
 }
-else{
-    //TODO: redirect to homepage and delete this alert
-    alert("Invalid id")
 
-    //TODO, make this the pre-signed url
-    //window.location.href = "index.html";
+
+//**INITIALIZATION CODE**
+function initSchedule(foundSchedule){
+    if(foundSchedule){
+
+        document.getElementById("name").innerText = schedule["scheduleName"];
+
+        console.log(schedule["startDate"])
+        document.getElementById("weekDate").value = convertDate(schedule["startDate"]);
+        //Populating an empty schedule so the updateSchedule function can fill it in
+
+        var scheduleTable = document.getElementById("scheduleTable").getElementsByTagName('tbody')[0];
+
+        var firstDay = schedule["days"][0]
+        var duration = schedule["meetingDuration"];
+        for(i = 0; i < firstDay["timeSlots"].length; i++)
+        {
+            var row = scheduleTable.insertRow(i);
+            timeCell = row.insertCell(0)
+
+            timeCell.innerHTML = firstDay["timeSlots"][i]["startTime"]
+
+            for(j = 0; j < 5; j++){
+                row.insertCell(j+1)
+            }
+        }
+
+        console.log(scheduleTable)
+
+        updateSchedule(schedule["startDate"], urlParams["view"])
+    }
+    else{
+        //TODO: redirect to homepage and delete this alert
+        alert("Invalid id")
+
+        //TODO, make this the pre-signed url
+        //window.location.href = "index.html";
+    }
 }
 
 function cellClick(x) {
-  td = $(x.target).closest('td');
-  cellText = td.text();
-  cellIndex = td.index();
-  rowIndex = td.parent().index();
-  console.log("clicking row: "+rowIndex+" cell: "+cellIndex+" text: "+cellText);
-  processCell(cellText, cellIndex, rowIndex);
+    td = $(x.target).closest('td');
+    cellText = td.text();
+    cellIndex = td.index();
+    rowIndex = td.parent().index();
+    console.log("clicking row: "+rowIndex+" cell: "+cellIndex+" text: "+cellText);
+    processCell(cellText, cellIndex, rowIndex);
 }
 
 function changeDate(value){
@@ -164,7 +217,7 @@ function showDayTime(cellIndex, rowIndex){
     days = schedule["days"];
     for (i = 0; i < days.length; i++){
         if (days[i]["date"] == date){
-            time = days[i]["timeslots"][rowIndex]["startTime"];
+            time = days[i]["timeSlots"][rowIndex]["startTime"];
             break;
         }
     }
@@ -174,8 +227,8 @@ function showDayTime(cellIndex, rowIndex){
 //takes in a start date, finds the appropriate sunday and populates the schedule
 function updateSchedule(startDate, organizerView){
 
+    startDate = convertDate(startDate);
     startDate = new Date(startDate);
-
     console.log(startDate);
 
     var days = schedule["days"]
@@ -191,7 +244,7 @@ function updateSchedule(startDate, organizerView){
         var index;
         for(y = 0; y < days.length; y++){
 
-            var difference = Math.ceil((new Date(days[y]["date"]) - prevSunday)/(1000*60*60*24));
+            var difference = Math.ceil((new Date(convertDate(days[y]["date"])) - prevSunday)/(1000*60*60*24));
             console.log(difference)
             if(difference == x){
                 index = y
@@ -203,12 +256,12 @@ function updateSchedule(startDate, organizerView){
         //scheduleTable.rows[y].cells[x].innerHTML = days[y]["date"];
         if(found){
 
-            var timeslots = days[index]["timeslots"]
-            for(y = 0; y < timeslots.length; y++){
-                if(timeslots[y]["isClosed"]){
-                    if(timeslots[y]["participantInfo"]){
+            var timeSlots = days[index]["timeSlots"]
+            for(y = 0; y < timeSlots.length; y++){
+                if(timeSlots[y]["isClosed"]){
+                    if(timeSlots[y]["participantInfo"]){
                         if (organizerView == 1){
-                            scheduleTable.rows[y].cells[x].innerHTML = 'Booked by:' + timeslots[y]["participantInfo"];
+                            scheduleTable.rows[y].cells[x].innerHTML = 'Booked by:' + timeSlots[y]["participantInfo"];
                         }
                         else {
                             scheduleTable.rows[y].cells[x].innerHTML = 'Taken';
@@ -230,7 +283,7 @@ function updateSchedule(startDate, organizerView){
 
         }
         else{
-            for(y = 0; y < days[0]["timeslots"].length; y++){
+            for(y = 0; y < days[0]["timeSlots"].length; y++){
                 scheduleTable.rows[y].cells[x].innerHTML = 'Not on schedule';
                 scheduleTable.rows[y].cells[x].style.backgroundColor = "gray";
             }
