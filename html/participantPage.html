@@ -7,12 +7,8 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <style>
-  .emptyspace{
-      height: 20px;
-      background: #ffffff;
-  }
-  </style>
+  <link rel="stylesheet" href="modal.css">
+
 </head>
 <body>
 
@@ -61,6 +57,62 @@
     </div>
 </div>
 
+<!-- Schedule Meeting Modal -->
+<div id="scheduleMeeting" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Schedule meeting on an open timeslot</h4>
+      </div>
+      <div class="modal-body">
+        <p id="scheduleMeetingText"></p>
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="name">Name: </label>
+            <div class="col-sm-10">
+              <input class="form-control" type="text" id="participantName" placeholder="YOUR NAME"></input>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success pull-left">Schedule Meeting</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- cancel Meeting Modal -->
+<div id="cancelMeeting" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Time slot with existing meeting</h4>
+      </div>
+      <div class="modal-body">
+        <p id="cancelMeetingText"></p>
+        <p>If this meeting is scheduled by you, you can input the secret code below to cancel it</p>
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-sm-4" for="meetingCode">Meeting Secret Code: </label>
+            <div class="col-sm-8">
+              <input class="form-control" type="text" id="participantName" placeholder="SECRET CODE"></input>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-left">Cancel Meeting</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 <script src="js/scheduleLoader.js"></script>
+<script src="js/participantScript.js"></script>
 </html>

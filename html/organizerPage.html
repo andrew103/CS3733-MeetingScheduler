@@ -7,28 +7,11 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <style>
-  .emptyspace{
-      height: 20px;
-      background: #ffffff;
-  }
-  .modal-header, h4, .close {
-      background-color: #696969;
-      color:white !important;
-      text-align: center;
-      font-size: 30px;
-  }
-  .modal-body {
-      background-color: #ffffff
-  }
-  .modal-footer {
-      background-color: #f9f9f9;
-  }
-  </style>
+  <link rel="stylesheet" href="modal.css">
 </head>
 <body>
 
-  <div class="jumbotron text-center" style="margin-bottom:0">
+  <div class="jumbotron text-center" style="margin-bottom:0" >
     <h1>Team Cursa Meeting Scheduler</h1>
     <p>This is the Organizer view</p>
   </div>
@@ -147,41 +130,7 @@
 </div>
 
 </body>
+<script src="js/api.js"></script>
 <script src="js/scheduleLoader.js"></script>
-<script type="text/javascript">
-  var table = $('#scheduleTable');
-  table.on("click", "td", cellClick); //attaches the handler on the whole table, but filter the events by the "td" selector
-  var dt = table.dataTable;
-  function cellClick(x) {
-    td = $(x.target).closest('td');
-    cellText = td.text();
-    cellIndex = td.index();
-    rowIndex = td.parent().index();
-    console.log("clicking row: "+rowIndex+" cell: "+cellIndex+" text: "+cellText);
-    processCell(cellText, cellIndex, rowIndex);
-  }
-
-  function processCell(cellText, cellIndex, rowIndex){
-    switch(cellText){
-      case "Open":
-        stringDisp = "Time slot open on "+showDayTime(cellIndex, rowIndex);
-        document.getElementById("closeSlotText").innerHTML=stringDisp;
-        $("#closeSlot").modal();
-        break;
-      case "Closed":
-        stringDisp = "Time slot closed on "+showDayTime(cellIndex, rowIndex);
-        document.getElementById("openSlotText").innerHTML=stringDisp;
-        $("#openSlot").modal();
-        break;
-      case "Not on schedule":
-        break;
-      default: //there is a meeting scheduled
-        stringDisp = "Meeting scheduled on "+showDayTime(cellIndex, rowIndex)+". "+cellText;
-        document.getElementById("cancelMeetingText").innerHTML=stringDisp;
-        $("#cancelMeeting").modal();
-    }
-  }
-
-</script>
-
+<script src="js/organizerScript.js" type="text/javascript"></script>
 </html>
