@@ -1,147 +1,4 @@
 
-schedule = {
-  "startDate": "2017-04-17",
-  "endDate": "2017-04-21",
-  "meetingDuration": 15,
-  "name": "I wanna be tracer",
-  "days": [
-    {
-      "date":"2017-04-17",
-      "dayStart": 1200,
-      "dayEnd": 1300,
-      "timeslots": [
-        {
-          "isClosed": true,
-          "startTime": 1200,
-          "participantInfo":""
-        },
-        {
-          "isClosed": false,
-          "startTime": 1215,
-          "participantInfo":""
-        },
-        {
-          "isClosed": true,
-          "startTime": 1230,
-          "participantInfo":"Hit or miss"
-        },
-        {
-          "isClosed": false,
-          "startTime": 1245,
-          "participantInfo":""
-        }
-      ]
-    },
-    {
-      "date":"2017-04-18",
-      "dayStart": 1200,
-      "dayEnd": 1300,
-      "timeslots": [
-        {
-          "isClosed": true,
-          "startTime": 1200,
-          "participantInfo":""
-        },
-        {
-          "isClosed": false,
-          "startTime": 1215,
-          "participantInfo":""
-        },
-        {
-          "isClosed": true,
-          "startTime": 1230,
-          "participantInfo":"I guess they never hiss HUH!"
-        },
-        {
-          "isClosed": false,
-          "startTime": 1245,
-          "participantInfo":""
-        }
-      ]
-    },
-    {
-      "date":"2017-04-19",
-      "dayStart": 1200,
-      "dayEnd": 1300,
-      "timeslots": [
-        {
-          "isClosed": true,
-          "startTime": 1200,
-          "participantInfo":""
-        },
-        {
-          "isClosed": false,
-          "startTime": 1215,
-          "participantInfo":""
-        },
-        {
-          "isClosed": true,
-          "startTime": 1230,
-          "participantInfo":"You got a boyfriend?"
-        },
-        {
-          "isClosed": false,
-          "startTime": 1245,
-          "participantInfo":""
-        }
-      ]
-    },
-    {
-      "date":"2017-04-20",
-      "dayStart": 1200,
-      "dayEnd": 1300,
-      "timeslots": [
-        {
-          "isClosed": true,
-          "startTime": 1200,
-          "participantInfo":""
-        },
-        {
-          "isClosed": false,
-          "startTime": 1215,
-          "participantInfo":""
-        },
-        {
-          "isClosed": true,
-          "startTime": 1230,
-          "participantInfo":"I bet he doesnt kiss yah MWAH"
-        },
-        {
-          "isClosed": false,
-          "startTime": 1245,
-          "participantInfo":""
-        }
-      ]
-    },
-    {
-      "date":"2017-04-21",
-      "dayStart": 1200,
-      "dayEnd": 1300,
-      "timeslots": [
-        {
-          "isClosed": true,
-          "startTime": 1200,
-          "participantInfo":""
-        },
-        {
-          "isClosed": false,
-          "startTime": 1215,
-          "participantInfo":""
-        },
-        {
-          "isClosed": true,
-          "startTime": 1230,
-          "participantInfo":"He gonna find another girl and he wont miss YAH"
-        },
-        {
-          "isClosed": false,
-          "startTime": 1245,
-          "participantInfo":""
-        }
-      ]
-    }
-  ]
-}
 
 
 //Fetches the url paramaters and sets them to the variable
@@ -155,19 +12,54 @@ var urlParams;
 
     urlParams = {};
     while (match = search.exec(query))
-       urlParams[decode(match[1])] = decode(match[2]);
+        urlParams[decode(match[1])] = decode(match[2]);
 })();
 
 
 
-//**INITIALIZATION CODE**
-//TODO, add check for valid id
-if(urlParams["id"]){
+var schedule;
 
-    //TODO update schedule to be from id
-    console.log(document.getElementById("name"));
+var postReq = {}
+function loadSchedule(){
+    postReq["shareCode"] = urlParams["id"]
+    console.log("JS of req:" + JSON.stringify(postReq))
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST",organizer_getSchedule2,true);
+
+    console.log("PostReq:" + JSON.stringify(postReq));
+
+    xhr.send(JSON.stringify(postReq));
+
+    xhr.onloadend=function() {
+        console.log(xhr);
+        console.log(xhr.request);
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            console.log ("XHR:" + xhr.responseText);
+            ret = JSON.parse(result)
+            console.log("ret")
+            if(status == 200){
+                schedule = ret["schedule"]
+                return true;
+            }
+            else {
+                console.log("could not retrieve schedule, got status" + status)
+                return false;
+            }
+        } else {
+            console.log("Could not get req")
+            return false;
+        }
+    }
+}
+
+//**INITIALIZATION CODE**
+
+foundSchedule = loadSchedule();
+if(foundSchedule){
+    console.log(foundSchedule)
+
     document.getElementById("name").innerText = schedule["name"];
-    console.log(document.getElementById("weekDate"));
+
     document.getElementById("weekDate").value = schedule["startDate"];
     //Populating an empty schedule so the updateSchedule function can fill it in
 
@@ -215,20 +107,20 @@ function changeDate(value){
     console.log(date);
     date.setDate(date.getDate()+parseInt(value,10)); //parse input text into int
     if (value != 0){
-      date.setDate(date.getDate()+1); //need to add one for formatDate()
-      document.getElementById("weekDate").value = formatDate(date);
+        date.setDate(date.getDate()+1); //need to add one for formatDate()
+        document.getElementById("weekDate").value = formatDate(date);
     }
     updateSchedule(date, urlParams["view"]);
 }
 
 function returnDate(value){
-  console.log("input"+value)
-  weekDate = document.getElementById("weekDate").value;
-  date = new Date(weekDate);
-  console.log(date);
-  date.setDate(date.getDate()+parseInt(value,10)+1); //parse input text into int
-  console.log(formatDate(date));
-  return formatDate(date);
+    console.log("input"+value)
+    weekDate = document.getElementById("weekDate").value;
+    date = new Date(weekDate);
+    console.log(date);
+    date.setDate(date.getDate()+parseInt(value,10)+1); //parse input text into int
+    console.log(formatDate(date));
+    return formatDate(date);
 }
 
 function formatDate(date) {
@@ -244,39 +136,39 @@ function formatDate(date) {
 }
 
 function showDayTime(cellIndex, rowIndex){
-  //TODO get actual meeting time from JSON
-  switch(cellIndex){
-    case 1:
-      day = "Monday";
-      date = returnDate(0); //base reference
-      break;
-    case 2:
-      day = "Tuesday";
-      date = returnDate(1);
-      break;
-    case 3:
-      day = "Wednesday";
-      date = returnDate(2);
-      break;
-    case 4:
-      day = "Thursday";
-      date = returnDate(3);
-      break;
-    case 5:
-      day = "Friday";
-      date = returnDate(4);
-      break;
-    default:
-      day = "Invalid day of week";
-  }
-  days = schedule["days"];
-  for (i = 0; i < days.length; i++){
-    if (days[i]["date"] == date){
-      time = days[i]["timeslots"][rowIndex]["startTime"];
-      break;
+    //TODO get actual meeting time from JSON
+    switch(cellIndex){
+        case 1:
+            day = "Monday";
+            date = returnDate(0); //base reference
+            break;
+        case 2:
+            day = "Tuesday";
+            date = returnDate(1);
+            break;
+        case 3:
+            day = "Wednesday";
+            date = returnDate(2);
+            break;
+        case 4:
+            day = "Thursday";
+            date = returnDate(3);
+            break;
+        case 5:
+            day = "Friday";
+            date = returnDate(4);
+            break;
+        default:
+            day = "Invalid day of week";
     }
-  }
-  return date+", "+day+" at "+time;
+    days = schedule["days"];
+    for (i = 0; i < days.length; i++){
+        if (days[i]["date"] == date){
+            time = days[i]["timeslots"][rowIndex]["startTime"];
+            break;
+        }
+    }
+    return date+", "+day+" at "+time;
 }
 
 //takes in a start date, finds the appropriate sunday and populates the schedule
@@ -316,10 +208,10 @@ function updateSchedule(startDate, organizerView){
                 if(timeslots[y]["isClosed"]){
                     if(timeslots[y]["participantInfo"]){
                         if (organizerView == 1){
-                          scheduleTable.rows[y].cells[x].innerHTML = 'Booked by:' + timeslots[y]["participantInfo"];
+                            scheduleTable.rows[y].cells[x].innerHTML = 'Booked by:' + timeslots[y]["participantInfo"];
                         }
                         else {
-                          scheduleTable.rows[y].cells[x].innerHTML = 'Taken';
+                            scheduleTable.rows[y].cells[x].innerHTML = 'Taken';
                         }
                         scheduleTable.rows[y].cells[x].style.backgroundColor = '#ffff99';
                     }
