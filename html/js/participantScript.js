@@ -103,6 +103,7 @@ function searchOpenTS(searchReturn){
       sr.append($('<h5></h5>').text(txt));
       sr.append($('<button></button>')
                 .attr('class',"btn btn-success")
+                .attr('onclick', "scheduleOpenTS()")
                 .text("schedule"));
       sr.append($('<br>'));
     }
@@ -115,6 +116,17 @@ function searchOpenTS(searchReturn){
   }
 }
 
+function scheduleOpenTS(){ //different from schedule meeting
+  alert("add schedule openTS functionality");
+}
+
+function scheduleMeeting(){
+  alert("add schedule meeting functionality");
+}
+
+function cancelMeeting(){
+  alert("add cancel meeting functionality");
+}
 
 function populateTS(selector) {
     var select = $(selector);

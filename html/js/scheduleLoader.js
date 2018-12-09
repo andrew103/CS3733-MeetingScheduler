@@ -90,9 +90,7 @@ function init(foundSchedule){
     else{
 
         alert("Invalid id")
-
-        //TODO, make this the pre-signed url
-        //window.location.href = "index.html";
+        window.location.href = indexWebsite
     }
 }
 
@@ -223,7 +221,7 @@ function updateSchedule(startDate, organizerView){
     console.log("New Start Date:" + startDate);
 
     var days = schedule["days"]
-    
+
     var prevSunday = new Date(startDate.setHours(-24 * startDate.getDay()));
     console.log(startDate.getDay());
     console.log(prevSunday);
