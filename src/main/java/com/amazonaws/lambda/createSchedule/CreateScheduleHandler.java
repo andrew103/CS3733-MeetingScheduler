@@ -33,6 +33,8 @@ import db.SchedulerDAO;
 public class CreateScheduleHandler implements RequestStreamHandler {
 
 	public LambdaLogger logger = null;
+	public String tempShareCode = "";
+	public String tempOrganizerCode = "";
 
 	// handle to our s3 storage
 	private AmazonS3 s3 = AmazonS3ClientBuilder.standard()
@@ -105,6 +107,8 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 			try {
 				if (createSchedule(createdSchedule)) {
 					resp = new CreateScheduleResponse(secretCode, shareCode, 200);	
+					tempShareCode = resp.shareCode;
+					tempOrganizerCode = resp.secretCode;
 					logger.log("created a proper response\n");
 				}
 				else {
@@ -125,5 +129,15 @@ public class CreateScheduleHandler implements RequestStreamHandler {
         OutputStreamWriter writer = new OutputStreamWriter(output, "UTF-8");
         writer.write(responseJson.toJSONString());  
         writer.close();
+	}
+	
+	public String getShareCode()
+	{
+		return tempShareCode;
+	}
+	
+	public String getOrganizerCode()
+	{
+		return tempOrganizerCode;
 	}
 }
