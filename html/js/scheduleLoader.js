@@ -60,11 +60,6 @@ function loadSchedule(init){
 
 
 loadSchedule(true);
-function convertDate(date) {
-    return [ date["year"],
-        ("0" + (date["month"]+1)).slice(-2),
-        ("0" + date["dayOfMonth"]).slice(-2) ].join("-");
-}
 
 
 //**INITIALIZATION CODE**
@@ -72,7 +67,7 @@ function init(foundSchedule){
     if(foundSchedule){
 
         document.getElementById("name").innerText = schedule["name"];
-        document.getElementById("weekDate").value = convertDate(schedule["startDate"]);
+        document.getElementById("weekDate").value = Date(schedule["startDate"]);
         //Populating an empty schedule so the updateSchedule function can fill it in
 
         var scheduleTable = document.getElementById("scheduleTable").getElementsByTagName('tbody')[0];
@@ -93,7 +88,7 @@ function init(foundSchedule){
 
         console.log(scheduleTable)
 
-        updateSchedule(schedule["startDate"], urlParams["view"])
+        updateSchedule(schedule["startDateStr"], urlParams["view"])
     }
     else{
 
@@ -111,8 +106,8 @@ function initSchedule(foundSchedule){
 
         document.getElementById("name").innerText = schedule["scheduleName"];
 
-        console.log(schedule["startDate"])
-        document.getElementById("weekDate").value = convertDate(schedule["startDate"]);
+        console.log("Start date:" + schedule["startDateStr"])
+        document.getElementById("weekDate").value = schedule["startDateStr"];
         //Populating an empty schedule so the updateSchedule function can fill it in
 
         var scheduleTable = document.getElementById("scheduleTable").getElementsByTagName('tbody')[0];
@@ -133,7 +128,7 @@ function initSchedule(foundSchedule){
 
         console.log(scheduleTable)
 
-        updateSchedule(schedule["startDate"], urlParams["view"])
+        updateSchedule(schedule["startDateStr"], urlParams["view"])
     }
     else{
         //TODO: redirect to homepage and delete this alert
@@ -154,7 +149,7 @@ function cellClick(x) {
 }
 
 function changeDate(value){
-    console.log("input"+value)
+    console.log("New date:"+value)
     weekDate = document.getElementById("weekDate").value;
     date = new Date(weekDate);
     console.log(date);
@@ -227,11 +222,11 @@ function showDayTime(cellIndex, rowIndex){
 //takes in a start date, finds the appropriate sunday and populates the schedule
 function updateSchedule(startDate, organizerView){
 
-    startDate = convertDate(startDate);
     startDate = new Date(startDate);
-    console.log(startDate);
+    console.log("New Start Date:" + startDate);
 
     var days = schedule["days"]
+    
     var prevSunday = new Date(startDate.setHours(-24 * startDate.getDay()));
     console.log(startDate.getDay());
     console.log(prevSunday);
@@ -243,9 +238,9 @@ function updateSchedule(startDate, organizerView){
         var found = false;
         var index;
         for(y = 0; y < days.length; y++){
-
-            var difference = Math.ceil((new Date(convertDate(days[y]["date"])) - prevSunday)/(1000*60*60*24));
-            console.log(difference)
+            //console.log(days[y]["dateStr"])
+            var difference = Math.ceil((new Date(days[y]["dateStr"]) - prevSunday)/(1000*60*60*24));
+            //console.log(difference)
             if(difference == x){
                 index = y
                 found = true;
