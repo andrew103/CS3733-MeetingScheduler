@@ -187,7 +187,7 @@ function scheduleMeeting(scheduleCode, participantInfo, time, day){
               document.getElementById("scheduleMeeting").innerHTML = afterScheduleMeetingHTML;
               document.getElementById("scheduleMeetingCode").innerHTML = "Your meeting code is: " + meetingCode + ". Please save this to access your meeting.";
               document.getElementById("closePopupButton").onclick = function () {
-                  loadSchedule();
+                  loadSchedule(false);
               };
           }
           else {
@@ -223,6 +223,7 @@ function cancelMeeting(scheduleCode, meetingCode){
             console.log(ret)
             if(ret["httpCode"] == 200){
                 found = true;
+                loadSchedule(false);
             }
             else {
                 found = false;
