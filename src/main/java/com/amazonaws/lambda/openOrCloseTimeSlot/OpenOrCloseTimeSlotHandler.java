@@ -91,10 +91,10 @@ public class OpenOrCloseTimeSlotHandler implements RequestStreamHandler {
 //		}
 //	}
 
-	boolean openOrCloseTimeSlot(String scheduleCode, int time, String day) throws Exception {
+	boolean openOrCloseTimeSlot(String secretCode, int time, String day) throws Exception {
 		SchedulerDAO dao = new SchedulerDAO();
 		GregorianCalendar date = parseDate(day);
-		return dao.openOrCloseTimeSlot(scheduleCode, time, date);	
+		return dao.openOrCloseTimeSlot(secretCode, time, date);	
 	}
 	
 	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
@@ -165,7 +165,7 @@ public class OpenOrCloseTimeSlotHandler implements RequestStreamHandler {
 				logger.log(req.scheduleCode);
 				logger.log(req.secretCode);
 				logger.log(req.day);
-				boolean del = openOrCloseTimeSlot(req.scheduleCode, req.time, req.day);
+				boolean del = openOrCloseTimeSlot(req.secretCode, req.time, req.day);
 				if (del) {
 					logger.log(" *** It definitely worked right? probably. *** ");
 					resp = new OpenOrCloseTimeSlotResponse(req.scheduleCode, req.secretCode, req.time, req.day, 200);					

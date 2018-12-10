@@ -228,7 +228,8 @@ public class ScheduleHandlerTests extends TestCase{
         
         //*******************************************
         //Open/Close Timeslot
-        OpenOrCloseTimeSlotRequest req10 = new OpenOrCloseTimeSlotRequest(tempShareCode, tempOrganizerCode, 300, "2018-10-26");
+        //OpenOrCloseTimeSlotRequest req10 = new OpenOrCloseTimeSlotRequest(tempShareCode, tempOrganizerCode, 0300, "2018-10-26");
+    	OpenOrCloseTimeSlotRequest req10 = new OpenOrCloseTimeSlotRequest("UAMH9LE21Y", "KTL849UY1Z", 1000, "2018-04-20");
         OpenOrCloseTimeSlotHandler handler10 = new OpenOrCloseTimeSlotHandler();
     	JSONObject req10Json = new JSONObject();
     	req10Json.put("body", new Gson().toJson(req10));
