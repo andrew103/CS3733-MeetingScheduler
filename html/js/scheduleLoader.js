@@ -13,7 +13,7 @@ var urlParams;
 })();
 
 var schedule; //The schedule
-var clickedSlot; //the clicked slot
+var timeOfClickedSlot; //the clicked slot
 var isOrganizer; //Is the user an organizer
 
 function loadSchedule(init){
@@ -161,23 +161,23 @@ function showDayTime(cellIndex, rowIndex){
     switch(cellIndex){
         case 1:
             day = "Monday";
-            date = returnDate(1); //base reference
+            date = returnDate(0); //base reference
             break;
         case 2:
             day = "Tuesday";
-            date = returnDate(2);
+            date = returnDate(1);
             break;
         case 3:
             day = "Wednesday";
-            date = returnDate(3);
+            date = returnDate(2);
             break;
         case 4:
             day = "Thursday";
-            date = returnDate(4);
+            date = returnDate(3);
             break;
         case 5:
             day = "Friday";
-            date = returnDate(5);
+            date = returnDate(4);
             break;
         default:
             day = "Invalid day of week";
@@ -188,13 +188,12 @@ function showDayTime(cellIndex, rowIndex){
       console.log("dateStr"+days[i]["dateStr"]);
         if (days[i]["dateStr"] == date){
             console.log("inside here");
-            time = days[i]["timeSlots"][rowIndex]["startTime"];
-            clickedSlot = days[i]["timeSlots"][rowIndex];
+            timeOfClickedSlot = days[i]["timeSlots"][rowIndex]["startTime"];
             dayOfClickedSlot = days[i]["dateStr"];
             break;
         }
     }
-    return date+", "+day+" at "+time;
+    return date+", "+day+" at "+timeOfClickedSlot;
 }
 
 //takes in a start date, finds the appropriate sunday and populates the schedule
