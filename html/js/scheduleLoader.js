@@ -12,15 +12,21 @@ var urlParams;
         urlParams[decode(match[1])] = decode(match[2]);
 })();
 
-
-
 var schedule;
-
 var postReq = {}
-function loadSchedule(init){
+function loadSchedule(){
+    if(urlParams["shareCode"]==null){
+      postReq["shareCode"] = "";
+      postReq["secretCode"] = urlParams["secretCode"];
+      console.log("loading page as organizer");
+    }
+    else if(urlParams["secretCode"]==null){
+      postReq["shareCode"] = urlParams["shareCode"];
+      postReq["secretCode"] = "";
+      console.log("loading page as participant");
+    }
+    else alert("should not have both secretCode and shareCode");
 
-    postReq["shareCode"] = ""
-    postReq["secretCode"] = urlParams["secretCode"]
     console.log("JS of req:" + JSON.stringify(postReq))
     var xhr = new XMLHttpRequest();
     xhr.open("POST",organizer_getSchedule,true);
@@ -31,7 +37,6 @@ function loadSchedule(init){
 
     xhr.onloadend=function() {
         //console.log(xhr);
-
         var found;
         console.log(xhr.request);
         if (xhr.readyState == XMLHttpRequest.DONE) {
@@ -55,45 +60,9 @@ function loadSchedule(init){
     }
 }
 
-
-loadSchedule(true);
-
-
-//**INITIALIZATION CODE**
-function init(foundSchedule){
-    if(foundSchedule){
-
-        document.getElementById("name").innerText = schedule["name"];
-        document.getElementById("weekDate").value = Date(schedule["startDate"]);
-        //Populating an empty schedule so the updateSchedule function can fill it in
-
-        var scheduleTable = document.getElementById("scheduleTable").getElementsByTagName('tbody')[0];
-
-        var firstDay = schedule["days"][0]
-        var duration = schedule["meetingDuration"];
-        for(i = 0; i < firstDay["timeSlots"].length; i++)
-        {
-            var row = scheduleTable.insertRow(i);
-            timeCell = row.insertCell(0)
-
-            timeCell.innerHTML = firstDay["timeSlots"][i]["startTime"]
-
-            for(j = 0; j < 5; j++){
-                row.insertCell(j+1)
-            }
-        }
-
-        console.log(scheduleTable)
-
-        updateSchedule(schedule["startDateStr"], urlParams["view"])
-    }
-    else{
-
-        alert("Invalid id")
-        window.location.href = indexWebsite
-    }
+window.onload = function(){
+  loadSchedule();
 }
-
 
 //**INITIALIZATION CODE**
 function initSchedule(foundSchedule){
@@ -126,14 +95,13 @@ function initSchedule(foundSchedule){
         updateSchedule(schedule["startDateStr"], urlParams["view"])
     }
     else{
-        //TODO: redirect to homepage and delete this alert
         alert("Invalid id")
-
-        //TODO, make this the pre-signed url
-        //window.location.href = "index.html";
+        window.location.href = indexWebsite;
     }
 }
 
+var table = $('#scheduleTable');
+table.on("click", "td", cellClick); //attaches the handler on the whole table, but filter the events by the "td" selector
 function cellClick(x) {
     td = $(x.target).closest('td');
     cellText = td.text();

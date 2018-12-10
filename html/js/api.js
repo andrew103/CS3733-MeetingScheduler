@@ -6,5 +6,8 @@ var organizer_url = base_url + "/organizer";
 
 var organizer_getSchedule = organizer_url + "/getschedule";
 
+var organizer_openCloseTimeSlot = organizer + "/organizer_openCloseTimeSlot";
+ 
 var organizer_createSchedule = organizer_url + "/createschedule";
+
 
