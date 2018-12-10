@@ -24,6 +24,7 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.google.gson.Gson;
 
 import entity.Schedule;
+import entity.Timeslot;
 import db.SchedulerDAO;
 
 
@@ -41,10 +42,10 @@ public class CreateMeetingHandler implements RequestStreamHandler {
 
 	boolean useRDS = true;
 
-	boolean createMeeting(String scheduleCode, String secretCode, String participantInfo, String meetingCode, int time, String day) throws Exception {
+	boolean createMeeting(String scheduleCode, String participantInfo, String meetingCode, int time, String day) throws Exception {
 		SchedulerDAO dao = new SchedulerDAO();	
 		GregorianCalendar date = parseDate(day);
-		return dao.createMeeting(scheduleCode, secretCode, participantInfo, meetingCode, time, date);	
+		return dao.createMeeting(scheduleCode, participantInfo, meetingCode, time, date);	
 	}
 	
 	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
@@ -106,6 +107,9 @@ public class CreateMeetingHandler implements RequestStreamHandler {
 			CreateMeetingRequest req = new Gson().fromJson(body, CreateMeetingRequest.class);
 			logger.log(req.toString());
 			
+			Timeslot timeslot = new Timeslot(false, req.time, req.participantInfo);
+			String meetingCode = timeslot.getMeetingCode();
+			
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
 			CreateMeetingResponse resp;
@@ -113,13 +117,12 @@ public class CreateMeetingHandler implements RequestStreamHandler {
 			try {
 				logger.log(" **** In the Try loop *** ");
 				logger.log(req.scheduleCode);
-				logger.log(req.secretCode);
 				logger.log(req.day);
 				logger.log(req.printTime());
-				boolean del = createMeeting(req.scheduleCode, req.secretCode, req.participantInfo, req.meetingCode, req.time, req.day);
+				boolean del = createMeeting(req.scheduleCode, req.participantInfo, meetingCode, req.time, req.day);
 				if (del) {
 					logger.log(" *** It definitely worked right? probably. *** ");
-					resp = new CreateMeetingResponse(req.scheduleCode, req.secretCode, req.time, req.day, req.participantInfo, req.meetingCode, 200);					
+					resp = new CreateMeetingResponse(req.scheduleCode, req.time, req.day, req.participantInfo, meetingCode, 200);					
 				}
 				else {
 					logger.log(" *** fuck it failed *** ");
