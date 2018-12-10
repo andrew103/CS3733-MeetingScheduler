@@ -577,10 +577,22 @@ public class SchedulerDAO {
     
     private long convertTimeToDB(int inputTime) {
     	long millisTime = 0;
-    	
     	String inputTimeStr = Integer.toString(inputTime);
-    	String inputHours = inputTimeStr.substring(0, 2);
-    	String inputMin = inputTimeStr.substring(2);
+    	String inputHours;
+    	String inputMin;
+    	
+    	if (inputTime == 0) {
+    		inputHours = "00";
+    		inputMin = "00";
+    	}
+    	else if (inputTime < 1000) {
+        	inputHours = inputTimeStr.substring(0, 1);
+        	inputMin = inputTimeStr.substring(1);
+    	}
+    	else {
+        	inputHours = inputTimeStr.substring(0, 2);
+        	inputMin = inputTimeStr.substring(2);
+    	}
     	
     	millisTime = Integer.valueOf(inputHours)*3600*1000 + Integer.valueOf(inputMin)*60*1000;
     	return millisTime;
