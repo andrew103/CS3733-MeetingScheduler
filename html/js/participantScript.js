@@ -1,3 +1,4 @@
+isOrganizer = false;
 
 function processCell(cellText, cellIndex, rowIndex){//organizer version
   switch(cellText){
