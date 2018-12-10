@@ -43,7 +43,7 @@ function loadSchedule(init){
         var found;
         console.log(xhr.request);
         if (xhr.readyState == XMLHttpRequest.DONE) {
-            console.log ("XHR:" + xhr.responseText);
+            //console.log ("XHR:" + xhr.responseText);
             ret = JSON.parse(xhr.responseText)
             console.log(ret)
             if(ret["httpCode"] == 200){
@@ -161,30 +161,33 @@ function showDayTime(cellIndex, rowIndex){
     switch(cellIndex){
         case 1:
             day = "Monday";
-            date = returnDate(0); //base reference
+            date = returnDate(1); //base reference
             break;
         case 2:
             day = "Tuesday";
-            date = returnDate(1);
+            date = returnDate(2);
             break;
         case 3:
             day = "Wednesday";
-            date = returnDate(2);
+            date = returnDate(3);
             break;
         case 4:
             day = "Thursday";
-            date = returnDate(3);
+            date = returnDate(4);
             break;
         case 5:
             day = "Friday";
-            date = returnDate(4);
+            date = returnDate(5);
             break;
         default:
             day = "Invalid day of week";
     }
     days = schedule["days"];
     for (i = 0; i < days.length; i++){
+      console.log("date"+date);
+      console.log("dateStr"+days[i]["dateStr"]);
         if (days[i]["dateStr"] == date){
+            console.log("inside here");
             time = days[i]["timeSlots"][rowIndex]["startTime"];
             clickedSlot = days[i]["timeSlots"][rowIndex];
             dayOfClickedSlot = days[i]["dateStr"];
@@ -195,7 +198,7 @@ function showDayTime(cellIndex, rowIndex){
 }
 
 //takes in a start date, finds the appropriate sunday and populates the schedule
-function updateSchedule(startDate, organizerView){
+function updateSchedule(startDate){
 
 
 
