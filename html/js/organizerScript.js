@@ -32,3 +32,15 @@ function deleteSchedule(){
   }
   alert(txt);
 }
+
+function cancelMeeting(){
+  alert("add cancel meeting functionality");
+}
+
+function openTimeSlot(){
+  alert("add open time slot functionality");
+}
+
+function closeTimeSlot(){
+  alert("add close time slot functionality");
+}
