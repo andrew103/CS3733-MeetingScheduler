@@ -40,7 +40,7 @@ function loadSchedule(){
         var found;
         console.log(xhr.request);
         if (xhr.readyState == XMLHttpRequest.DONE) {
-            console.log ("XHR:" + xhr.responseText);
+            //console.log ("XHR:" + xhr.responseText);
             ret = JSON.parse(xhr.responseText)
             console.log(ret)
             if(ret["httpCode"] == 200){
@@ -92,7 +92,7 @@ function initSchedule(foundSchedule){
 
         console.log(scheduleTable)
 
-        updateSchedule(schedule["startDateStr"], urlParams["view"])
+        updateSchedule(schedule["startDateStr"])
     }
     else{
         alert("Invalid id")
@@ -121,15 +121,16 @@ function changeDate(value){
         date.setDate(date.getDate()+1); //need to add one for formatDate()
         document.getElementById("weekDate").value = formatDate(date);
     }
-    updateSchedule(date, urlParams["view"]);
+    updateSchedule(date);
 }
 
 function returnDate(value){
     console.log("input"+value)
     weekDate = document.getElementById("weekDate").value;
     date = new Date(weekDate);
-    console.log(date);
-    date.setDate(date.getDate()+parseInt(value,10)+1); //parse input text into int
+    dayOfWeekOnSchedule = date.getDay()+1;
+    console.log(dayOfWeekOnSchedule);
+    date.setDate(date.getDate()+value-dayOfWeekOnSchedule+1); //parse input text into int
     console.log(formatDate(date));
     return formatDate(date);
 }
@@ -151,30 +152,33 @@ function showDayTime(cellIndex, rowIndex){
     switch(cellIndex){
         case 1:
             day = "Monday";
-            date = returnDate(0); //base reference
+            date = returnDate(1); //base reference
             break;
         case 2:
             day = "Tuesday";
-            date = returnDate(1);
+            date = returnDate(2);
             break;
         case 3:
             day = "Wednesday";
-            date = returnDate(2);
+            date = returnDate(3);
             break;
         case 4:
             day = "Thursday";
-            date = returnDate(3);
+            date = returnDate(4);
             break;
         case 5:
             day = "Friday";
-            date = returnDate(4);
+            date = returnDate(5);
             break;
         default:
             day = "Invalid day of week";
     }
     days = schedule["days"];
     for (i = 0; i < days.length; i++){
+      console.log("date"+date);
+      console.log("dateStr"+days[i]["dateStr"]);
         if (days[i]["dateStr"] == date){
+            console.log("inside here");
             time = days[i]["timeSlots"][rowIndex]["startTime"];
             break;
         }
@@ -183,7 +187,7 @@ function showDayTime(cellIndex, rowIndex){
 }
 
 //takes in a start date, finds the appropriate sunday and populates the schedule
-function updateSchedule(startDate, organizerView){
+function updateSchedule(startDate){
 
     startDate = new Date(startDate);
     console.log("New Start Date:" + startDate);
@@ -218,12 +222,15 @@ function updateSchedule(startDate, organizerView){
             for(y = 0; y < timeSlots.length; y++){
                 if(timeSlots[y]["isClosed"]){
                     if(timeSlots[y]["participantInfo"]){
-                        if (organizerView == 1){
+                        if (urlParams["shareCode"]==null){
                             scheduleTable.rows[y].cells[x].innerHTML = 'Booked by:' + timeSlots[y]["participantInfo"];
+                            console.log("loading new schedule as organizer");
                         }
-                        else {
+                        else if (urlParams["secretCode"]==null){
                             scheduleTable.rows[y].cells[x].innerHTML = 'Taken';
+                            console.log("loading new schedule as organizer");
                         }
+                        else alert("ERROR, trying to update schedule with both shareCode and secretCode");
                         scheduleTable.rows[y].cells[x].style.backgroundColor = '#ffff99';
                     }
                     else{
