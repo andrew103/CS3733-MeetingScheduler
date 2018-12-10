@@ -70,7 +70,7 @@ public class ScheduleHandlerTests extends TestCase{
     	Context c = createContext("test");
     	conn = DatabaseUtils.connect();
     	
-    	CreateScheduleRequest req = new CreateScheduleRequest("toBeDeleted", 60, "2018-10-26", "2018-10-27", 300, 400);
+    	CreateScheduleRequest req = new CreateScheduleRequest("toBeDeleted", 60, "2018-10-26", "2018-10-27", 0300, 0400);
     	CreateScheduleHandler handler = new CreateScheduleHandler();
     	JSONObject reqJson = new JSONObject();
     	reqJson.put("body", new Gson().toJson(req));
@@ -90,7 +90,7 @@ public class ScheduleHandlerTests extends TestCase{
         System.out.println("/output");
         //*******************************************
         //Create Meeting
-    	CreateMeetingRequest req3 = new CreateMeetingRequest(tempShareCode, tempOrganizerCode, 300, "2018-10-26", "Samuel Vimes", "The Watch");
+    	CreateMeetingRequest req3 = new CreateMeetingRequest(tempShareCode, tempOrganizerCode, 0300, "2018-10-26", "Samuel Vimes", "The Watch");
     	CreateMeetingHandler handler3 = new CreateMeetingHandler();
     	JSONObject req3Json = new JSONObject();
     	req3Json.put("body", new Gson().toJson(req3));
@@ -108,7 +108,7 @@ public class ScheduleHandlerTests extends TestCase{
         
         //*******************************************
         //Cancel Meeting
-    	CancelMeetingRequest req4 = new CancelMeetingRequest(tempShareCode, tempOrganizerCode, 300, "2018-10-26");
+    	CancelMeetingRequest req4 = new CancelMeetingRequest(tempShareCode, tempOrganizerCode, 0300, "2018-10-26");
     	CancelMeetingHandler handler4 = new CancelMeetingHandler();
     	JSONObject req4Json = new JSONObject();
     	req4Json.put("body", new Gson().toJson(req4));
@@ -127,7 +127,7 @@ public class ScheduleHandlerTests extends TestCase{
         //*******************************************
         //Cancel Meeting Participant
         
-    	CreateMeetingRequest req31 = new CreateMeetingRequest(tempShareCode, tempOrganizerCode, 300, "2018-10-26", "Samuel Vimes", "The Watch");
+    	CreateMeetingRequest req31 = new CreateMeetingRequest(tempShareCode, tempOrganizerCode, 0300, "2018-10-26", "Samuel Vimes", "The Watch");
     	CreateMeetingHandler handler31 = new CreateMeetingHandler();
     	JSONObject req31Json = new JSONObject();
     	req31Json.put("body", new Gson().toJson(req31));
@@ -192,7 +192,7 @@ public class ScheduleHandlerTests extends TestCase{
         
         //*******************************************
         //Close Slots Time
-        CloseAllTimeSlotsTimeRequest req8 = new CloseAllTimeSlotsTimeRequest(tempShareCode, tempOrganizerCode, 300);
+        CloseAllTimeSlotsTimeRequest req8 = new CloseAllTimeSlotsTimeRequest(tempShareCode, tempOrganizerCode, 0300);
         CloseAllTimeSlotsTimeHandler handler8 = new CloseAllTimeSlotsTimeHandler();
     	JSONObject req8Json = new JSONObject();
     	req8Json.put("body", new Gson().toJson(req8));
@@ -210,7 +210,7 @@ public class ScheduleHandlerTests extends TestCase{
         
         //*******************************************
         //Open Slots Time
-        OpenAllTimeSlotsTimeRequest req9 = new OpenAllTimeSlotsTimeRequest(tempShareCode, tempOrganizerCode, 300);
+        OpenAllTimeSlotsTimeRequest req9 = new OpenAllTimeSlotsTimeRequest(tempShareCode, tempOrganizerCode, 0300);
         OpenAllTimeSlotsTimeHandler handler9 = new OpenAllTimeSlotsTimeHandler();
     	JSONObject req9Json = new JSONObject();
     	req9Json.put("body", new Gson().toJson(req9));
@@ -228,8 +228,8 @@ public class ScheduleHandlerTests extends TestCase{
         
         //*******************************************
         //Open/Close Timeslot
-        //OpenOrCloseTimeSlotRequest req10 = new OpenOrCloseTimeSlotRequest(tempShareCode, tempOrganizerCode, 0300, "2018-10-26");
-    	OpenOrCloseTimeSlotRequest req10 = new OpenOrCloseTimeSlotRequest("UAMH9LE21Y", "KTL849UY1Z", 1000, "2018-04-20");
+        OpenOrCloseTimeSlotRequest req10 = new OpenOrCloseTimeSlotRequest(tempShareCode, tempOrganizerCode, 0300, "2018-10-26");
+    	//OpenOrCloseTimeSlotRequest req10 = new OpenOrCloseTimeSlotRequest("UAMH9LE21Y", "KTL849UY1Z", 1000, "2018-04-20");
         OpenOrCloseTimeSlotHandler handler10 = new OpenOrCloseTimeSlotHandler();
     	JSONObject req10Json = new JSONObject();
     	req10Json.put("body", new Gson().toJson(req10));

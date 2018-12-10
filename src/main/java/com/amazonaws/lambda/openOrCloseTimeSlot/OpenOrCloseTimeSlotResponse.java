@@ -7,9 +7,11 @@ public class OpenOrCloseTimeSlotResponse {
 	String day; 
 	int httpCode;
 	
-	public OpenOrCloseTimeSlotResponse(String secretCode, String shareCode, int time, String day, int hc) {
+	public OpenOrCloseTimeSlotResponse(String shareCode, String secretCode, int time, String day, int hc) {
 		this.secretCode = secretCode;
 		this.shareCode = shareCode;
+		this.time = time;
+		this.day = day;
 		this.httpCode = hc;
 	}
 	
