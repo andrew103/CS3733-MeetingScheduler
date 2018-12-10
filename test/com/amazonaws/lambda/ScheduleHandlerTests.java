@@ -283,37 +283,4 @@ public class ScheduleHandlerTests extends TestCase{
       //*******************************************
         
     }
-    
-//    @Test
-//    public void testDeleteScheduleHandler() throws Exception {// throws IOException {
-//    	Context c = createContext("test");
-//    	conn = DatabaseUtils.connect();
-//    	String scheduleName = "toBeDeleted";
-//    	
-//    	String query = "SELECT * FROM Schedule WHERE scheduleID = ?";
-//    	PreparedStatement ps = conn.prepareStatement(query);
-//    	
-//    	ps.setInt(1, 3);
-//    	ResultSet resultSet1 = ps.executeQuery();
-//    	String shareCode = resultSet1.getString("shareCode");
-//    	String organizerCode = resultSet1.getString("organizerCode");
-//    	
-//    	
-//    	DeleteScheduleRequest req = new DeleteScheduleRequest(tempShareCode, tempOrganizerCode);
-//    	DeleteScheduleHandler handler = new DeleteScheduleHandler();
-//    	JSONObject reqJson = new JSONObject();
-//    	reqJson.put("body", new Gson().toJson(req));
-//    	
-//    	
-//        InputStream input = new ByteArrayInputStream(reqJson.toJSONString().getBytes());;
-//        OutputStream output = new ByteArrayOutputStream();
-//                
-//        handler.handleRequest(input, output, c);
-//
-//        String sampleOutputString = output.toString();
-//        System.out.println("output");
-//        System.out.println(sampleOutputString);
-//        System.out.println("/output");
-//        //assertTrue(true);
-//    }
 }
