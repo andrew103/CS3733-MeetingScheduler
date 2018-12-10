@@ -5,11 +5,56 @@ function createSchedule(){
     var EndTime = document.getElementById("et").value;
     var StartDate = document.getElementById("sd").value;
     var EndDate = document.getElementById("ed").value;
-
+    console.log(Name)
+    console.log(Duration)
+    console.log(StartTime)
+    console.log(EndTime)
+    console.log(StartDate)
+    console.log(EndDate)
     if(Name && Duration && StartTime && EndTime && StartDate && EndDate)
     {
-        id = "test"
-        alert("created schedule, now redirecting")
+        if(StartTime > EndTime)
+        {
+            alert("Start time is greater than end time.")
+        }
+        else if(StartDate > EndDate){
+            alert("Start date cannot be after end date")
+        }
+        else {
+            var postReq = {}
+            postReq["name"] = Name;
+            postReq["meetingDuration"] = Duration;
+            postReq["sd"] = StartDate;
+            postReq["ed"] = EndDate;
+            postReq["startTime"] = StartTime;
+            postReq["endTime"] = EndTime;
+
+            console.log("JS of req:" + JSON.stringify(postReq));
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST",organizer_createSchedule,true);
+            console.log(organizer_createSchedule)
+
+            xhr.send(JSON.stringify(postReq));
+            xhr.onloadend=function() {
+                console.log(xhr);
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    console.log ("XHR:" + xhr.responseText);
+                    ret = JSON.parse(xhr.responseText)
+                    console.log(ret)
+                    if(ret["httpCode"] == 200){
+                        console.log(ret["secretCode"]);
+                        alert("Succesfully creates schedule. \nYour secret code is:  " + ret["secretCode"] + " (don't lose it)\n" + "Press OK to view your schedule")
+                        window.location.href = organizerWebsite + "?secretCode=" + ret["secretCode"]
+                    }
+                    else {
+                        alert("could not create schedule, got status" + status)
+                    }
+                } else {
+                    alert("Did not get request")
+                }
+            }
+
+        }
         // TODO: add redirection with database stuff, also display serect code
     }
     else{
@@ -33,6 +78,6 @@ function populate(selector) {
 }
 //Calling the function on pageload
 window.onload = function (e) {
-  populate('#et');
-  populate('#st');
+    populate('#et');
+    populate('#st');
 }
