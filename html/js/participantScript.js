@@ -48,6 +48,13 @@ function processCell(cellText, cellIndex, rowIndex){//organizer version
     default: //there is a meeting scheduled but not visiable to participant
       stringDisp = "Time slot has a scheduled meeting on "+showDayTime(cellIndex, rowIndex)+".";
       document.getElementById("cancelMeetingText").innerHTML=stringDisp;
+      document.getElementById("scheduleMeetingButton").onclick = function() {
+        var shareCode = urlParams["shareCode"];
+        var meetingCode = document.getElementById("meetingCode").value;
+        console.log("successfully set all params");
+
+        cancelMeeting(shareCode, meetingCode);
+      };
       $("#cancelMeeting").modal();
   }
 }
@@ -158,7 +165,7 @@ function scheduleMeeting(scheduleCode, participantInfo, time, day){
   postReq["participantInfo"] = participantInfo;
   postReq["time"] = time;
   postReq["day"] = day;
-  console.log(participant_scheduleMeeting);
+
   var xhr = new XMLHttpRequest();
   xhr.open("POST",participant_scheduleMeeting,true);
 
@@ -196,8 +203,36 @@ function scheduleMeeting(scheduleCode, participantInfo, time, day){
   // alert("add schedule meeting functionality");
 }
 
-function cancelMeeting(){
-  alert("add cancel meeting functionality");
+function cancelMeeting(scheduleCode, meetingCode){
+    var postReq = {};
+    postReq["scheduleCode"] = scheduleCode;
+    postReq["meetingCode"] = meetingCode;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST",participant_cancelMeeting,true);
+
+    xhr.send(JSON.stringify(postReq));
+
+    xhr.onloadend=function() {
+        //console.log(xhr);
+        var found;
+        console.log(xhr.request);
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            console.log ("XHR:" + xhr.responseText);
+            ret = JSON.parse(xhr.responseText)
+            console.log(ret)
+            if(ret["httpCode"] == 200){
+                found = true;
+            }
+            else {
+                found = false;
+            }
+        } else {
+            console.log("Could not get req")
+            found = false;
+        }
+    }
+    // alert("add cancel meeting functionality");
 }
 
 function populateTS(selector) {

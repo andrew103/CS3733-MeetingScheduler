@@ -94,18 +94,18 @@
       </div>
       <div class="modal-body">
         <p id="cancelMeetingText"></p>
-        <p>If this meeting is scheduled by you, you can input the secret code below to cancel it</p>
+        <p>If this meeting is scheduled by you, you can input the meeting code below to cancel it</p>
         <form class="form-horizontal">
           <div class="form-group">
             <label class="control-label col-sm-4" for="meetingCode">Meeting Secret Code: </label>
             <div class="col-sm-8">
-              <input class="form-control" type="text" id="participantName" placeholder="SECRET CODE"></input>
+              <input class="form-control" type="text" id="meetingCode" placeholder="MEETING CODE"></input>
             </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger pull-left" onclick="cancelMeeting()">Cancel Meeting</button>
+        <button type="button" class="btn btn-danger pull-left" data-dismiss="modal" onclick="cancelMeeting()">Cancel Meeting</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>

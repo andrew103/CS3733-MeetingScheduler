@@ -13,3 +13,5 @@ var organizer_openCloseTimeSlot = organizer_url + "/organizer_openCloseTimeSlot"
 var organizer_createSchedule = organizer_url + "/createschedule";
 
 var participant_scheduleMeeting = participant_url + "/createmeeting";
+
+var participant_cancelMeeting = participant_url + "/cancelmeeting";
