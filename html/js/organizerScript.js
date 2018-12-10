@@ -39,11 +39,8 @@ function cancelMeeting(){
     alert("add cancel meeting functionality");
 }
 
-function openTimeSlot(){
-    alert("add open time slot functionality");
-}
 
-function closeTimeSlot(time, dateStr){
+function toggleTimeSlot(){
     var postReq = {}
     postReq["scheduleCode"] = schedule["shareCode"];
     postReq["secretCode"] = urlParams["secretCode"];
@@ -69,7 +66,6 @@ function closeTimeSlot(time, dateStr){
             if(ret["httpCode"] == 200){
                 console.log("Toggled Timeslot")
                 loadSchedule(false) 
-                alert("Closed timeslot")
             }
             else {
                 console.log("could not retrieve schedule, got stats" + ret["httpCode"])
