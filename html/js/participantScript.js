@@ -1,5 +1,3 @@
-var table = $('#scheduleTable');
-table.on("click", "td", cellClick); //attaches the handler on the whole table, but filter the events by the "td" selector
 
 function processCell(cellText, cellIndex, rowIndex){//organizer version
   switch(cellText){

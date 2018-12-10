@@ -10,7 +10,7 @@ var urlParams;
     urlParams = {};
     while (match = search.exec(query))
         urlParams[decode(match[1])] = decode(match[2]);
-}
+})();
 
 var schedule;
 var postReq = {}
@@ -20,7 +20,7 @@ function loadSchedule(){
       postReq["secretCode"] = urlParams["secretCode"];
       console.log("loading page as organizer");
     }
-    else if(urlParams["shareCode"]==null){
+    else if(urlParams["secretCode"]==null){
       postReq["shareCode"] = urlParams["shareCode"];
       postReq["secretCode"] = "";
       console.log("loading page as participant");
@@ -100,6 +100,8 @@ function initSchedule(foundSchedule){
     }
 }
 
+var table = $('#scheduleTable');
+table.on("click", "td", cellClick); //attaches the handler on the whole table, but filter the events by the "td" selector
 function cellClick(x) {
     td = $(x.target).closest('td');
     cellText = td.text();
