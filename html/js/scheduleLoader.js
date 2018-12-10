@@ -12,9 +12,12 @@ var urlParams;
         urlParams[decode(match[1])] = decode(match[2]);
 })();
 
-var schedule;
-var postReq = {}
-function loadSchedule(){
+var schedule; //The schedule
+var clickedSlot; //the clicked slot
+var isOrganizer; //Is the user an organizer
+
+function loadSchedule(init){
+    var postReq = {}
     if(urlParams["shareCode"]==null){
       postReq["shareCode"] = "";
       postReq["secretCode"] = urlParams["secretCode"];
@@ -56,12 +59,17 @@ function loadSchedule(){
             console.log("Could not get req")
             found = false;
         }
-        initSchedule(found);
+        if(init){
+            initSchedule(found);
+        }
+        else{
+            updateSchedule(document.getElementById("weekDate").value , isOrganizer);
+        }
     }
 }
 
 window.onload = function(){
-  loadSchedule();
+  loadSchedule(true);
 }
 
 //**INITIALIZATION CODE**
@@ -92,7 +100,7 @@ function initSchedule(foundSchedule){
 
         console.log(scheduleTable)
 
-        updateSchedule(schedule["startDateStr"])
+        updateSchedule(schedule["startDateStr"], isOrganizer)
     }
     else{
         alert("Invalid id")
@@ -121,19 +129,20 @@ function changeDate(value){
         date.setDate(date.getDate()+1); //need to add one for formatDate()
         document.getElementById("weekDate").value = formatDate(date);
     }
-    updateSchedule(date);
+    updateSchedule(date, isOrganizer);
 }
 
 function returnDate(value){
     console.log("input"+value)
-    weekDate = document.getElementById("weekDate").value;
-    date = new Date(weekDate);
-    dayOfWeekOnSchedule = date.getDay()+1;
-    console.log(dayOfWeekOnSchedule);
-    date.setDate(date.getDate()+value-dayOfWeekOnSchedule+1); //parse input text into int
+    weekDate =new Date(document.getElementById("weekDate").value);
+    prevSunday = new Date(weekDate.setHours(-24 * weekDate.getDay()));
+    date = new Date(prevSunday);
+    console.log(date);
+    date.setDate(date.getDate()+parseInt(value,10)+1); //parse input text into int
     console.log(formatDate(date));
     return formatDate(date);
 }
+
 
 function formatDate(date) {
     var d = new Date(date),
@@ -180,6 +189,8 @@ function showDayTime(cellIndex, rowIndex){
         if (days[i]["dateStr"] == date){
             console.log("inside here");
             time = days[i]["timeSlots"][rowIndex]["startTime"];
+            clickedSlot = days[i]["timeSlots"][rowIndex];
+            dayOfClickedSlot = days[i]["dateStr"];
             break;
         }
     }
@@ -188,6 +199,8 @@ function showDayTime(cellIndex, rowIndex){
 
 //takes in a start date, finds the appropriate sunday and populates the schedule
 function updateSchedule(startDate){
+
+
 
     startDate = new Date(startDate);
     console.log("New Start Date:" + startDate);
@@ -220,17 +233,10 @@ function updateSchedule(startDate){
 
             var timeSlots = days[index]["timeSlots"]
             for(y = 0; y < timeSlots.length; y++){
-                if(timeSlots[y]["isClosed"]){
+                console.log(timeSlots[y]["available"])
+                if(!timeSlots[y]["available"]){
                     if(timeSlots[y]["participantInfo"]){
-                        if (urlParams["shareCode"]==null){
                             scheduleTable.rows[y].cells[x].innerHTML = 'Booked by:' + timeSlots[y]["participantInfo"];
-                            console.log("loading new schedule as organizer");
-                        }
-                        else if (urlParams["secretCode"]==null){
-                            scheduleTable.rows[y].cells[x].innerHTML = 'Taken';
-                            console.log("loading new schedule as organizer");
-                        }
-                        else alert("ERROR, trying to update schedule with both shareCode and secretCode");
                         scheduleTable.rows[y].cells[x].style.backgroundColor = '#ffff99';
                     }
                     else{
@@ -241,7 +247,7 @@ function updateSchedule(startDate){
                 }
 
                 else{
-                    scheduleTable.rows[y].cells[x].innerHTML = 'Open';
+                    scheduleTable.rows[y].cells[x].innerHTML = 'Open'// + days[index]["dateStr"];
                     scheduleTable.rows[y].cells[x].style.backgroundColor = '#66ff99';
                 }
             }
