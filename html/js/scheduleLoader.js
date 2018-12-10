@@ -182,6 +182,28 @@ function showDayTime(cellIndex, rowIndex){
     return date+", "+day+" at "+time;
 }
 
+function getDate(cellIndex) {
+    switch (cellIndex) {
+        case 1:
+            return returnDate(0); //base reference
+            break;
+        case 2:
+            return returnDate(1);
+            break;
+        case 3:
+            return returnDate(2);
+            break;
+        case 4:
+            return returnDate(3);
+            break;
+        case 5:
+            return returnDate(4);
+            break;
+        default:
+            return "Invalid day of week";
+    }
+}
+
 //takes in a start date, finds the appropriate sunday and populates the schedule
 function updateSchedule(startDate, organizerView){
 

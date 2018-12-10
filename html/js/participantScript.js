@@ -1,9 +1,42 @@
+var afterScheduleMeetingHTML = `
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <h4 class="modal-title">Schedule meeting on an open timeslot</h4>
+    </div>
+    <div class="modal-body">
+      <p id="scheduleMeetingCode"></p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal" id="closePopupButton" onclick="">Close</button>
+    </div>
+  </div>
+</div>
+`
 
 function processCell(cellText, cellIndex, rowIndex){//organizer version
   switch(cellText){
     case "Open":
       stringDisp = "Time slot open on "+showDayTime(cellIndex, rowIndex);
       document.getElementById("scheduleMeetingText").innerHTML=stringDisp;
+      document.getElementById("scheduleMeetingButton").onclick = function() {
+        var shareCode = urlParams["shareCode"];
+        var partInfo = document.getElementById("participantName").value;
+        var date = getDate(cellIndex);
+        var time;
+
+        days = schedule["days"];
+        for (i = 0; i < days.length; i++){
+            if (days[i]["dateStr"] == date){
+                time = days[i]["timeSlots"][rowIndex]["startTime"];
+                break;
+            }
+        }
+        console.log("successfully set all params");
+
+        scheduleMeeting(shareCode, partInfo, time, date);
+      };
       $("#scheduleMeeting").modal();
       break;
     case "Closed":
@@ -118,8 +151,49 @@ function scheduleOpenTS(){ //different from schedule meeting
   alert("add schedule openTS functionality");
 }
 
-function scheduleMeeting(){
-  alert("add schedule meeting functionality");
+function scheduleMeeting(scheduleCode, participantInfo, time, day){
+  var postReq = {};
+  var meetingCode;
+  postReq["scheduleCode"] = scheduleCode;
+  postReq["participantInfo"] = participantInfo;
+  postReq["time"] = time;
+  postReq["day"] = day;
+  console.log(participant_scheduleMeeting);
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST",participant_scheduleMeeting,true);
+
+  xhr.send(JSON.stringify(postReq));
+
+  xhr.onloadend=function() {
+      //console.log(xhr);
+      var found;
+      console.log(xhr.request);
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+          console.log ("XHR:" + xhr.responseText);
+          ret = JSON.parse(xhr.responseText)
+          console.log(ret)
+          if(ret["httpCode"] == 200){
+              meetingCode = ret["meetingCode"];
+              console.log(meetingCode);
+              found = true;
+
+              document.getElementById("scheduleMeeting").innerHTML = afterScheduleMeetingHTML;
+              document.getElementById("scheduleMeetingCode").innerHTML = "Your meeting code is: " + meetingCode + ". Please save this to access your meeting.";
+              document.getElementById("closePopupButton").onclick = function () {
+                  loadSchedule();
+              };
+          }
+          else {
+              console.log("could not retrieve schedule, got status" + status)
+              found = false;
+          }
+      } else {
+          console.log("Could not get req")
+          found = false;
+      }
+  }
+
+  // alert("add schedule meeting functionality");
 }
 
 function cancelMeeting(){
