@@ -2,6 +2,7 @@ var table = $('#scheduleTable');
 table.on("click", "td", cellClick); //attaches the handler on the whole table, but filter the events by the "td" selector
 
 isOrganizer = true;
+document.getElementById("shareCodeDisplay").innerHTML = "Give this code to participants: " + schedule["shareCode"];
 
 function processCell(cellText, cellIndex, rowIndex){//organizer version
     switch(cellText){
@@ -65,7 +66,7 @@ function toggleTimeSlot(){
             console.log(ret)
             if(ret["httpCode"] == 200){
                 console.log("Toggled Timeslot")
-                loadSchedule(false) 
+                loadSchedule(false)
             }
             else {
                 console.log("could not retrieve schedule, got stats" + ret["httpCode"])
