@@ -50,6 +50,10 @@ function loadSchedule(init){
                 schedule = ret["schedule"];
                 console.log(schedule);
                 found = true;
+                if(urlParams["shareCode"]==null){
+                    console.log(schedule["shareCode"]);
+                    document.getElementById("shareCodeDisplay").innerHTML = "Participant access code: " + schedule["shareCode"];
+                }
             }
             else {
                 console.log("could not retrieve schedule, got status" + status)
