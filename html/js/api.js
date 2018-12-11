@@ -8,8 +8,8 @@ var participant_url = base_url + "/participant";
 
 var organizer_getSchedule = organizer_url + "/getschedule";
 
-var organizer_openCloseTimeSlot = organizer_url + "/organizer_openCloseTimeSlot";
-
+var organizer_openCloseTimeSlot = organizer_url + "/openclosetimeslot";
+ 
 var organizer_createSchedule = organizer_url + "/createschedule";
 
 var participant_scheduleMeeting = participant_url + "/createmeeting";

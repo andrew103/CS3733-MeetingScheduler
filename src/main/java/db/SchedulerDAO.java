@@ -208,12 +208,12 @@ public class SchedulerDAO {
 		}
 	}
 
-	public boolean openOrCloseTimeSlot(String scheduleCode, int time, GregorianCalendar day) throws Exception {
+	public boolean openOrCloseTimeSlot(String secretCode, int time, GregorianCalendar day) throws Exception {
 		
 		try {
 			String query = "SELECT * FROM Schedule WHERE organizerCode = ?";
         	PreparedStatement ps = conn.prepareStatement(query);
-        	ps.setString(1, scheduleCode);
+        	ps.setString(1, secretCode);
         	ResultSet resultSet1 = ps.executeQuery();
         	resultSet1.next();
         	Date startDate = new Date(day.getTimeInMillis());

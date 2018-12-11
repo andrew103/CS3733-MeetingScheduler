@@ -41,60 +41,11 @@ public class OpenOrCloseTimeSlotHandler implements RequestStreamHandler {
 
 	boolean useRDS = true;
 	
-//	// not yet connected to RDS, so comment this out...
-//	public double loadConstant(String arg) {
-//		if (useRDS) {
-//			double val = 0;
-//			try {
-//				val = loadValueFromRDS(arg);
-//				return val;
-//			} catch (Exception e) {
-//				return 0;
-//			}
-//		}
-//		
-//		return loadValueFromBucket(arg);
-//	}
-//
-//	/** Load from RDS, if it exists
-//	 * 
-//	 * @throws Exception 
-//	 */
-//	double loadValueFromRDS(String arg) throws Exception {
-//		if (logger != null) { logger.log("in loadValue"); }
-//		ConstantsDAO dao = new ConstantsDAO();
-//		Constant constant = dao.getConstant(arg);
-//		return constant.value;
-//	}
-//	
-//	/** Load up S3 Bucket with given key and interpret contents as double. */
-//	double loadValueFromBucket(String arg) {
-//		if (logger != null) { logger.log("load from bucket:" + arg); }
-//		try {
-//			S3Object pi = s3.getObject("cs3733/constants", arg);
-//			if (pi == null) {
-//				return 0;
-//			} else {
-//				S3ObjectInputStream pis = pi.getObjectContent();
-//				Scanner sc = new Scanner(pis);
-//				String val = sc.nextLine();
-//				sc.close();
-//				try { pis.close(); } catch (IOException e) { }
-//				try {
-//					return Double.valueOf(val);
-//				} catch (NumberFormatException nfe) {
-//					return 0.0;
-//				}
-//			}
-//		} catch (SdkClientException sce) {
-//			return 0;
-//		}
-//	}
 
-	boolean openOrCloseTimeSlot(String scheduleCode, int time, String day) throws Exception {
+	boolean openOrCloseTimeSlot(String secretCode, int time, String day) throws Exception {
 		SchedulerDAO dao = new SchedulerDAO();
 		GregorianCalendar date = parseDate(day);
-		return dao.openOrCloseTimeSlot(scheduleCode, time, date);	
+		return dao.openOrCloseTimeSlot(secretCode, time, date);	
 	}
 	
 	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
@@ -165,7 +116,7 @@ public class OpenOrCloseTimeSlotHandler implements RequestStreamHandler {
 				logger.log(req.scheduleCode);
 				logger.log(req.secretCode);
 				logger.log(req.day);
-				boolean del = openOrCloseTimeSlot(req.scheduleCode, req.time, req.day);
+				boolean del = openOrCloseTimeSlot(req.secretCode, req.time, req.day);
 				if (del) {
 					logger.log(" *** It definitely worked right? probably. *** ");
 					resp = new OpenOrCloseTimeSlotResponse(req.scheduleCode, req.secretCode, req.time, req.day, 200);					
