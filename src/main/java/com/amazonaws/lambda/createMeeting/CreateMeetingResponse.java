@@ -3,16 +3,14 @@ package com.amazonaws.lambda.createMeeting;
 public class CreateMeetingResponse {
 	
 	String scheduleCode;
-	String secretCode;
 	String participantInfo;
 	String meetingCode;
 	int time;
 	String day;
 	int httpCode;
 
-	public CreateMeetingResponse(String scheduleCode, String secretCode, int time, String day, String participantInfo, String meetingCode, int hc) {
+	public CreateMeetingResponse(String scheduleCode, int time, String day, String participantInfo, String meetingCode, int hc) {
 		this.scheduleCode = scheduleCode;
-		this.secretCode = secretCode;
 		this.participantInfo = participantInfo;
 		this.meetingCode = meetingCode;
 		this.time = time;
@@ -20,10 +18,9 @@ public class CreateMeetingResponse {
 		this.httpCode = hc;
 	}
 	
-	public CreateMeetingResponse(String scheduleCode, String secretCode, int time, String day, String participantInfo, String meetingCode)
+	public CreateMeetingResponse(String scheduleCode, int time, String day, String participantInfo, String meetingCode)
 	{
 		this.scheduleCode = scheduleCode;
-		this.secretCode = secretCode;
 		this.participantInfo = participantInfo;
 		this.meetingCode = meetingCode;
 		this.time = time;

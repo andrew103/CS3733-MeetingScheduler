@@ -274,13 +274,13 @@ public class SchedulerDAO {
 		}
 	}
 
-	public boolean createMeeting(String scheduleCode, String secretCode, String participantInfo, String meetingCode, int time, GregorianCalendar day) throws Exception {
+	public boolean createMeeting(String scheduleCode, String participantInfo, String meetingCode, int time, GregorianCalendar day) throws Exception {
 		try {
 			//UPDATE tableName SET colname = ? WHERE schedId = ? AND dayID = ? AND dayDate = ? --Retrieves timeslots
 			//Remove schedule from database
-			String query = "SELECT * FROM Schedule WHERE organizerCode = ?";
+			String query = "SELECT * FROM Schedule WHERE shareCode = ?";
         	PreparedStatement ps = conn.prepareStatement(query);
-        	ps.setString(1, secretCode);
+        	ps.setString(1, scheduleCode);
         	ResultSet resultSet1 = ps.executeQuery();
         	resultSet1.next();
         	int scheduleID = resultSet1.getInt("scheduleID");
