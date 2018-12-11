@@ -44,7 +44,7 @@ function toggleTimeSlot(){
     var postReq = {}
     postReq["scheduleCode"] = schedule["shareCode"];
     postReq["secretCode"] = urlParams["secretCode"];
-    postReq["time"] = clickedSlot["startTime"] 
+    postReq["time"] = timeOfClickedSlot;
     postReq["day"] = dayOfClickedSlot;
 
     console.log("JS of req:" + JSON.stringify(postReq))
