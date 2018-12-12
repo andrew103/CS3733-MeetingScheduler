@@ -65,7 +65,7 @@ function toggleTimeSlot(){
             console.log(ret)
             if(ret["httpCode"] == 200){
                 console.log("Toggled Timeslot")
-                loadSchedule(false) 
+                loadSchedule(false)
             }
             else {
                 console.log("could not retrieve schedule, got stats" + ret["httpCode"])
