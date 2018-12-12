@@ -88,7 +88,7 @@ function organizerLoad(){
         window.location.href = organizerWebsite + "?secretCode=" + code
     }
     else{
-        alert("Schedule Code cannot be blank")
+        alert("Secret Code cannot be blank")
     }
 }
 
