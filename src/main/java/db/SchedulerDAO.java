@@ -1,6 +1,7 @@
 package db;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -33,9 +34,7 @@ public class SchedulerDAO {
         	Date endDate = new Date(schedule.getEndDate().getTimeInMillis());
         	Date createdDate = new Date((new GregorianCalendar()).getTimeInMillis());
         	SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        	
-        	String createdDateStr = fmt.format(createdDate);
-        	
+        	String createdDateStr = fmt.format(createdDate);        	
         	
         	ps.setString(1, schedule.getShareCode());
         	ps.setString(2, schedule.getOrganizerCode());
@@ -647,7 +646,7 @@ public class SchedulerDAO {
 	        	GregorianCalendar endDate = new GregorianCalendar();
 	        	endDate.setTime(resultSet1.getDate("endDate"));
 	        	GregorianCalendar createdDate = new GregorianCalendar();
-	        	createdDate.setTime(resultSet1.getDate("endDate"));
+	        	createdDate.setTime(resultSet1.getTimestamp("createdDate"));
 	        	Schedule schedule = new Schedule(resultSet1.getString("scheduleName"),
 	        									 startDate,
 	        									 endDate,
@@ -659,10 +658,8 @@ public class SchedulerDAO {
 	        									 resultSet1.getString("shareCode"));
 	        	GregorianCalendar current = new GregorianCalendar();
 	        	
-	        	GregorianCalendar schedDate = schedule.getCreatedDate();
-	        	long curr = current.getTimeInMillis();
-	        	long offset = TimeUnit.HOURS.toMillis(hours);
-	    		
+	        	//GregorianCalendar schedDate = schedule.getCreatedDate();	
+	        	
 	    		if (schedule.getCreatedDate().getTimeInMillis() > (current.getTimeInMillis() - TimeUnit.HOURS.toMillis(hours)))
 	    		{
 	    			s.add(schedule.getScheduleName());
@@ -671,7 +668,50 @@ public class SchedulerDAO {
 			return s;
     	}
     	catch (Exception e) {
-			throw new Exception("Couldn't close timeslots at specified time " + e.getMessage());
+			throw new Exception("Couldn't return any schedules: " + e.getMessage());
+		}
+	}
+
+	public ArrayList<String> retrieveOldSchedules(int days) throws Exception {
+    	try {
+			ArrayList<String> s = new ArrayList<String>();
+			
+			String query = "SELECT * FROM Schedule";
+	    	PreparedStatement ps = conn.prepareStatement(query);
+	    	//ps.setString(1, shareCode);
+	    	ResultSet resultSet1 = ps.executeQuery();
+	    	//resultSet1.next();
+	    	while (resultSet1.next())
+	    	{
+	    		GregorianCalendar startDate = new GregorianCalendar();
+	        	startDate.setTime(resultSet1.getDate("startDate"));
+	        	GregorianCalendar endDate = new GregorianCalendar();
+	        	endDate.setTime(resultSet1.getDate("endDate"));
+	        	GregorianCalendar createdDate = new GregorianCalendar();
+	        	createdDate.setTime(resultSet1.getTimestamp("createdDate"));
+	        	Schedule schedule = new Schedule(resultSet1.getString("scheduleName"),
+	        									 startDate,
+	        									 endDate,
+	        									 resultSet1.getInt("meetingDuration"),
+	        									 convertTimeToMilitary(resultSet1.getLong("startTime")),
+	        									 convertTimeToMilitary(resultSet1.getLong("endTime")),
+	        									 createdDate,
+	        									 resultSet1.getString("organizerCode"),
+	        									 resultSet1.getString("shareCode"));
+	        	
+	        	GregorianCalendar current = new GregorianCalendar();
+	        	GregorianCalendar schedDate = schedule.getEndDate();
+	        	long endDateTime = resultSet1.getLong("endTime");
+	    		
+	    		if ((schedDate.getTimeInMillis() + endDateTime) < (current.getTimeInMillis() - TimeUnit.DAYS.toMillis(days)))
+	    		{
+	    			s.add(schedule.getScheduleName());
+	    		}
+	    	}
+			return s;
+    	}
+    	catch (Exception e) {
+			throw new Exception("Couldn't find any schedules: " + e.getMessage());
 		}
 	}
 }
