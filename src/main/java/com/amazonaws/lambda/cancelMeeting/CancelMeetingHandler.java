@@ -109,7 +109,7 @@ public class CancelMeetingHandler implements RequestStreamHandler {
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
 			CancelMeetingResponse resp;
-			logger.log(" ***Request made succ*** ");
+			logger.log(" ***Request made successfully*** ");
 			try {
 				logger.log(" **** In the Try loop *** ");
 				logger.log(req.scheduleCode);

@@ -284,7 +284,7 @@ public class ScheduleHandlerTests extends TestCase{
         System.out.println("/output2");
       //*******************************************
         //Test reportActivity
-//    	CreateScheduleRequest req12 = new CreateScheduleRequest("Yin3", 60, "2018-10-26", "2018-10-27", 0300, 0400);
+//    	CreateScheduleRequest req12 = new CreateScheduleRequest("Yin4", 60, "2018-10-26", "2018-10-27", 0300, 0400);
 //    	CreateScheduleHandler handler12 = new CreateScheduleHandler();
 //    	JSONObject reqJson12 = new JSONObject();
 //    	reqJson12.put("body", new Gson().toJson(req12));
@@ -296,7 +296,7 @@ public class ScheduleHandlerTests extends TestCase{
 //        handler12.handleRequest(input12, output12, c);
 //        
 //        
-//    	CreateScheduleRequest req13 = new CreateScheduleRequest("Yang3", 60, "2018-10-26", "2018-10-29", 0300, 0400);
+//    	CreateScheduleRequest req13 = new CreateScheduleRequest("Yang4", 60, "2018-10-26", "2018-10-29", 0300, 0400);
 //    	CreateScheduleHandler handler13 = new CreateScheduleHandler();
 //    	JSONObject reqJson13 = new JSONObject();
 //    	reqJson13.put("body", new Gson().toJson(req13));
