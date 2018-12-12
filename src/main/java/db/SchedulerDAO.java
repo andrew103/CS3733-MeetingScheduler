@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.GregorianCalendar;
+import java.text.SimpleDateFormat;
 
 import entity.Day;
 import entity.Schedule;
@@ -32,10 +33,8 @@ public class SchedulerDAO {
         	Date startDate = new Date(schedule.getStartDate().getTimeInMillis());
         	Date endDate = new Date(schedule.getEndDate().getTimeInMillis());
         	Date createdDate = new Date((new GregorianCalendar()).getTimeInMillis());
-        	
         	SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        	String createdDateStr = fmt.format(createdDate);
-        	
+        	String createdDateStr = fmt.format(createdDate);        	
         	
         	ps.setString(1, schedule.getShareCode());
         	ps.setString(2, schedule.getOrganizerCode());
@@ -115,8 +114,7 @@ public class SchedulerDAO {
         	GregorianCalendar endDate = new GregorianCalendar();
         	endDate.setTime(resultSet1.getDate("endDate"));
         	GregorianCalendar createdDate = new GregorianCalendar();
-        	createdDate.setTime(resultSet1.getDate("createdDate"));
-        	
+        	createdDate.setTime(resultSet1.getTimestamp("createdDate"));
         	Schedule schedule = new Schedule(resultSet1.getString("scheduleName"),
         									 startDate,
         									 endDate,
@@ -648,7 +646,7 @@ public class SchedulerDAO {
 	        	GregorianCalendar endDate = new GregorianCalendar();
 	        	endDate.setTime(resultSet1.getDate("endDate"));
 	        	GregorianCalendar createdDate = new GregorianCalendar();
-	        	createdDate.setTime(resultSet1.getDate("createdDate"));
+	        	createdDate.setTime(resultSet1.getTimestamp("createdDate"));
 	        	Schedule schedule = new Schedule(resultSet1.getString("scheduleName"),
 	        									 startDate,
 	        									 endDate,
