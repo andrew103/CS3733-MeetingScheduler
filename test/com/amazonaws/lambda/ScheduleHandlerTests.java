@@ -38,6 +38,8 @@ import com.amazonaws.lambda.openOrCloseTimeSlot.OpenOrCloseTimeSlotHandler;
 import com.amazonaws.lambda.openOrCloseTimeSlot.OpenOrCloseTimeSlotRequest;
 import com.amazonaws.lambda.reportActivity.ReportActivityHandler;
 import com.amazonaws.lambda.reportActivity.ReportActivityRequest;
+import com.amazonaws.lambda.retrieveOldSchedules.RetrieveOldSchedulesHandler;
+import com.amazonaws.lambda.retrieveOldSchedules.RetrieveOldSchedulesRequest;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.google.gson.Gson;
 
@@ -284,7 +286,7 @@ public class ScheduleHandlerTests extends TestCase{
         System.out.println("/output2");
       //*******************************************
         //Test reportActivity
-//    	CreateScheduleRequest req12 = new CreateScheduleRequest("Yin4", 60, "2018-10-26", "2018-10-27", 0300, 0400);
+//    	CreateScheduleRequest req12 = new CreateScheduleRequest("Yin4", 60, "2018-12-1", "2018-12-12", 0300, 0400);
 //    	CreateScheduleHandler handler12 = new CreateScheduleHandler();
 //    	JSONObject reqJson12 = new JSONObject();
 //    	reqJson12.put("body", new Gson().toJson(req12));
@@ -296,7 +298,7 @@ public class ScheduleHandlerTests extends TestCase{
 //        handler12.handleRequest(input12, output12, c);
 //        
 //        
-//    	CreateScheduleRequest req13 = new CreateScheduleRequest("Yang4", 60, "2018-10-26", "2018-10-29", 0300, 0400);
+//    	CreateScheduleRequest req13 = new CreateScheduleRequest("Yang4", 60, "2018-12-1", "2018-12-9", 0300, 0400);
 //    	CreateScheduleHandler handler13 = new CreateScheduleHandler();
 //    	JSONObject reqJson13 = new JSONObject();
 //    	reqJson13.put("body", new Gson().toJson(req13));
@@ -323,6 +325,23 @@ public class ScheduleHandlerTests extends TestCase{
         System.out.println(sampleOutputString14);
         System.out.println("/output14");
         
+        //*******************************************
+        //Test retrieveOldSchedules
+    	RetrieveOldSchedulesRequest req15 = new RetrieveOldSchedulesRequest(1);
+    	RetrieveOldSchedulesHandler handler15 = new RetrieveOldSchedulesHandler();
+    	JSONObject reqJson15 = new JSONObject();
+    	reqJson15.put("body", new Gson().toJson(req15));
+    	
+    	
+        InputStream input15 = new ByteArrayInputStream(reqJson15.toJSONString().getBytes());;
+        OutputStream output15 = new ByteArrayOutputStream();
+                
+        handler15.handleRequest(input15, output14, c);
+        
+        String sampleOutputString15 = output15.toString();
+        System.out.println("output15");
+        System.out.println(sampleOutputString15);
+        System.out.println("/output15");
 
     }
 }
