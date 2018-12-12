@@ -21,33 +21,19 @@
 
         <div class="container">
             <div class="row">
-                <div class="col-sm-4">
-                    <h2>System Administrator</h2>
-                    <h5>Input login info in the text box below:</h5>
-                    <div class="form-group">
-                        <label for="usr">Username:</label>
-                        <input type="text" class="form-control" id="usr">
-                    </div>
-                    <div class="form-group">
-                        <label for="pwd">Password:</label>
-                        <input type="password" class="form-control" id="pwd">
-                    </div>
-                    <button type="button" class="btn btn-primary">Login</button>
-                    <hr class="hidden-sm hidden-md hidden-lg">
-                </div>
-                <div class="col-sm-4">
+                <div class="col-sm-6">
                     <h2>Organizer</h2>
                     <h5>Input schedule code below to access existing schedule:</h5>
                     <div class="form-group">
-                        <label for="pwd">Schedule Code:</label>
+                        <label for="pwd">Secret Code:</label>
                         <input type="text" class="form-control" id="organizerScheduleCode">
                     </div>
                     <button type="button" onclick="organizerLoad()" class="btn btn-info">Access Schedule</button>
 
-                    <h5>Click the botton below to create new schedule</h5>
+                    <h5>Click the button below to create new schedule</h5>
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createNewSchedule">Create New Schedule</button>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-6">
                     <h2>Participant</h2>
                     <h5>Input schedule code to access existing schedule below:</h5>
                     <div class="form-group">
