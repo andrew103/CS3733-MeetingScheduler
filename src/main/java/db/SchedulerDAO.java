@@ -25,10 +25,11 @@ public class SchedulerDAO {
 
     public boolean createSchedule(Schedule schedule) throws Exception {
     	try {
-        	String query = "INSERT INTO Schedule (scheduleID, shareCode, organizerCode, scheduleName, meetingDuration, startDate, endDate, startTime, endTime) values(NULL, ?, ?, ?, ?, ?, ?, ?, ?);";
+        	String query = "INSERT INTO Schedule (scheduleID, shareCode, organizerCode, scheduleName, meetingDuration, startDate, endDate, createdDate ,startTime, endTime) values(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         	PreparedStatement ps = conn.prepareStatement(query);
         	Date startDate = new Date(schedule.getStartDate().getTimeInMillis());
         	Date endDate = new Date(schedule.getEndDate().getTimeInMillis());
+        	Date createdDate = new Date(schedule.getCreatedDate().getTimeInMillis());
         	
         	
         	ps.setString(1, schedule.getShareCode());
@@ -37,8 +38,9 @@ public class SchedulerDAO {
         	ps.setInt(4, schedule.getDuration());
         	ps.setDate(5, startDate);
         	ps.setDate(6, endDate);
-        	ps.setLong(7, convertTimeToDB(schedule.getStartTime()));
-        	ps.setLong(8, convertTimeToDB(schedule.getEndTime()));
+        	ps.setDate(7, createdDate);
+        	ps.setLong(8, convertTimeToDB(schedule.getStartTime()));
+        	ps.setLong(9, convertTimeToDB(schedule.getEndTime()));
         	ps.execute();
         	        	
         	query = "SELECT scheduleID FROM Schedule WHERE shareCode = ?;";
@@ -107,12 +109,15 @@ public class SchedulerDAO {
         	startDate.setTime(resultSet1.getDate("startDate"));
         	GregorianCalendar endDate = new GregorianCalendar();
         	endDate.setTime(resultSet1.getDate("endDate"));
+        	GregorianCalendar createdDate = new GregorianCalendar();
+        	createdDate.setTime(resultSet1.getDate("createdDate"));
         	Schedule schedule = new Schedule(resultSet1.getString("scheduleName"),
         									 startDate,
         									 endDate,
         									 resultSet1.getInt("meetingDuration"),
         									 convertTimeToMilitary(resultSet1.getLong("startTime")),
         									 convertTimeToMilitary(resultSet1.getLong("endTime")),
+        									 createdDate,
         									 resultSet1.getString("organizerCode"),
         									 resultSet1.getString("shareCode"));
         	
@@ -620,5 +625,39 @@ public class SchedulerDAO {
 		int month = Integer.parseInt(date.substring(5, 6));
 		int day = Integer.parseInt(date.substring(8, 9));
 		return new GregorianCalendar(year, month, day);
+	}
+
+    public ArrayList<String> reportActivity(int hours) throws SQLException {
+		ArrayList<String> s = null;
+		
+		String query = "SELECT * FROM Schedule";
+    	PreparedStatement ps = conn.prepareStatement(query);
+    	//ps.setString(1, shareCode);
+    	ResultSet resultSet1 = ps.executeQuery();
+    	resultSet1.next();
+    	while (resultSet1.next())
+    	{
+    		GregorianCalendar startDate = new GregorianCalendar();
+        	startDate.setTime(resultSet1.getDate("startDate"));
+        	GregorianCalendar endDate = new GregorianCalendar();
+        	endDate.setTime(resultSet1.getDate("endDate"));
+        	GregorianCalendar createdDate = new GregorianCalendar();
+        	createdDate.setTime(resultSet1.getDate("createdDate"));
+        	Schedule schedule = new Schedule(resultSet1.getString("scheduleName"),
+        									 startDate,
+        									 endDate,
+        									 resultSet1.getInt("meetingDuration"),
+        									 convertTimeToMilitary(resultSet1.getLong("startTime")),
+        									 convertTimeToMilitary(resultSet1.getLong("endTime")),
+        									 createdDate,
+        									 resultSet1.getString("organizerCode"),
+        									 resultSet1.getString("shareCode"));
+    		
+    		if (schedule.getCreatedDate().getTimeInMillis() > convertTimeToDB(hours))
+    		{
+    			s.add(schedule.getScheduleName());
+    		}
+    	}
+		return s;
 	}
 }

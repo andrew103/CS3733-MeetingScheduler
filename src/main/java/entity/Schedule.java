@@ -13,6 +13,7 @@ public class Schedule
 	ArrayList<Day> days;
 	GregorianCalendar startDate;
 	GregorianCalendar endDate;
+	GregorianCalendar createdDate;
 	String startDateStr;
 	String endDateStr;
 	int startTime;
@@ -37,9 +38,10 @@ public class Schedule
 		this.organizerCode = randomAlphaNumeric(10);
 		this.shareCode = randomAlphaNumeric(10);
 		this.days = new ArrayList<Day>();
+		this.createdDate = new GregorianCalendar();
 	}
 
-	public Schedule(String name, GregorianCalendar startDate, GregorianCalendar endDate, int duration, int startTime, int endTime, String organizerCode, String shareCode) {
+	public Schedule(String name, GregorianCalendar startDate, GregorianCalendar endDate, int duration, int startTime, int endTime, GregorianCalendar createdDate, String organizerCode, String shareCode) {
 		/*
 		 * Use this constructor when dealing with existing schedules
 		 */
@@ -52,6 +54,7 @@ public class Schedule
 		this.organizerCode = organizerCode;
 		this.shareCode = shareCode;
 		this.days = new ArrayList<Day>();
+		this.createdDate = createdDate;
 	}
 
 	public static String randomAlphaNumeric(int count) {
@@ -112,6 +115,11 @@ public class Schedule
 	
 	public ArrayList<Day> getDays()	{
 		return days;
+	}
+	
+	public GregorianCalendar getCreatedDate()
+	{
+		return createdDate;
 	}
 	
 	public JSONObject toJSON() {
