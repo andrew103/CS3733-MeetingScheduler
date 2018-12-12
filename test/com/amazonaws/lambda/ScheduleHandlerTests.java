@@ -36,6 +36,8 @@ import com.amazonaws.lambda.openAllTimeSlotsTime.OpenAllTimeSlotsTimeHandler;
 import com.amazonaws.lambda.openAllTimeSlotsTime.OpenAllTimeSlotsTimeRequest;
 import com.amazonaws.lambda.openOrCloseTimeSlot.OpenOrCloseTimeSlotHandler;
 import com.amazonaws.lambda.openOrCloseTimeSlot.OpenOrCloseTimeSlotRequest;
+import com.amazonaws.lambda.reportActivity.ReportActivityHandler;
+import com.amazonaws.lambda.reportActivity.ReportActivityRequest;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.google.gson.Gson;
 
@@ -281,6 +283,46 @@ public class ScheduleHandlerTests extends TestCase{
         System.out.println(sampleOutputString2);
         System.out.println("/output2");
       //*******************************************
+        //Test reportActivity
+//    	CreateScheduleRequest req12 = new CreateScheduleRequest("Yin3", 60, "2018-10-26", "2018-10-27", 0300, 0400);
+//    	CreateScheduleHandler handler12 = new CreateScheduleHandler();
+//    	JSONObject reqJson12 = new JSONObject();
+//    	reqJson12.put("body", new Gson().toJson(req12));
+//    	
+//    	
+//        InputStream input12 = new ByteArrayInputStream(reqJson12.toJSONString().getBytes());;
+//        OutputStream output12 = new ByteArrayOutputStream();
+//                
+//        handler12.handleRequest(input12, output12, c);
+//        
+//        
+//    	CreateScheduleRequest req13 = new CreateScheduleRequest("Yang3", 60, "2018-10-26", "2018-10-29", 0300, 0400);
+//    	CreateScheduleHandler handler13 = new CreateScheduleHandler();
+//    	JSONObject reqJson13 = new JSONObject();
+//    	reqJson13.put("body", new Gson().toJson(req13));
+//    	
+//    	
+//        InputStream input13 = new ByteArrayInputStream(reqJson13.toJSONString().getBytes());;
+//        OutputStream output13 = new ByteArrayOutputStream();
+//                
+//        handler13.handleRequest(input13, output13, c);
         
+    	ReportActivityRequest req14 = new ReportActivityRequest(1);
+    	ReportActivityHandler handler14 = new ReportActivityHandler();
+    	JSONObject reqJson14 = new JSONObject();
+    	reqJson14.put("body", new Gson().toJson(req14));
+    	
+    	
+        InputStream input14 = new ByteArrayInputStream(reqJson14.toJSONString().getBytes());;
+        OutputStream output14 = new ByteArrayOutputStream();
+                
+        handler14.handleRequest(input14, output14, c);
+        
+        String sampleOutputString14 = output14.toString();
+        System.out.println("output14");
+        System.out.println(sampleOutputString14);
+        System.out.println("/output14");
+        
+
     }
 }

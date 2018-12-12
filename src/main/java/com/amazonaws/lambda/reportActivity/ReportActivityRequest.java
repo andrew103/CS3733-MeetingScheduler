@@ -11,7 +11,7 @@ public class ReportActivityRequest {
 	
 	public String toString()
 	{
-		return "Getting Schedules that were made within the last n hours";
+		return "Getting Schedules that were made within the last " + time+ " hours";
 	}
 
 }
