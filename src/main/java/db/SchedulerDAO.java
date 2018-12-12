@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.GregorianCalendar;
+import java.text.SimpleDateFormat;
 
 import entity.Day;
 import entity.Schedule;
@@ -30,7 +31,10 @@ public class SchedulerDAO {
         	PreparedStatement ps = conn.prepareStatement(query);
         	Date startDate = new Date(schedule.getStartDate().getTimeInMillis());
         	Date endDate = new Date(schedule.getEndDate().getTimeInMillis());
-        	long createdDate = (new GregorianCalendar()).getTimeInMillis();
+        	Date createdDate = new Date((new GregorianCalendar()).getTimeInMillis());
+        	SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        	
+        	String createdDateStr = fmt.format(createdDate);
         	
         	
         	ps.setString(1, schedule.getShareCode());
@@ -39,7 +43,7 @@ public class SchedulerDAO {
         	ps.setInt(4, schedule.getDuration());
         	ps.setDate(5, startDate);
         	ps.setDate(6, endDate);
-        	ps.setLong(7, createdDate);
+        	ps.setString(7, createdDateStr);
         	ps.setLong(8, convertTimeToDB(schedule.getStartTime()));
         	ps.setLong(9, convertTimeToDB(schedule.getEndTime()));
         	ps.execute();
@@ -110,13 +114,15 @@ public class SchedulerDAO {
         	startDate.setTime(resultSet1.getDate("startDate"));
         	GregorianCalendar endDate = new GregorianCalendar();
         	endDate.setTime(resultSet1.getDate("endDate"));
+        	GregorianCalendar createdDate = new GregorianCalendar();
+        	createdDate.setTime(resultSet1.getTimestamp("createdDate"));
         	Schedule schedule = new Schedule(resultSet1.getString("scheduleName"),
         									 startDate,
         									 endDate,
         									 resultSet1.getInt("meetingDuration"),
         									 convertTimeToMilitary(resultSet1.getLong("startTime")),
         									 convertTimeToMilitary(resultSet1.getLong("endTime")),
-        									 resultSet1.getLong("createdDate"),
+        									 createdDate,
         									 resultSet1.getString("organizerCode"),
         									 resultSet1.getString("shareCode"));
         	
@@ -640,22 +646,24 @@ public class SchedulerDAO {
 	        	startDate.setTime(resultSet1.getDate("startDate"));
 	        	GregorianCalendar endDate = new GregorianCalendar();
 	        	endDate.setTime(resultSet1.getDate("endDate"));
+	        	GregorianCalendar createdDate = new GregorianCalendar();
+	        	createdDate.setTime(resultSet1.getDate("endDate"));
 	        	Schedule schedule = new Schedule(resultSet1.getString("scheduleName"),
 	        									 startDate,
 	        									 endDate,
 	        									 resultSet1.getInt("meetingDuration"),
 	        									 convertTimeToMilitary(resultSet1.getLong("startTime")),
 	        									 convertTimeToMilitary(resultSet1.getLong("endTime")),
-	        									 resultSet1.getLong("createdDate"),
+	        									 createdDate,
 	        									 resultSet1.getString("organizerCode"),
 	        									 resultSet1.getString("shareCode"));
 	        	GregorianCalendar current = new GregorianCalendar();
 	        	
-	        	long schedDate = schedule.getCreatedDate();
+	        	GregorianCalendar schedDate = schedule.getCreatedDate();
 	        	long curr = current.getTimeInMillis();
 	        	long offset = TimeUnit.HOURS.toMillis(hours);
 	    		
-	    		if (schedule.getCreatedDate() > (current.getTimeInMillis() - TimeUnit.HOURS.toMillis(hours)))
+	    		if (schedule.getCreatedDate().getTimeInMillis() > (current.getTimeInMillis() - TimeUnit.HOURS.toMillis(hours)))
 	    		{
 	    			s.add(schedule.getScheduleName());
 	    		}
