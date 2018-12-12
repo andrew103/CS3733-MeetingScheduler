@@ -108,13 +108,11 @@ function initSchedule(foundSchedule){
     }
     else{
         alert("Invalid id")
-        backToIndex();
+        window.location.href = indexWebsite;
     }
 }
 
-function backToIndex(){
-  window.location.href = indexWebsite;
-}
+
 
 var table = $('#scheduleTable');
 table.on("click", "td", cellClick); //attaches the handler on the whole table, but filter the events by the "td" selector
@@ -262,7 +260,6 @@ function updateSchedule(startDate){
 
             var timeSlots = days[index]["timeSlots"]
             for(y = 0; y < timeSlots.length; y++){
-                console.log(timeSlots[y]["available"])
                 if(!timeSlots[y]["available"]){
                     if(timeSlots[y]["participantInfo"]){
                             scheduleTable.rows[y].cells[x].innerHTML = 'Booked by:' + timeSlots[y]["participantInfo"];

@@ -87,6 +87,18 @@ function processCell(cellText, cellIndex, rowIndex){//organizer version
   }
 }
 
+function populateTS(selector) {
+    console.log(schedule);
+    var select = $(selector);
+    var time;
+    timeslots = schedule["days"][0]["timeslots"];
+    for (var i = 0; i < timeslots.length; i ++) {
+        time = timeslots[i]["startTime"];
+        //add the value to dropdownlist
+        select.append($('<option></option>').attr('value', time).text(time));
+    }
+}
+
 function searchOpenTS(searchReturn){
   prevSearch = document.getElementById("searchReturn").getElementsByTagName("h5");
   btn = document.getElementById("searchReturn").getElementsByTagName("button")
@@ -271,15 +283,4 @@ function cancelMeeting(scheduleCode, meetingCode){
         }
     }
     // alert("add cancel meeting functionality");
-}
-
-function populateTS(selector) {
-    var select = $(selector);
-    var time;
-    timeslots = schedule["days"][0]["timeslots"];
-    for (var i = 0; i < timeslots.length; i ++) {
-        time = timeslots[i]["startTime"];
-        //add the value to dropdownlist
-        select.append($('<option></option>').attr('value', time).text(time));
-    }
 }
