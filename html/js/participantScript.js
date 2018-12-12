@@ -165,11 +165,11 @@ function searchOpenTS(searchReturn){
   for(i=0;i<current.length;i++){
     for(j=0;j<current[i]["timeslots"].length;j++){
       txt = (current[i]["dateStr"]+" at "+current[i]["timeslots"][j]["startTime"]);
-      //sr.append($('<br>'));
       sr.append($('<h5></h5>').text(txt));
       sr.append($('<button></button>')
                 .attr('class',"btn btn-success")
-                .attr('onclick', "scheduleOpenTS()")
+                .attr('value', txt)
+                .attr('onclick', "scheduleOpenTS(this)")
                 .text("schedule"));
       sr.append($('<br>'));
     }
@@ -182,8 +182,16 @@ function searchOpenTS(searchReturn){
   }
 }
 
-function scheduleOpenTS(){ //different from schedule meeting
-  alert("add schedule openTS functionality");
+function scheduleOpenTS(text){ //different from schedule meeting
+  console.log("input txt:"+text);
+  var shareCode = urlParams["shareCode"];
+  var partInfo = document.getElementById("searchOpenTSName").value;
+  var date = text.substring(0,10);
+  console.log("date: "+date);
+  var time = text.substring(14,4);
+  console.log("time"+time);
+
+  scheduleMeeting(shareCode, partInfo, time, date);
 }
 
 function scheduleMeeting(scheduleCode, participantInfo, time, day){

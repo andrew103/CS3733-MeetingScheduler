@@ -108,8 +108,12 @@ function initSchedule(foundSchedule){
     }
     else{
         alert("Invalid id")
-        window.location.href = indexWebsite;
+        backToIndex();
     }
+}
+
+function backToIndex(){
+  window.location.href = indexWebsite;
 }
 
 var table = $('#scheduleTable');
