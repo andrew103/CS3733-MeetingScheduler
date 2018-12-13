@@ -35,6 +35,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 	public LambdaLogger logger = null;
 	public String tempShareCode = "";
 	public String tempOrganizerCode = "";
+	public String tempMeetingCode = "";
 
 	// handle to our s3 storage
 	private AmazonS3 s3 = AmazonS3ClientBuilder.standard()
@@ -139,5 +140,9 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 	public String getOrganizerCode()
 	{
 		return tempOrganizerCode;
+	}
+
+	public String getMeetingCode() {
+		return tempMeetingCode;
 	}
 }

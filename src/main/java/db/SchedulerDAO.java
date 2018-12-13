@@ -714,4 +714,58 @@ public class SchedulerDAO {
 			throw new Exception("Couldn't find any schedules: " + e.getMessage());
 		}
 	}
+
+	public boolean deleteOldSchedules(int days)  throws Exception {
+    	try {
+			String query = "SELECT * FROM Schedule";
+	    	PreparedStatement ps = conn.prepareStatement(query);
+	    	ResultSet resultSet1 = ps.executeQuery();
+	    	while (resultSet1.next())
+	    	{
+	    		GregorianCalendar startDate = new GregorianCalendar();
+	        	startDate.setTime(resultSet1.getDate("startDate"));
+	        	GregorianCalendar endDate = new GregorianCalendar();
+	        	endDate.setTime(resultSet1.getDate("endDate"));
+	        	GregorianCalendar createdDate = new GregorianCalendar();
+	        	createdDate.setTime(resultSet1.getTimestamp("createdDate"));
+	        	Schedule schedule = new Schedule(resultSet1.getString("scheduleName"),
+	        									 startDate,
+	        									 endDate,
+	        									 resultSet1.getInt("meetingDuration"),
+	        									 convertTimeToMilitary(resultSet1.getLong("startTime")),
+	        									 convertTimeToMilitary(resultSet1.getLong("endTime")),
+	        									 createdDate,
+	        									 resultSet1.getString("organizerCode"),
+	        									 resultSet1.getString("shareCode"));
+	        	
+	        	GregorianCalendar current = new GregorianCalendar();
+	        	GregorianCalendar schedDate = schedule.getEndDate();
+	        	long endDateTime = resultSet1.getLong("endTime");
+	    		
+	    		if ((schedDate.getTimeInMillis() + endDateTime) < (current.getTimeInMillis() - TimeUnit.DAYS.toMillis(days)))
+	    		{
+	    			int scheduleID = resultSet1.getInt("scheduleID");
+	            	query = "DELETE FROM Timeslot WHERE scheduleID = ?";
+	            	ps = conn.prepareStatement(query);
+	            	ps.setInt(1, scheduleID);
+	            	ps.executeUpdate();
+	            	
+	            	query = "DELETE FROM Day WHERE scheduleID = ?";
+	            	ps = conn.prepareStatement(query);
+	            	ps.setInt(1, scheduleID);
+	            	ps.executeUpdate();
+
+	            	query = "DELETE FROM Schedule WHERE scheduleID = ?";
+	            	ps = conn.prepareStatement(query);
+	            	ps.setInt(1, scheduleID);
+	            	ps.executeUpdate();
+	    		}
+	    	}
+	    	System.out.println("Deleted old schedules");
+			return true;
+    	}
+    	catch (Exception e) {
+			throw new Exception("Couldn't find any schedules to delete: " + e.getMessage());
+		}
+	}
 }

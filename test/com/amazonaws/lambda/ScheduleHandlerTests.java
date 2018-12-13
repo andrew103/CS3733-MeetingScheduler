@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 import org.json.simple.JSONObject;
@@ -26,6 +27,8 @@ import com.amazonaws.lambda.createMeeting.CreateMeetingHandler;
 import com.amazonaws.lambda.createMeeting.CreateMeetingRequest;
 import com.amazonaws.lambda.createSchedule.CreateScheduleHandler;
 import com.amazonaws.lambda.createSchedule.CreateScheduleRequest;
+import com.amazonaws.lambda.deleteOldSchedules.DeleteOldSchedulesHandler;
+import com.amazonaws.lambda.deleteOldSchedules.DeleteOldSchedulesRequest;
 import com.amazonaws.lambda.deleteSchedule.DeleteScheduleHandler;
 import com.amazonaws.lambda.deleteSchedule.DeleteScheduleRequest;
 import com.amazonaws.lambda.getSchedule.GetScheduleRequest;
@@ -94,7 +97,7 @@ public class ScheduleHandlerTests extends TestCase{
         System.out.println("/output");
         //*******************************************
         //Create Meeting
-    	CreateMeetingRequest req3 = new CreateMeetingRequest(tempShareCode, tempOrganizerCode, 0300, "2018-10-26", "Samuel Vimes", "The Watch");
+    	CreateMeetingRequest req3 = new CreateMeetingRequest(tempShareCode, "Samuel Vimes", 0300, "2018-10-26");
     	CreateMeetingHandler handler3 = new CreateMeetingHandler();
     	JSONObject req3Json = new JSONObject();
     	req3Json.put("body", new Gson().toJson(req3));
@@ -130,8 +133,7 @@ public class ScheduleHandlerTests extends TestCase{
         
         //*******************************************
         //Cancel Meeting Participant
-        
-    	CreateMeetingRequest req31 = new CreateMeetingRequest(tempShareCode, tempOrganizerCode, 0300, "2018-10-26", "Samuel Vimes", "The Watch");
+    	CreateMeetingRequest req31 = new CreateMeetingRequest(tempShareCode, "Samuel Vimes", 0300, "2018-10-26");
     	CreateMeetingHandler handler31 = new CreateMeetingHandler();
     	JSONObject req31Json = new JSONObject();
     	req31Json.put("body", new Gson().toJson(req31));
@@ -142,7 +144,8 @@ public class ScheduleHandlerTests extends TestCase{
                 
         handler31.handleRequest(input31, output31, c);
         
-        CancelMeetingParticipantRequest req5 = new CancelMeetingParticipantRequest(tempShareCode, "The Watch");
+        tempMeetingCode = handler31.getMeetingCode();
+        CancelMeetingParticipantRequest req5 = new CancelMeetingParticipantRequest(tempShareCode, tempMeetingCode);
         CancelMeetingParticipantHandler handler5 = new CancelMeetingParticipantHandler();
     	JSONObject req5Json = new JSONObject();
     	req5Json.put("body", new Gson().toJson(req5));
@@ -336,12 +339,30 @@ public class ScheduleHandlerTests extends TestCase{
         InputStream input15 = new ByteArrayInputStream(reqJson15.toJSONString().getBytes());;
         OutputStream output15 = new ByteArrayOutputStream();
                 
-        handler15.handleRequest(input15, output14, c);
+        handler15.handleRequest(input15, output15, c);
         
         String sampleOutputString15 = output15.toString();
         System.out.println("output15");
         System.out.println(sampleOutputString15);
         System.out.println("/output15");
+        
+        //*******************************************
+        //Test deleteOldSchedules
+    	DeleteOldSchedulesRequest req16 = new DeleteOldSchedulesRequest(3);
+    	DeleteOldSchedulesHandler handler16 = new DeleteOldSchedulesHandler();
+    	JSONObject reqJson16 = new JSONObject();
+    	reqJson16.put("body", new Gson().toJson(req16));
+    	
+    	
+        InputStream input16 = new ByteArrayInputStream(reqJson16.toJSONString().getBytes());;
+        OutputStream output16 = new ByteArrayOutputStream();
+                
+        handler16.handleRequest(input16, output16, c);
+        
+        String sampleOutputString16 = output16.toString();
+        System.out.println("output16");
+        System.out.println(sampleOutputString16);
+        System.out.println("/output16");
 
     }
 }

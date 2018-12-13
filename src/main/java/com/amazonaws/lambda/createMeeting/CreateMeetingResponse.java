@@ -42,7 +42,7 @@ public class CreateMeetingResponse {
 	
 	public String toString()
 	{
-		return "Your meeting has been created on " + this.day + " at " + this.time;
+		return "Your meeting has been created on " + this.day + " at " + this.time + " with the meeting code: "+ meetingCode;
 	}
 
 }
