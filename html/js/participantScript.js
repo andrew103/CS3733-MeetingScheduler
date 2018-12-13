@@ -1,69 +1,31 @@
-var originalScheduleMeetingHTML = `
-<div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal">&times;</button>
-      <h4 class="modal-title">Schedule meeting on an open timeslot</h4>
-    </div>
-    <div class="modal-body">
-      <p id="scheduleMeetingText"></p>
-      <form class="form-horizontal">
-        <div class="form-group">
-          <label class="control-label col-sm-2" for="name">Name: </label>
-          <div class="col-sm-10">
-            <input class="form-control" type="text" id="participantName" placeholder="YOUR NAME"></input>
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-success pull-left" id="scheduleMeetingButton" onclick="scheduleMeeting()">Schedule Meeting</button>
-      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    </div>
-  </div>
-</div>
-`
-var afterScheduleMeetingHTML = `
-<div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal">&times;</button>
-      <h4 class="modal-title">Schedule meeting on an open timeslot</h4>
-    </div>
-    <div class="modal-body">
-      <p id="scheduleMeetingCode"></p>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-default" data-dismiss="modal" id="closePopupButton" onclick="">Close</button>
-    </div>
-  </div>
-</div>
-`
-
 isOrganizer = false;
 
 function processCell(cellText, cellIndex, rowIndex){//organizer version
-  document.getElementById("scheduleMeeting").innerHTML = originalScheduleMeetingHTML;
+  //document.getElementById("scheduleMeeting").innerHTML = originalScheduleMeetingHTML;
   switch(cellText){
     case "Open":
       stringDisp = "Time slot open on "+showDayTime(cellIndex, rowIndex);
       document.getElementById("scheduleMeetingText").innerHTML=stringDisp;
       document.getElementById("scheduleMeetingButton").onclick = function() {
-        var shareCode = urlParams["shareCode"];
-        var partInfo = document.getElementById("participantName").value;
-        var date = getDate(cellIndex);
-        var time;
-
-        days = schedule["days"];
-        for (i = 0; i < days.length; i++){
-            if (days[i]["dateStr"] == date){
-                time = days[i]["timeSlots"][rowIndex]["startTime"];
-                break;
-            }
+        if(document.getElementById("participantName").value==null||document.getElementById("participantName").value==""){
+          alert("please enter your name");
         }
-        console.log("successfully set all params");
-
-        scheduleMeeting(shareCode, partInfo, time, date);
+        else{
+          var shareCode = urlParams["shareCode"];
+          var partInfo = document.getElementById("participantName").value;
+          var date = getDate(cellIndex);
+          var time;
+          days = schedule["days"];
+          for (i = 0; i < days.length; i++){
+              if (days[i]["dateStr"] == date){
+                  time = days[i]["timeSlots"][rowIndex]["startTime"];
+                  break;
+              }
+          }
+          console.log("successfully set all params");
+          scheduleMeeting(shareCode, partInfo, time, date);
+          $("#scheduleMeetingConfirmation").modal();
+        }
       };
       $("#scheduleMeeting").modal();
       break;
@@ -83,8 +45,21 @@ function processCell(cellText, cellIndex, rowIndex){//organizer version
 
         cancelMeeting(shareCode, meetingCode);
       };
-      $("#cancelMeeting").modal();
   }
+}
+
+function populateTS(selector) {
+    console.log(schedule);
+    var select = $(selector);
+    var time;
+
+    timeslots = schedule["days"][0]["timeSlots"];
+
+    for (var i = 0; i < timeslots.length; i ++) {
+        time = timeslots[i]["startTime"];
+        //add the value to dropdownlist
+        select.append($('<option></option>').attr('value', time).text(time));
+    }
 }
 
 function searchOpenTS(searchReturn){
@@ -146,13 +121,13 @@ function searchOpenTS(searchReturn){
   if (timeSlot != null && timeSlot != ""){
     //if timeSlot input is not empty, do last search
     for(i=0;i<current.length;i++){
-      for(j=0;j<current[i]["timeslots"].length;j++){
-        if (current[i]["timeslots"][j]["startTime"] != timeSlot || current[i]["timeslots"][j]["isClosed"] == true){
-          current[i]["timeslots"].splice(j,1); //remove unmatched TS from current list
+      for(j=0;j<current[i]["timeSlots"].length;j++){
+        if (current[i]["timeSlots"][j]["startTime"] != timeSlot || current[i]["timeSlots"][j]["isClosed"] == true){
+          current[i]["timeSlots"].splice(j,1); //remove unmatched TS from current list
           j --; //list shortens by 1
         }
       }
-      if (current[i]["timeslots"].length ==0){
+      if (current[i]["timeSlots"].length ==0){
         current.splice(i,1); //if all timeslots in a day are removed, delete day
         i --;
       }
@@ -163,13 +138,14 @@ function searchOpenTS(searchReturn){
   var sr = $(searchReturn);
   var txt;
   for(i=0;i<current.length;i++){
-    for(j=0;j<current[i]["timeslots"].length;j++){
-      txt = (current[i]["dateStr"]+" at "+current[i]["timeslots"][j]["startTime"]);
-      //sr.append($('<br>'));
+    for(j=0;j<current[i]["timeSlots"].length;j++){
+      txt = (current[i]["dateStr"]+" at "+current[i]["timeSlots"][j]["startTime"]);
       sr.append($('<h5></h5>').text(txt));
       sr.append($('<button></button>')
                 .attr('class',"btn btn-success")
-                .attr('onclick', "scheduleOpenTS()")
+                .attr('value', txt)
+                .attr('onclick', "scheduleOpenTS(this)")
+                .attr('data-dismiss',"modal")
                 .text("schedule"));
       sr.append($('<br>'));
     }
@@ -182,8 +158,15 @@ function searchOpenTS(searchReturn){
   }
 }
 
-function scheduleOpenTS(){ //different from schedule meeting
-  alert("add schedule openTS functionality");
+function scheduleOpenTS(btn){ //different from schedule meeting
+  console.log("input txt:"+btn.value);
+  text = btn.value;
+  var shareCode = urlParams["shareCode"];
+  var partInfo = document.getElementById("searchOpenTSName").value;
+  var date = text.substring(0,10);
+  var time = text.substring(14);
+  scheduleMeeting(shareCode, partInfo, time, date);
+  $("#scheduleMeeting").modal();
 }
 
 function scheduleMeeting(scheduleCode, participantInfo, time, day){
@@ -198,6 +181,7 @@ function scheduleMeeting(scheduleCode, participantInfo, time, day){
   xhr.open("POST",participant_scheduleMeeting,true);
 
   xhr.send(JSON.stringify(postReq));
+  console.log(postReq);
 
   xhr.onloadend=function() {
       //console.log(xhr);
@@ -212,7 +196,6 @@ function scheduleMeeting(scheduleCode, participantInfo, time, day){
               console.log(meetingCode);
               found = true;
 
-              document.getElementById("scheduleMeeting").innerHTML = afterScheduleMeetingHTML;
               document.getElementById("scheduleMeetingCode").innerHTML = "Your meeting code is: " + meetingCode + ". Please save this to access your meeting.";
               document.getElementById("closePopupButton").onclick = function () {
                   loadSchedule(false);
@@ -263,15 +246,4 @@ function cancelMeeting(scheduleCode, meetingCode){
         }
     }
     // alert("add cancel meeting functionality");
-}
-
-function populateTS(selector) {
-    var select = $(selector);
-    var time;
-    timeslots = schedule["days"][0]["timeslots"];
-    for (var i = 0; i < timeslots.length; i ++) {
-        time = timeslots[i]["startTime"];
-        //add the value to dropdownlist
-        select.append($('<option></option>').attr('value', time).text(time));
-    }
 }
