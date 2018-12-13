@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -39,6 +40,7 @@ public class Schedule
 		this.shareCode = randomAlphaNumeric(10);
 		this.days = new ArrayList<Day>();
 		this.createdDate = new GregorianCalendar();
+		//this.createdDate.setTimeZone(TimeZone.getTimeZone("Zulu"));
 	}
 
 	public Schedule(String name, GregorianCalendar startDate, GregorianCalendar endDate, int duration, int startTime, int endTime, GregorianCalendar createdDate, String organizerCode, String shareCode) {
@@ -55,6 +57,7 @@ public class Schedule
 		this.shareCode = shareCode;
 		this.days = new ArrayList<Day>();
 		this.createdDate = createdDate;
+		//this.createdDate.setTimeZone(TimeZone.getTimeZone("Zulu"));
 	}
 
 	public static String randomAlphaNumeric(int count) {

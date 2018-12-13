@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.GregorianCalendar;
 import java.text.SimpleDateFormat;
@@ -610,6 +611,7 @@ public ArrayList<String> reportActivity(int hours) throws Exception {
 	        									 resultSet1.getString("organizerCode"),
 	        									 resultSet1.getString("shareCode"));
 	        	GregorianCalendar current = new GregorianCalendar();
+	        	System.out.println("Created Time: " + resultSet1.getTimestamp("createdDate"));
 	        	
 	        	//GregorianCalendar schedDate = schedule.getCreatedDate();	
 	        	
@@ -653,7 +655,7 @@ public ArrayList<String> reportActivity(int hours) throws Exception {
 	        									 resultSet1.getString("shareCode"));
 	        	
 	        	GregorianCalendar current = new GregorianCalendar();
-	        	GregorianCalendar schedDate = schedule.getEndDate();
+	        	GregorianCalendar schedDate = schedule.getCreatedDate();
 	        	long endDateTime = resultSet1.getLong("endTime");
 	    		
 	    		if ((schedDate.getTimeInMillis() + endDateTime) < (current.getTimeInMillis() - TimeUnit.DAYS.toMillis(days)))
@@ -680,6 +682,8 @@ public ArrayList<String> reportActivity(int hours) throws Exception {
 	        	GregorianCalendar endDate = new GregorianCalendar();
 	        	endDate.setTime(resultSet1.getDate("endDate"));
 	        	GregorianCalendar createdDate = new GregorianCalendar();
+	        	TimeZone utc = TimeZone.getTimeZone("Zulu");
+	        	createdDate.setTimeZone(utc);
 	        	createdDate.setTime(resultSet1.getTimestamp("createdDate"));
 	        	Schedule schedule = new Schedule(resultSet1.getString("scheduleName"),
 	        									 startDate,
@@ -745,7 +749,7 @@ public ArrayList<String> reportActivity(int hours) throws Exception {
 	    	String calEndd = calEnd.toString();
 	    	GregorianCalendar calendarCurrent = parseDate(endDate.toString());
 	    	//GregorianCalendar calendarEnd = newEndDate;
-	    	
+	    	//newEndDate.add(Calendar.DAY_OF_MONTH, -1);
 	    	while(calendarCurrent.equals(newEndDate)==false) {
 	    		calendarCurrent.add(Calendar.DAY_OF_MONTH, 1);
 	    		if (calendarCurrent.DAY_OF_WEEK != calendarCurrent.SUNDAY || calendarCurrent.DAY_OF_WEEK != calendarCurrent.SATURDAY) {
@@ -823,7 +827,6 @@ public ArrayList<String> reportActivity(int hours) throws Exception {
 	    	String calSrt = calStart.toString();
 	    	GregorianCalendar calendarStart = parseDate(startDate.toString());
 	    	//newStartDate.add(Calendar.DAY_OF_MONTH, 1);
-	    	calendarStart.add(Calendar.DAY_OF_MONTH, -1);
 	    	//GregorianCalendar calendarEnd = newEndDate;
 	    	
 	    	while(newStartDate.equals(calendarStart)==false) {
