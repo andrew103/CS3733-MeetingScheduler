@@ -1,4 +1,4 @@
-package com.amazonaws.lambda.openAllSlotsDay;
+package com.amazonaws.lambda.extendStartDate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
 
@@ -31,7 +32,7 @@ import db.SchedulerDAO;
  * Found gson JAR file from
  * https://repo1.maven.org/maven2/com/google/code/gson/gson/2.6.2/gson-2.6.2.jar
  */
-public class OpenAllSlotsDayHandler implements RequestStreamHandler {
+public class ExtendStartDateHandler implements RequestStreamHandler {
 
 	public LambdaLogger logger = null;
 
@@ -40,18 +41,12 @@ public class OpenAllSlotsDayHandler implements RequestStreamHandler {
 			.withRegion("us-east-2").build();
 
 	boolean useRDS = true;
-
-	boolean openAllSlotsDay(String scheduleCode, String secretCode, String day) throws Exception {
-		SchedulerDAO dao = new SchedulerDAO();	
-		GregorianCalendar date = parseDate(day);  
-		return dao.openAllSlotsDay(scheduleCode, secretCode, date);	
-	}
 	
-	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
-		int year = Integer.parseInt(date.substring(0, 4));
-		int month = Integer.parseInt(date.substring(5, 7));
-		int day = Integer.parseInt(date.substring(8));
-		return new GregorianCalendar(year, month-1, day);
+
+	boolean extendStartDate(String shareCode, String organizerCode, String date) throws Exception {
+		SchedulerDAO dao = new SchedulerDAO();	
+		GregorianCalendar startDate = parseDate(date);
+		return dao.extendStartDate(shareCode, organizerCode, startDate);	
 	}
 	
 	@Override
@@ -67,7 +62,7 @@ public class OpenAllSlotsDayHandler implements RequestStreamHandler {
 		JSONObject responseJson = new JSONObject();
 		responseJson.put("headers", headerJson);
 
-		OpenAllSlotsDayResponse response = null;
+		ExtendStartDateResponse response = null;
 		
 		// extract body from incoming HTTP POST request. If any error, then return 422 error
 		String body;
@@ -83,7 +78,7 @@ public class OpenAllSlotsDayHandler implements RequestStreamHandler {
 			String method = (String) event.get("httpMethod");
 			if (method != null && method.equalsIgnoreCase("OPTIONS")) {
 				logger.log("Options request");
-				response = new OpenAllSlotsDayResponse("Option", 200);  // OPTIONS needs a 200 response
+				response = new ExtendStartDateResponse("Option", 200);  // OPTIONS needs a 200 response
 		        responseJson.put("body", new Gson().toJson(response));
 		        processed = true;
 		        body = null;
@@ -95,7 +90,7 @@ public class OpenAllSlotsDayHandler implements RequestStreamHandler {
 			}
 		} catch (ParseException pe) {
 			logger.log(pe.toString());
-			response = new OpenAllSlotsDayResponse("Failure", 400);  // unable to process input
+			response = new ExtendStartDateResponse("Failure", 400);  // unable to process input
 	        responseJson.put("body", new Gson().toJson(response));
 	        processed = true;
 	        body = null;
@@ -103,33 +98,29 @@ public class OpenAllSlotsDayHandler implements RequestStreamHandler {
 
 		if (!processed) 
 		{
-			OpenAllSlotsDayRequest req = new Gson().fromJson(body, OpenAllSlotsDayRequest.class);
+			ExtendStartDateRequest req = new Gson().fromJson(body, ExtendStartDateRequest.class);
 			logger.log(req.toString());
 			
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
-			OpenAllSlotsDayResponse resp;
+			ExtendStartDateResponse resp;
 			logger.log(" ***Request made succ*** ");
 			try {
 				logger.log(" **** In the Try loop *** ");
-				logger.log(req.scheduleCode);
-				logger.log(req.secretCode);
-				logger.log(req.date);
-				boolean del = openAllSlotsDay(req.scheduleCode, req.secretCode, req.date);
-				if (del) {
-					logger.log(" *** It definitely worked right? probably. *** ");
-					resp = new OpenAllSlotsDayResponse(req.scheduleCode, req.secretCode, req.date, 200);					
+				boolean s = extendStartDate(req.shareCode, req.organizerCode, req.newStartDate);
+				if (s) {
+					System.out.println("Found schedule to extend!");
+					resp = new ExtendStartDateResponse(req.newStartDate.toString(), 200);					
 				}
 				else {
-					logger.log(" *** fuck it failed *** ");
-					resp = new OpenAllSlotsDayResponse("The schedule was not found", 400);					
+					System.out.println("No schedules found");
+					resp = new ExtendStartDateResponse("No schedules were found", 400);					
 					}
-				logger.log("WTF");
 				} 
 			catch (Exception e) 
 			{
 				logger.log(" ***EXCEPTION*** " + e);
-				resp = new OpenAllSlotsDayResponse("Something went wrong in the database", 400);					
+				resp = new ExtendStartDateResponse("Something went wrong in the database", 400);					
 			}
 	        
 			logger.log(" ***something did happen*** ");
@@ -142,5 +133,12 @@ public class OpenAllSlotsDayHandler implements RequestStreamHandler {
         OutputStreamWriter writer = new OutputStreamWriter(output, "UTF-8");
         writer.write(responseJson.toJSONString());  
         writer.close();
+	}
+	
+	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
+		int year = Integer.parseInt(date.substring(0, 4));
+		int month = Integer.parseInt(date.substring(5, 7));
+		int day = Integer.parseInt(date.substring(8));
+		return new GregorianCalendar(year, month-1, day);
 	}
 }
