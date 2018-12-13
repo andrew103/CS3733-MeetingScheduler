@@ -583,8 +583,8 @@ public class SchedulerDAO {
 		}
 	}
 	
-	public ArrayList<String> reportActivity(int hours) throws Exception {
-    	try {
+public ArrayList<String> reportActivity(int hours) throws Exception {
+    try {
 			ArrayList<String> s = new ArrayList<String>();
 			
 			String query = "SELECT * FROM Schedule";
