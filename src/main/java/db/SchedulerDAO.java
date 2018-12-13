@@ -692,7 +692,7 @@ public ArrayList<String> reportActivity(int hours) throws Exception {
 	        									 resultSet1.getString("shareCode"));
 	        	
 	        	GregorianCalendar current = new GregorianCalendar();
-	        	GregorianCalendar schedDate = schedule.getEndDate();
+	        	GregorianCalendar schedDate = schedule.getCreatedDate();
 	        	long endDateTime = resultSet1.getLong("endTime");
 	    		
 	    		if ((schedDate.getTimeInMillis() + endDateTime) < (current.getTimeInMillis() - TimeUnit.DAYS.toMillis(days)))
