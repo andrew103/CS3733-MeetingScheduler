@@ -787,25 +787,86 @@ public ArrayList<String> reportActivity(int hours) throws Exception {
 	    		}
 	    		
 	    	}
-//	    	query = "SELECT dayID, dayDate FROM Day WHERE scheduleID = ?;";
-//	    	ps = conn.prepareStatement(query);
-//	    	ps.setInt(1, scheduleID);
-//	    	resultSet1 = ps.executeQuery();
-//	    	while (resultSet1.next()) {
-//	        	long currentTime = startTime;
-//	        	long et = endTime;
-//	    		while (currentTime < et) {
-//	    			query = "INSERT INTO Timeslot (startTime, available, participantInfo, meetingCode, dayDate, scheduleID, dayID) values(?, true, NULL, NULL, ?, ?, ?);";
-//	    			ps = conn.prepareStatement(query);
-//	    			ps.setLong(1, currentTime);
-//	    			ps.setDate(2, resultSet1.getDate("dayDate"));
-//	    			ps.setInt(3, scheduleID);
-//	    			ps.setInt(4, resultSet1.getInt("dayID"));
-//	    			ps.execute();
-//	    			
-//	    			currentTime = currentTime + duration*60*1000;
-//	    		}
-//	    	}
+	    	resultSet1.close();
+	    	ps.close();
+			
+			
+			return true;
+			
+		}
+		catch (Exception e){
+			throw new Exception("Failed to extend end date: " + e.getMessage());
+		}
+
+	}
+	
+	public boolean extendStartDate(String shareCode, String organizerCode, GregorianCalendar newStartDate) throws Exception {
+		try {
+			String query = "SELECT * FROM Schedule WHERE organizerCode = ?";
+			PreparedStatement ps = conn.prepareStatement(query);
+	    	ps.setString(1, organizerCode);
+	    	ResultSet resultSet1 = ps.executeQuery();
+	    	resultSet1.next();
+	    	int scheduleID = resultSet1.getInt("scheduleID");
+	    	long startTime = resultSet1.getLong("startTime");
+	    	long endTime = resultSet1.getLong("endTime");
+	    	int duration = resultSet1.getInt("meetingDuration");
+	    	Date startDate = resultSet1.getDate("startDate");
+	    	
+	    	query = "UPDATE Schedule SET startDate = ? WHERE scheduleID = ?";
+	    	ps = conn.prepareStatement(query);
+	    	ps.setDate(1, new Date(newStartDate.getTimeInMillis()));
+	    	ps.setInt(2, scheduleID);
+	    	ps.executeUpdate();
+	    	String calCurr = startDate.toString();
+	    	Date calStart = new Date(newStartDate.getTimeInMillis());
+	    	String calSrt = calStart.toString();
+	    	GregorianCalendar calendarStart = parseDate(startDate.toString());
+	    	//newStartDate.add(Calendar.DAY_OF_MONTH, 1);
+	    	calendarStart.add(Calendar.DAY_OF_MONTH, -1);
+	    	//GregorianCalendar calendarEnd = newEndDate;
+	    	
+	    	while(newStartDate.equals(calendarStart)==false) {
+	    		if (newStartDate.DAY_OF_WEEK != newStartDate.SUNDAY || newStartDate.DAY_OF_WEEK != newStartDate.SATURDAY) {
+	        		Date currentDate = new Date(newStartDate.getTimeInMillis());
+	        		
+	        		query = "INSERT INTO Day (dayID, dayDate, dayStartTime, dayEndTime, scheduleID) values(NULL, ?, ?, ?, ?);";
+	        		ps = conn.prepareStatement(query);
+	        		ps.setDate(1, currentDate);
+	        		ps.setLong(2, startTime);
+	        		ps.setLong(3, endTime);
+	        		ps.setInt(4, scheduleID);
+	        		ps.execute();
+	        		
+	        		//Populate day with timeslots
+	        		
+	        		query = "SELECT dayID FROM Day WHERE scheduleID = ? AND dayDate =?";
+	        		ps = conn.prepareStatement(query);
+	        		ps.setInt(1, scheduleID);
+	        		ps.setDate(2, currentDate);
+	        		ResultSet resultSet2 = ps.executeQuery();
+	        		resultSet2.next();
+	        		int dayID = resultSet2.getInt("dayID");
+	        		int schedID = scheduleID;
+	        		//Timeslots
+	        		long currentTime = startTime;
+	        		long et = endTime;
+	        		while (currentTime < et)
+	        		{
+	        			query = "INSERT INTO Timeslot (startTime, available, participantInfo, meetingCode, dayDate, scheduleID, dayID) values(?, true, NULL, NULL, ?, ?, ?);";
+		    			ps = conn.prepareStatement(query);
+		    			ps.setLong(1, currentTime);
+		    			ps.setDate(2, currentDate);
+		    			ps.setInt(3, scheduleID);
+		    			ps.setInt(4, dayID);
+		    			ps.execute();
+		    			
+		    			currentTime = currentTime + duration*60*1000;
+	        		}
+	        		newStartDate.add(Calendar.DAY_OF_MONTH, 1);
+	    		}
+	    		
+	    	}
 	    	resultSet1.close();
 	    	ps.close();
 			
@@ -865,5 +926,7 @@ public ArrayList<String> reportActivity(int hours) throws Exception {
 		int day = Integer.parseInt(date.substring(8));
 		return new GregorianCalendar(year, month-1, day);
 	}
+
+
 
 }

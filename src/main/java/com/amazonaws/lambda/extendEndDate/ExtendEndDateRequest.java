@@ -7,9 +7,9 @@ public class ExtendEndDateRequest {
 	
 	String shareCode;
 	String organizerCode;
-	GregorianCalendar newEndDate;
+	String newEndDate;
 	
-	public ExtendEndDateRequest(String shareCode, String organizerCode, GregorianCalendar newEndDate)
+	public ExtendEndDateRequest(String shareCode, String organizerCode, String newEndDate)
 	{
 		this.shareCode = shareCode;
 		this.organizerCode = organizerCode;
@@ -18,8 +18,7 @@ public class ExtendEndDateRequest {
 	
 	public String toString()
 	{
-		Date endDate = new Date(newEndDate.getTimeInMillis());
-		return "Extending end date to " + endDate.toString();
+		return "Extending end date to "+ newEndDate;
 	}
 
 }

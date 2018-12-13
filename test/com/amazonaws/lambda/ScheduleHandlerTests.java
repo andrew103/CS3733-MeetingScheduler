@@ -33,6 +33,8 @@ import com.amazonaws.lambda.deleteSchedule.DeleteScheduleHandler;
 import com.amazonaws.lambda.deleteSchedule.DeleteScheduleRequest;
 import com.amazonaws.lambda.extendEndDate.ExtendEndDateHandler;
 import com.amazonaws.lambda.extendEndDate.ExtendEndDateRequest;
+import com.amazonaws.lambda.extendStartDate.ExtendStartDateHandler;
+import com.amazonaws.lambda.extendStartDate.ExtendStartDateRequest;
 import com.amazonaws.lambda.getSchedule.GetScheduleRequest;
 import com.amazonaws.lambda.getSchedule.OrganizerGetScheduleHandler;
 import com.amazonaws.lambda.openAllSlotsDay.OpenAllSlotsDayHandler;
@@ -79,7 +81,7 @@ public class ScheduleHandlerTests extends TestCase{
     	Context c = createContext("test");
     	conn = DatabaseUtils.connect();
     	
-    	CreateScheduleRequest req = new CreateScheduleRequest("lookAtmeeeee", 60, "2018-10-26", "2018-10-27", 0300, 0400);
+    	CreateScheduleRequest req = new CreateScheduleRequest("bestScheduleEverrrrr", 60, "2018-10-26", "2018-10-27", 0300, 0400);
     	CreateScheduleHandler handler = new CreateScheduleHandler();
     	JSONObject reqJson = new JSONObject();
     	reqJson.put("body", new Gson().toJson(req));
@@ -367,8 +369,8 @@ public class ScheduleHandlerTests extends TestCase{
 //        System.out.println("/output16");
         
         //*******************************************
-        //Test retrieveOldSchedules
-    	ExtendEndDateRequest req16 = new ExtendEndDateRequest(tempShareCode, tempOrganizerCode, parseDate("2018-12-25"));
+        //Test extend End Date
+    	ExtendEndDateRequest req16 = new ExtendEndDateRequest(tempShareCode, tempOrganizerCode, "2018-12-25");
     	ExtendEndDateHandler handler16 = new ExtendEndDateHandler();
     	JSONObject reqJson16 = new JSONObject();
     	reqJson16.put("body", new Gson().toJson(req16));
@@ -383,6 +385,24 @@ public class ScheduleHandlerTests extends TestCase{
         System.out.println("output16");
         System.out.println(sampleOutputString16);
         System.out.println("/output16");
+        
+        //*******************************************
+        //Test extend Start Date
+    	ExtendStartDateRequest req17 = new ExtendStartDateRequest(tempShareCode, tempOrganizerCode, "2018-10-1");
+    	ExtendStartDateHandler handler17 = new ExtendStartDateHandler();
+    	JSONObject reqJson17 = new JSONObject();
+    	reqJson17.put("body", new Gson().toJson(req17));
+    	
+    	
+        InputStream input17 = new ByteArrayInputStream(reqJson17.toJSONString().getBytes());;
+        OutputStream output17 = new ByteArrayOutputStream();
+                
+        handler17.handleRequest(input17, output17, c);
+        
+        String sampleOutputString17 = output17.toString();
+        System.out.println("output17");
+        System.out.println(sampleOutputString17);
+        System.out.println("/output17");
 
     }
     

@@ -1,4 +1,4 @@
-package com.amazonaws.lambda.extendEndDate;
+package com.amazonaws.lambda.extendStartDate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,7 +32,7 @@ import db.SchedulerDAO;
  * Found gson JAR file from
  * https://repo1.maven.org/maven2/com/google/code/gson/gson/2.6.2/gson-2.6.2.jar
  */
-public class ExtendEndDateHandler implements RequestStreamHandler {
+public class ExtendStartDateHandler implements RequestStreamHandler {
 
 	public LambdaLogger logger = null;
 
@@ -43,10 +43,10 @@ public class ExtendEndDateHandler implements RequestStreamHandler {
 	boolean useRDS = true;
 	
 
-	boolean extendEndDate(String shareCode, String organizerCode, String date) throws Exception {
-		SchedulerDAO dao = new SchedulerDAO();
-		GregorianCalendar endDate = parseDate(date);
-		return dao.extendEndDate(shareCode, organizerCode, endDate);	
+	boolean extendStartDate(String shareCode, String organizerCode, String date) throws Exception {
+		SchedulerDAO dao = new SchedulerDAO();	
+		GregorianCalendar startDate = parseDate(date);
+		return dao.extendStartDate(shareCode, organizerCode, startDate);	
 	}
 	
 	@Override
@@ -62,7 +62,7 @@ public class ExtendEndDateHandler implements RequestStreamHandler {
 		JSONObject responseJson = new JSONObject();
 		responseJson.put("headers", headerJson);
 
-		ExtendEndDateResponse response = null;
+		ExtendStartDateResponse response = null;
 		
 		// extract body from incoming HTTP POST request. If any error, then return 422 error
 		String body;
@@ -78,7 +78,7 @@ public class ExtendEndDateHandler implements RequestStreamHandler {
 			String method = (String) event.get("httpMethod");
 			if (method != null && method.equalsIgnoreCase("OPTIONS")) {
 				logger.log("Options request");
-				response = new ExtendEndDateResponse("Option", 200);  // OPTIONS needs a 200 response
+				response = new ExtendStartDateResponse("Option", 200);  // OPTIONS needs a 200 response
 		        responseJson.put("body", new Gson().toJson(response));
 		        processed = true;
 		        body = null;
@@ -90,7 +90,7 @@ public class ExtendEndDateHandler implements RequestStreamHandler {
 			}
 		} catch (ParseException pe) {
 			logger.log(pe.toString());
-			response = new ExtendEndDateResponse("Failure", 400);  // unable to process input
+			response = new ExtendStartDateResponse("Failure", 400);  // unable to process input
 	        responseJson.put("body", new Gson().toJson(response));
 	        processed = true;
 	        body = null;
@@ -98,29 +98,29 @@ public class ExtendEndDateHandler implements RequestStreamHandler {
 
 		if (!processed) 
 		{
-			ExtendEndDateRequest req = new Gson().fromJson(body, ExtendEndDateRequest.class);
+			ExtendStartDateRequest req = new Gson().fromJson(body, ExtendStartDateRequest.class);
 			logger.log(req.toString());
 			
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
-			ExtendEndDateResponse resp;
+			ExtendStartDateResponse resp;
 			logger.log(" ***Request made succ*** ");
 			try {
 				logger.log(" **** In the Try loop *** ");
-				boolean s = extendEndDate(req.shareCode, req.organizerCode, req.newEndDate);
+				boolean s = extendStartDate(req.shareCode, req.organizerCode, req.newStartDate);
 				if (s) {
 					System.out.println("Found schedule to extend!");
-					resp = new ExtendEndDateResponse(req.newEndDate.toString(), 200);					
+					resp = new ExtendStartDateResponse(req.newStartDate.toString(), 200);					
 				}
 				else {
 					System.out.println("No schedules found");
-					resp = new ExtendEndDateResponse("No schedules were found", 400);					
+					resp = new ExtendStartDateResponse("No schedules were found", 400);					
 					}
 				} 
 			catch (Exception e) 
 			{
 				logger.log(" ***EXCEPTION*** " + e);
-				resp = new ExtendEndDateResponse("Something went wrong in the database", 400);					
+				resp = new ExtendStartDateResponse("Something went wrong in the database", 400);					
 			}
 	        
 			logger.log(" ***something did happen*** ");

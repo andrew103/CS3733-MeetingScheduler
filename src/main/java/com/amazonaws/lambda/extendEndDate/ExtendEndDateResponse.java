@@ -7,10 +7,10 @@ public class ExtendEndDateResponse {
 	
 	String shareCode;
 	String organizerCode;
-	GregorianCalendar newEndDate;
+	String newEndDate;
 	int httpCode;
 	
-	public ExtendEndDateResponse(String shareCode, String organizerCode, GregorianCalendar newEndDate, int hc)
+	public ExtendEndDateResponse(String shareCode, String organizerCode, String newEndDate, int hc)
 	{
 		this.shareCode = shareCode;
 		this.organizerCode = organizerCode;
