@@ -162,7 +162,7 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
-function showDayTime(cellIndex, rowIndex){
+function showDayTime(cellIndex, rowIndex, option){
     //TODO get actual meeting time from JSON
     switch(cellIndex){
         case 1:
@@ -190,39 +190,21 @@ function showDayTime(cellIndex, rowIndex){
     }
     days = schedule["days"];
     for (i = 0; i < days.length; i++){
-      console.log("date"+date);
-      console.log("dateStr"+days[i]["dateStr"]);
         if (days[i]["dateStr"] == date){
-            console.log("inside here");
             timeOfClickedSlot = days[i]["timeSlots"][rowIndex]["startTime"];
             dayOfClickedSlot = days[i]["dateStr"];
             break;
         }
     }
-    return date+", "+day+" at "+timeOfClickedSlot;
+    if(option==false){
+      return date+", "+day+" at "+timeOfClickedSlot;
+    }
+    else {
+      return date+timeOfClickedSlot;
+    }
+
 }
 
-function getDate(cellIndex) {
-    switch (cellIndex) {
-        case 1:
-            return returnDate(0); //base reference
-            break;
-        case 2:
-            return returnDate(1);
-            break;
-        case 3:
-            return returnDate(2);
-            break;
-        case 4:
-            return returnDate(3);
-            break;
-        case 5:
-            return returnDate(4);
-            break;
-        default:
-            return "Invalid day of week";
-    }
-}
 
 //takes in a start date, finds the appropriate sunday and populates the schedule
 function updateSchedule(startDate){
