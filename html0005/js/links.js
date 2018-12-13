@@ -1,7 +1,7 @@
 
 
 
-folder = "html0005"
+folder = "html0001"
 
 organizerWebsite = "https://s3.us-east-2.amazonaws.com/scheduler-storage/" + folder + "/organizerPage.html"
 

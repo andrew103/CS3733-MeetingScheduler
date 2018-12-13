@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Team Cursa Meeting Scheduler/sysAdmin</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+  .emptyspace{
+      height: 20px;
+      background: #ffffff;
+  }
+  </style>
+</head>
+<body>
+
+<div class="jumbotron text-center" style="margin-bottom:0">
+  <h1>Team Cursa Meeting Scheduler</h1>
+  <p>This is the System Administrator view</p>
+</div>
+
+<div class="container">
+  <form class="form-inline">
+    <div class="form-group">
+      <label for="text1">Delete meetings more than </label>
+      <input type="number" class="form-control" maxlength="2" size="2">
+      <label for="text2"> days old</label>
+    </div>
+    <button type="submit" id ="deleteButton" class="btn btn-danger">Delete Schedules</button>
+  </form>
+</div>
+
+<div class="container">
+  <form class="form-inline">
+    <div class="form-group">
+      <label for="text1">Retrieve schedules created in the past</label>
+      <input type="number" class="form-control" maxlength="2" size="2">
+      <label for="text2"> hours</label>
+    </div>
+    <button type="submit" id="retrieveButton" class="btn btn-info">Retrive Schedules</button>
+  </form>
+</div>
+
+<script>
+
+document.getElementById("deleteButton").addEventListener("click", function(event){
+    event.preventDefault();
+   handleDelete();
+});
+
+document.getElementById("retrieveButton").addEventListener("click", function(event){
+    event.preventDefault();
+   handleRetrieve();
+});
+    function handleDelete(){
+
+        var num = document.getElementsByClassName('form-control')[0].value;
+        //TODO: put stuff in schedules using num and/or admin credentials
+        //TODO, parsing a list of schedules
+        if(num){
+            if(confirm("hit or miss? I guess they never miss HUH"))
+                window.alert("you got a boyfriend I bet he doesn't kiss ya MWAH")
+        }
+        else{
+            window.alert("Number of days cannot be empty");
+        }
+    }
+
+    function handleRetrieve(){
+        var num = document.getElementsByClassName('form-control')[1].value;
+
+        schedules = "";
+        //TODO: put stuff in schedules using num and/or admin credentials
+        //TODO, parsing a list of schedules
+
+        if(num){
+            window.alert("Here are the schedules created in the last " + num + " hour(s):\n" + schedules);
+        }
+        else{
+            window.alert("Number of hours cannot be empty");
+        }
+    }
+</script>
+</body>
+</html>
