@@ -909,7 +909,11 @@ public ArrayList<String> reportActivity(int hours) throws Exception {
     		inputHours = "00";
     		inputMin = "00";
     	}
-    	else if (inputTime < 1000) {
+    	else if (inputTime > 0 && inputTime < 100) {
+    		inputHours = "00";
+    		inputMin = inputTimeStr;
+    	}
+    	else if (inputTime >= 100 && inputTime < 1000) {
         	inputHours = inputTimeStr.substring(0, 1);
         	inputMin = inputTimeStr.substring(1);
     	}
