@@ -274,47 +274,30 @@ public class ScheduleHandlerTests extends TestCase{
         System.out.println(sampleOutputString11);
         System.out.println("/output11");
         
-        //*******************************************
-        //Delete Schedule
-//    	DeleteScheduleRequest req2 = new DeleteScheduleRequest(tempShareCode, tempOrganizerCode);
-//    	DeleteScheduleHandler handler2 = new DeleteScheduleHandler();
-//    	JSONObject req2Json = new JSONObject();
-//    	req2Json.put("body", new Gson().toJson(req2));
-//    	
-//    	
-//        InputStream input2 = new ByteArrayInputStream(req2Json.toJSONString().getBytes());;
-//        OutputStream output2 = new ByteArrayOutputStream();
-//                
-//        handler2.handleRequest(input2, output2, c);
-//
-//        String sampleOutputString2 = output2.toString();
-//        System.out.println("output2");
-//        System.out.println(sampleOutputString2);
-//        System.out.println("/output2");
       //*******************************************
         //Test reportActivity
-//    	CreateScheduleRequest req12 = new CreateScheduleRequest("Yin4", 60, "2018-12-1", "2018-12-12", 0300, 0400);
-//    	CreateScheduleHandler handler12 = new CreateScheduleHandler();
-//    	JSONObject reqJson12 = new JSONObject();
-//    	reqJson12.put("body", new Gson().toJson(req12));
-//    	
-//    	
-//        InputStream input12 = new ByteArrayInputStream(reqJson12.toJSONString().getBytes());;
-//        OutputStream output12 = new ByteArrayOutputStream();
-//                
-//        handler12.handleRequest(input12, output12, c);
-//        
-//        
-//    	CreateScheduleRequest req13 = new CreateScheduleRequest("Yang4", 60, "2018-12-1", "2018-12-9", 0300, 0400);
-//    	CreateScheduleHandler handler13 = new CreateScheduleHandler();
-//    	JSONObject reqJson13 = new JSONObject();
-//    	reqJson13.put("body", new Gson().toJson(req13));
-//    	
-//    	
-//        InputStream input13 = new ByteArrayInputStream(reqJson13.toJSONString().getBytes());;
-//        OutputStream output13 = new ByteArrayOutputStream();
-//                
-//        handler13.handleRequest(input13, output13, c);
+    	CreateScheduleRequest req12 = new CreateScheduleRequest("Yin4", 60, "2018-12-1", "2018-12-12", 0300, 0400);
+    	CreateScheduleHandler handler12 = new CreateScheduleHandler();
+    	JSONObject reqJson12 = new JSONObject();
+    	reqJson12.put("body", new Gson().toJson(req12));
+    	
+    	
+        InputStream input12 = new ByteArrayInputStream(reqJson12.toJSONString().getBytes());;
+        OutputStream output12 = new ByteArrayOutputStream();
+                
+        handler12.handleRequest(input12, output12, c);
+        
+        
+    	CreateScheduleRequest req13 = new CreateScheduleRequest("Yang4", 60, "2018-12-1", "2018-12-9", 0300, 0400);
+    	CreateScheduleHandler handler13 = new CreateScheduleHandler();
+    	JSONObject reqJson13 = new JSONObject();
+    	reqJson13.put("body", new Gson().toJson(req13));
+    	
+    	
+        InputStream input13 = new ByteArrayInputStream(reqJson13.toJSONString().getBytes());;
+        OutputStream output13 = new ByteArrayOutputStream();
+                
+        handler13.handleRequest(input13, output13, c);
         
     	ReportActivityRequest req14 = new ReportActivityRequest(1);
     	ReportActivityHandler handler14 = new ReportActivityHandler();
@@ -350,23 +333,7 @@ public class ScheduleHandlerTests extends TestCase{
         System.out.println(sampleOutputString15);
         System.out.println("/output15");
         
-        //*******************************************
-        //Test deleteOldSchedules
-//    	DeleteOldSchedulesRequest req16 = new DeleteOldSchedulesRequest(3);
-//    	DeleteOldSchedulesHandler handler16 = new DeleteOldSchedulesHandler();
-//    	JSONObject reqJson16 = new JSONObject();
-//    	reqJson16.put("body", new Gson().toJson(req16));
-//    	
-//    	
-//        InputStream input16 = new ByteArrayInputStream(reqJson16.toJSONString().getBytes());;
-//        OutputStream output16 = new ByteArrayOutputStream();
-//                
-//        handler16.handleRequest(input16, output16, c);
-//        
-//        String sampleOutputString16 = output16.toString();
-//        System.out.println("output16");
-//        System.out.println(sampleOutputString16);
-//        System.out.println("/output16");
+
         
         //*******************************************
         //Test extend End Date
@@ -403,6 +370,42 @@ public class ScheduleHandlerTests extends TestCase{
         System.out.println("output17");
         System.out.println(sampleOutputString17);
         System.out.println("/output17");
+        
+        //*******************************************
+        //Delete Schedule
+    	DeleteScheduleRequest req2 = new DeleteScheduleRequest(tempShareCode, tempOrganizerCode);
+    	DeleteScheduleHandler handler2 = new DeleteScheduleHandler();
+    	JSONObject req2Json = new JSONObject();
+    	req2Json.put("body", new Gson().toJson(req2));
+    	
+    	
+        InputStream input2 = new ByteArrayInputStream(req2Json.toJSONString().getBytes());;
+        OutputStream output2 = new ByteArrayOutputStream();
+                
+        handler2.handleRequest(input2, output2, c);
+
+        String sampleOutputString2 = output2.toString();
+        System.out.println("output2");
+        System.out.println(sampleOutputString2);
+        System.out.println("/output2");
+        
+        //*******************************************
+        //Test deleteOldSchedules
+    	DeleteOldSchedulesRequest req18 = new DeleteOldSchedulesRequest(3);
+    	DeleteOldSchedulesHandler handler18 = new DeleteOldSchedulesHandler();
+    	JSONObject reqJson18 = new JSONObject();
+    	reqJson18.put("body", new Gson().toJson(req18));
+    	
+    	
+        InputStream input18 = new ByteArrayInputStream(reqJson18.toJSONString().getBytes());;
+        OutputStream output18 = new ByteArrayOutputStream();
+                
+        handler18.handleRequest(input18, output18, c);
+        
+        String sampleOutputString18 = output18.toString();
+        System.out.println("output18");
+        System.out.println(sampleOutputString18);
+        System.out.println("/output18");
 
     }
     
