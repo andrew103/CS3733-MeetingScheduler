@@ -46,7 +46,7 @@ function deleteSchedule(){
                 console.log(ret)
                 if(ret["httpCode"] == 200){
                     alert("The entire schedule is cancled");
-                    window.location.href = "file:///Users/apple/git/CS3733-MeetingScheduler/html0006/index.html";
+                    window.location.href = indexWebsite;
                 }
                 else {
                     console.log("could not retrieve schedule, got stats" + ret["httpCode"])
@@ -63,7 +63,43 @@ function deleteSchedule(){
 }
 
 function cancelMeeting(){
-    alert("add cancel meeting functionality");
+    var postReq = {}
+    postReq["scheduleCode"] = schedule["shareCode"];
+    postReq["secretCode"] = urlParams["secretCode"];
+    postReq["time"] = timeOfClickedSlot;
+    postReq["day"] = dayOfClickedSlot;
+
+
+        console.log("JS of req:" + JSON.stringify(postReq))
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST",organizer_cancelMeeting,true);
+
+        console.log("PostReq:" + JSON.stringify(postReq));
+
+        xhr.send(JSON.stringify(postReq));
+
+        xhr.onloadend=function() {
+            //console.log(xhr);
+            var found;
+            console.log(xhr.request);
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                console.log ("XHR:" + xhr.responseText);
+                ret = JSON.parse(xhr.responseText)
+                console.log(ret)
+                if(ret["httpCode"] == 200){
+                    console.log("Canceled Meeting")
+                    loadSchedule(false)
+                }
+                else {
+                    console.log("could not retrieve schedule, got stats" + ret["httpCode"])
+                    alert("Could not cancel, try again later?")
+                }
+            } else {
+                console.log("Could not get req")
+                alert("Server seems to be down, try again later?")
+            }
+        }
+
 }
 
 
