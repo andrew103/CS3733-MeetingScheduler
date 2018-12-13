@@ -9,9 +9,13 @@ var participant_url = base_url + "/participant";
 var organizer_getSchedule = organizer_url + "/getschedule";
 
 var organizer_openCloseTimeSlot = organizer_url + "/openclosetimeslot";
- 
+
 var organizer_createSchedule = organizer_url + "/createschedule";
 
 var participant_scheduleMeeting = participant_url + "/createmeeting";
 
 var participant_cancelMeeting = participant_url + "/cancelmeeting";
+
+var organizer_deleteSchedule = organizer_url + "/deleteschedule";
+
+var organizer_cancelMeeting = organizer_url + "/cancelmeeting";

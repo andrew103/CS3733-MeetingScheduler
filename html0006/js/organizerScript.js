@@ -28,11 +28,38 @@ function deleteSchedule(){
     var msg = prompt("Confirm deleting the entire schedule by typing 'YES'", "Are you sure about that?");
     var txt;
     if (msg == "YES" || msg == "yes" || msg == "Yes") {
-        txt = "The entire schedule is cancled";
+        var postReq = {}
+        postReq["scheduleCode"] = schedule["shareCode"];
+        postReq["secretCode"] = urlParams["secretCode"];
+        console.log("JS of req:" + JSON.stringify(postReq))
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST",organizer_deleteSchedule,true);
+        console.log("PostReq:" + JSON.stringify(postReq));
+        xhr.send(JSON.stringify(postReq));
+        xhr.onloadend=function() {
+            //console.log(xhr);
+            var found;
+            console.log(xhr.request);
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                console.log ("XHR:" + xhr.responseText);
+                ret = JSON.parse(xhr.responseText)
+                console.log(ret)
+                if(ret["httpCode"] == 200){
+                    alert("The entire schedule is cancled");
+                    window.location.href = "file:///Users/apple/git/CS3733-MeetingScheduler/html0006/index.html";
+                }
+                else {
+                    console.log("could not retrieve schedule, got stats" + ret["httpCode"])
+                    alert("Could not delete schedule, try again later?")
+                }
+            } else {
+                console.log("Could not get req")
+                alert("Server seems to be down, try again later?")
+            }
+        }
     } else {
-        txt = "Input not recognized, failed to cancle schedule";
+      alert("Input not recognized, failed to cancle schedule");
     }
-    alert(txt);
 }
 
 function cancelMeeting(){
