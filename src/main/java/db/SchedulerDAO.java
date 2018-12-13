@@ -57,6 +57,7 @@ public class SchedulerDAO {
         	
         	GregorianCalendar calendarCurrent = schedule.getStartDate();
         	GregorianCalendar calendarEnd = schedule.getEndDate();
+        	calendarEnd.add(Calendar.DAY_OF_MONTH, 1);
         	while(!calendarCurrent.equals(calendarEnd)) {
         		if (calendarCurrent.DAY_OF_WEEK != calendarCurrent.SUNDAY || calendarCurrent.DAY_OF_WEEK != calendarCurrent.SATURDAY) {
             		Date currentDate = new Date(calendarCurrent.getTimeInMillis());
@@ -743,6 +744,8 @@ public ArrayList<String> reportActivity(int hours) throws Exception {
 	
 	public boolean extendEndDate(String shareCode, String organizerCode, GregorianCalendar newEndDate) throws Exception {
 		try {
+			newEndDate.add(Calendar.DAY_OF_MONTH, 1);
+			
 			String query = "SELECT * FROM Schedule WHERE organizerCode = ?";
 			PreparedStatement ps = conn.prepareStatement(query);
 	    	ps.setString(1, organizerCode);
