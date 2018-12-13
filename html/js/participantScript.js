@@ -4,7 +4,7 @@ function processCell(cellText, cellIndex, rowIndex){//organizer version
   //document.getElementById("scheduleMeeting").innerHTML = originalScheduleMeetingHTML;
   switch(cellText){
     case "Open":
-      stringDisp = "Time slot open on "+showDayTime(cellIndex, rowIndex);
+      stringDisp = "Time slot open on "+showDayTime(cellIndex, rowIndex, false);
       document.getElementById("scheduleMeetingText").innerHTML=stringDisp;
       document.getElementById("scheduleMeetingButton").onclick = function() {
         if(document.getElementById("participantName").value==null||document.getElementById("participantName").value==""){
@@ -13,16 +13,10 @@ function processCell(cellText, cellIndex, rowIndex){//organizer version
         else{
           var shareCode = urlParams["shareCode"];
           var partInfo = document.getElementById("participantName").value;
-          var date = getDate(cellIndex);
-          var time;
-          days = schedule["days"];
-          for (i = 0; i < days.length; i++){
-              if (days[i]["dateStr"] == date){
-                  time = days[i]["timeSlots"][rowIndex]["startTime"];
-                  break;
-              }
-          }
-          console.log("successfully set all params");
+          var text = showDayTime(cellIndex, rowIndex, true);
+          console.log("got dateTime: "+text);
+          var time = text.substring(10);
+          var date = text.substring(0,10);
           scheduleMeeting(shareCode, partInfo, time, date);
           $("#scheduleMeetingConfirmation").modal();
         }
@@ -41,10 +35,13 @@ function processCell(cellText, cellIndex, rowIndex){//organizer version
       document.getElementById("cancelMeetingButton").onclick = function() {
         var shareCode = urlParams["shareCode"];
         var meetingCode = document.getElementById("meetingCode").value;
-        console.log("successfully set all params");
-
-        cancelMeeting(shareCode, meetingCode);
+        var text = showDayTime(cellIndex, rowIndex, true);
+        console.log("got dateTime: "+text);
+        var time = text.substring(10);
+        var date = text.substring(0,10);
+        cancelMeeting(shareCode, meetingCode, time, date);
       };
+      $("#cancelMeeting").modal();
   }
 }
 
@@ -166,7 +163,7 @@ function scheduleOpenTS(btn){ //different from schedule meeting
   var date = text.substring(0,10);
   var time = text.substring(14);
   scheduleMeeting(shareCode, partInfo, time, date);
-  $("#scheduleMeeting").modal();
+  $("#scheduleMeetingConfirmation").modal();
 }
 
 function scheduleMeeting(scheduleCode, participantInfo, time, day){
@@ -202,11 +199,11 @@ function scheduleMeeting(scheduleCode, participantInfo, time, day){
               };
           }
           else {
-              console.log("could not retrieve schedule, got status" + status)
+              alert("could not retrieve schedule, got status" + status);
               found = false;
           }
       } else {
-          console.log("Could not get req")
+          alert("Could not get req");
           found = false;
       }
   }
@@ -214,10 +211,12 @@ function scheduleMeeting(scheduleCode, participantInfo, time, day){
   // alert("add schedule meeting functionality");
 }
 
-function cancelMeeting(scheduleCode, meetingCode){
+function cancelMeeting(scheduleCode, meetingCode, time, date){
     var postReq = {};
     postReq["scheduleCode"] = scheduleCode;
     postReq["meetingCode"] = meetingCode;
+    postReq["time"] = time;
+    postReq["day"] = date;
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST",participant_cancelMeeting,true);
@@ -238,10 +237,11 @@ function cancelMeeting(scheduleCode, meetingCode){
                 loadSchedule(false);
             }
             else {
+                alert("invalid meeting code" + status);
                 found = false;
             }
         } else {
-            console.log("Could not get req")
+            alert("Could not get req");
             found = false;
         }
     }
