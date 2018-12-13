@@ -11,7 +11,7 @@ public class RetrieveOldSchedulesRequest {
 	
 	public String toString()
 	{
-		return "Getting Schedules that were made within the last " + days+ " days";
+		return "Getting all schedules that were made within the last " + days+ " days";
 	}
 
 }
