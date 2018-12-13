@@ -434,7 +434,7 @@ public class SchedulerDAO {
         	ResultSet resultSet3 = ps.executeQuery();
         	resultSet3.next();
         	
-        	if (resultSet3.getString("meetingCode")==meetingCode)
+        	if (resultSet3.getString("meetingCode").equals(meetingCode))
         	{
             	//Create new timeslot+meeting
         		query = "UPDATE Timeslot SET available = ?, participantInfo = ?, meetingCode = ? WHERE scheduleID = ? AND dayID =? AND startTime = ?";
