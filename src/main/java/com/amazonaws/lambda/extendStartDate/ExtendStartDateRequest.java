@@ -20,12 +20,5 @@ public class ExtendStartDateRequest {
 	{
 		return "Extending startDate date to " + newStartDate;
 	}
-	
-	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
-		int year = Integer.parseInt(date.substring(0, 4));
-		int month = Integer.parseInt(date.substring(5, 7));
-		int day = Integer.parseInt(date.substring(8));
-		return new GregorianCalendar(year, month-1, day);
-	}
 
 }
