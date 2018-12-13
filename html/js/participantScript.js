@@ -91,7 +91,9 @@ function populateTS(selector) {
     console.log(schedule);
     var select = $(selector);
     var time;
-    timeslots = schedule["days"][0]["timeslots"];
+
+    timeslots = schedule["days"][0]["timeSlots"];
+
     for (var i = 0; i < timeslots.length; i ++) {
         time = timeslots[i]["startTime"];
         //add the value to dropdownlist
@@ -158,13 +160,13 @@ function searchOpenTS(searchReturn){
   if (timeSlot != null && timeSlot != ""){
     //if timeSlot input is not empty, do last search
     for(i=0;i<current.length;i++){
-      for(j=0;j<current[i]["timeslots"].length;j++){
-        if (current[i]["timeslots"][j]["startTime"] != timeSlot || current[i]["timeslots"][j]["isClosed"] == true){
-          current[i]["timeslots"].splice(j,1); //remove unmatched TS from current list
+      for(j=0;j<current[i]["timeSlots"].length;j++){
+        if (current[i]["timeSlots"][j]["startTime"] != timeSlot || current[i]["timeSlots"][j]["isClosed"] == true){
+          current[i]["timeSlots"].splice(j,1); //remove unmatched TS from current list
           j --; //list shortens by 1
         }
       }
-      if (current[i]["timeslots"].length ==0){
+      if (current[i]["timeSlots"].length ==0){
         current.splice(i,1); //if all timeslots in a day are removed, delete day
         i --;
       }
@@ -175,14 +177,14 @@ function searchOpenTS(searchReturn){
   var sr = $(searchReturn);
   var txt;
   for(i=0;i<current.length;i++){
-    for(j=0;j<current[i]["timeslots"].length;j++){
-      txt = (current[i]["dateStr"]+" at "+current[i]["timeslots"][j]["startTime"]);
+    for(j=0;j<current[i]["timeSlots"].length;j++){
+      txt = (current[i]["dateStr"]+" at "+current[i]["timeSlots"][j]["startTime"]);
       sr.append($('<h5></h5>').text(txt));
-      sr.append($('<button></button>')
-                .attr('class',"btn btn-success")
+      sr.append($('<input></input>')
+                .attr('type',"button")
                 .attr('value', txt)
                 .attr('onclick', "scheduleOpenTS(this)")
-                .text("schedule"));
+                .attr('name',"schedule"));
       sr.append($('<br>'));
     }
   }
@@ -194,8 +196,9 @@ function searchOpenTS(searchReturn){
   }
 }
 
-function scheduleOpenTS(text){ //different from schedule meeting
-  console.log("input txt:"+text);
+function scheduleOpenTS(btn){ //different from schedule meeting
+  console.log("input txt:"+btn.innerHTML);
+  text = btn.innerHTML;
   var shareCode = urlParams["shareCode"];
   var partInfo = document.getElementById("searchOpenTSName").value;
   var date = text.substring(0,10);
