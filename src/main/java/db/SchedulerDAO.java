@@ -582,55 +582,8 @@ public class SchedulerDAO {
 			throw new Exception("Couldn't close timeslots at specified time " + e.getMessage());
 		}
 	}
-    
-    private long convertTimeToDB(int inputTime) {
-    	long millisTime = 0;
-    	String inputTimeStr = Integer.toString(inputTime);
-    	String inputHours;
-    	String inputMin;
-    	
-    	if (inputTime == 0) {
-    		inputHours = "00";
-    		inputMin = "00";
-    	}
-    	else if (inputTime < 1000) {
-        	inputHours = inputTimeStr.substring(0, 1);
-        	inputMin = inputTimeStr.substring(1);
-    	}
-    	else {
-        	inputHours = inputTimeStr.substring(0, 2);
-        	inputMin = inputTimeStr.substring(2);
-    	}
-    	
-    	millisTime = Integer.valueOf(inputHours)*3600*1000 + Integer.valueOf(inputMin)*60*1000;
-    	return millisTime;
-    }
-
-    private int convertTimeToMilitary(long inputMillis) {
-    	int militaryTime = 0;
-    	
-    	long rawMinutes = inputMillis/(1000*60);
-    	long hours = rawMinutes/60;
-    	long mins = rawMinutes%60;
-    	
-    	if (mins == 0) {
-        	militaryTime = Integer.valueOf(Long.toString(hours) + "00");    		
-    	}
-    	else {
-        	militaryTime = Integer.valueOf(Long.toString(hours) + Long.toString(mins));    		
-    	}
-
-    	return militaryTime;
-    }
-
-    public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
-		int year = Integer.parseInt(date.substring(0, 3));
-		int month = Integer.parseInt(date.substring(5, 6));
-		int day = Integer.parseInt(date.substring(8, 9));
-		return new GregorianCalendar(year, month, day);
-	}
-
-    public ArrayList<String> reportActivity(int hours) throws Exception {
+	
+	public ArrayList<String> reportActivity(int hours) throws Exception {
     	try {
 			ArrayList<String> s = new ArrayList<String>();
 			
@@ -768,4 +721,52 @@ public class SchedulerDAO {
 			throw new Exception("Couldn't find any schedules to delete: " + e.getMessage());
 		}
 	}
+    
+    private long convertTimeToDB(int inputTime) {
+    	long millisTime = 0;
+    	String inputTimeStr = Integer.toString(inputTime);
+    	String inputHours;
+    	String inputMin;
+    	
+    	if (inputTime == 0) {
+    		inputHours = "00";
+    		inputMin = "00";
+    	}
+    	else if (inputTime < 1000) {
+        	inputHours = inputTimeStr.substring(0, 1);
+        	inputMin = inputTimeStr.substring(1);
+    	}
+    	else {
+        	inputHours = inputTimeStr.substring(0, 2);
+        	inputMin = inputTimeStr.substring(2);
+    	}
+    	
+    	millisTime = Integer.valueOf(inputHours)*3600*1000 + Integer.valueOf(inputMin)*60*1000;
+    	return millisTime;
+    }
+
+    private int convertTimeToMilitary(long inputMillis) {
+    	int militaryTime = 0;
+    	
+    	long rawMinutes = inputMillis/(1000*60);
+    	long hours = rawMinutes/60;
+    	long mins = rawMinutes%60;
+    	
+    	if (mins == 0) {
+        	militaryTime = Integer.valueOf(Long.toString(hours) + "00");    		
+    	}
+    	else {
+        	militaryTime = Integer.valueOf(Long.toString(hours) + Long.toString(mins));    		
+    	}
+
+    	return militaryTime;
+    }
+
+    public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
+		int year = Integer.parseInt(date.substring(0, 3));
+		int month = Integer.parseInt(date.substring(5, 6));
+		int day = Integer.parseInt(date.substring(8, 9));
+		return new GregorianCalendar(year, month, day);
+	}
+
 }
