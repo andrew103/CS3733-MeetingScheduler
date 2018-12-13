@@ -7,7 +7,7 @@ public class CreateMeetingRequest {
 	int time;
 	String day;
 	
-	public CreateMeetingRequest(String scheduleCode, int time, String day, String participantInfo)
+	public CreateMeetingRequest(String scheduleCode, String participantInfo, int time, String day)
 	{
 		this.scheduleCode = scheduleCode;
 		this.participantInfo = participantInfo;

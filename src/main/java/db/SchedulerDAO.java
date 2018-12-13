@@ -582,60 +582,9 @@ public class SchedulerDAO {
 			throw new Exception("Couldn't close timeslots at specified time " + e.getMessage());
 		}
 	}
-    
-    private long convertTimeToDB(int inputTime) {
-    	long millisTime = 0;
-    	String inputTimeStr = Integer.toString(inputTime);
-    	String inputHours;
-    	String inputMin;
-    	
-    	if (inputTime == 0) {
-    		inputHours = "00";
-    		inputMin = "00";
-    	}
-    	else if (inputTime < 100) {
-    		inputHours = "00";
-    		inputMin = inputTimeStr;
-    	}
-    	else if (inputTime >= 100 && inputTime < 1000) {
-        	inputHours = inputTimeStr.substring(0, 1);
-        	inputMin = inputTimeStr.substring(1);
-    	}
-    	else {
-        	inputHours = inputTimeStr.substring(0, 2);
-        	inputMin = inputTimeStr.substring(2);
-    	}
-    	
-    	millisTime = Integer.valueOf(inputHours)*3600*1000 + Integer.valueOf(inputMin)*60*1000;
-    	return millisTime;
-    }
-
-    private int convertTimeToMilitary(long inputMillis) {
-    	int militaryTime = 0;
-    	
-    	long rawMinutes = inputMillis/(1000*60);
-    	long hours = rawMinutes/60;
-    	long mins = rawMinutes%60;
-    	
-    	if (mins == 0) {
-        	militaryTime = Integer.valueOf(Long.toString(hours) + "00");    		
-    	}
-    	else {
-        	militaryTime = Integer.valueOf(Long.toString(hours) + Long.toString(mins));    		
-    	}
-
-    	return militaryTime;
-    }
-
-    public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
-		int year = Integer.parseInt(date.substring(0, 3));
-		int month = Integer.parseInt(date.substring(5, 6));
-		int day = Integer.parseInt(date.substring(8, 9));
-		return new GregorianCalendar(year, month, day);
-	}
-
-    public ArrayList<String> reportActivity(int hours) throws Exception {
-    	try {
+	
+public ArrayList<String> reportActivity(int hours) throws Exception {
+    try {
 			ArrayList<String> s = new ArrayList<String>();
 			
 			String query = "SELECT * FROM Schedule";
@@ -718,4 +667,106 @@ public class SchedulerDAO {
 			throw new Exception("Couldn't find any schedules: " + e.getMessage());
 		}
 	}
+
+	public boolean deleteOldSchedules(int days)  throws Exception {
+    	try {
+			String query = "SELECT * FROM Schedule";
+	    	PreparedStatement ps = conn.prepareStatement(query);
+	    	ResultSet resultSet1 = ps.executeQuery();
+	    	while (resultSet1.next())
+	    	{
+	    		GregorianCalendar startDate = new GregorianCalendar();
+	        	startDate.setTime(resultSet1.getDate("startDate"));
+	        	GregorianCalendar endDate = new GregorianCalendar();
+	        	endDate.setTime(resultSet1.getDate("endDate"));
+	        	GregorianCalendar createdDate = new GregorianCalendar();
+	        	createdDate.setTime(resultSet1.getTimestamp("createdDate"));
+	        	Schedule schedule = new Schedule(resultSet1.getString("scheduleName"),
+	        									 startDate,
+	        									 endDate,
+	        									 resultSet1.getInt("meetingDuration"),
+	        									 convertTimeToMilitary(resultSet1.getLong("startTime")),
+	        									 convertTimeToMilitary(resultSet1.getLong("endTime")),
+	        									 createdDate,
+	        									 resultSet1.getString("organizerCode"),
+	        									 resultSet1.getString("shareCode"));
+	        	
+	        	GregorianCalendar current = new GregorianCalendar();
+	        	GregorianCalendar schedDate = schedule.getEndDate();
+	        	long endDateTime = resultSet1.getLong("endTime");
+	    		
+	    		if ((schedDate.getTimeInMillis() + endDateTime) < (current.getTimeInMillis() - TimeUnit.DAYS.toMillis(days)))
+	    		{
+	    			int scheduleID = resultSet1.getInt("scheduleID");
+	            	query = "DELETE FROM Timeslot WHERE scheduleID = ?";
+	            	ps = conn.prepareStatement(query);
+	            	ps.setInt(1, scheduleID);
+	            	ps.executeUpdate();
+	            	
+	            	query = "DELETE FROM Day WHERE scheduleID = ?";
+	            	ps = conn.prepareStatement(query);
+	            	ps.setInt(1, scheduleID);
+	            	ps.executeUpdate();
+
+	            	query = "DELETE FROM Schedule WHERE scheduleID = ?";
+	            	ps = conn.prepareStatement(query);
+	            	ps.setInt(1, scheduleID);
+	            	ps.executeUpdate();
+	    		}
+	    	}
+	    	System.out.println("Deleted old schedules");
+			return true;
+    	}
+    	catch (Exception e) {
+			throw new Exception("Couldn't find any schedules to delete: " + e.getMessage());
+		}
+	}
+    
+    private long convertTimeToDB(int inputTime) {
+    	long millisTime = 0;
+    	String inputTimeStr = Integer.toString(inputTime);
+    	String inputHours;
+    	String inputMin;
+    	
+    	if (inputTime == 0) {
+    		inputHours = "00";
+    		inputMin = "00";
+    	}
+    	else if (inputTime < 1000) {
+        	inputHours = inputTimeStr.substring(0, 1);
+        	inputMin = inputTimeStr.substring(1);
+    	}
+    	else {
+        	inputHours = inputTimeStr.substring(0, 2);
+        	inputMin = inputTimeStr.substring(2);
+    	}
+    	
+    	millisTime = Integer.valueOf(inputHours)*3600*1000 + Integer.valueOf(inputMin)*60*1000;
+    	return millisTime;
+    }
+
+    private int convertTimeToMilitary(long inputMillis) {
+    	int militaryTime = 0;
+    	
+    	long rawMinutes = inputMillis/(1000*60);
+    	long hours = rawMinutes/60;
+    	long mins = rawMinutes%60;
+    	
+    	if (mins == 0) {
+        	militaryTime = Integer.valueOf(Long.toString(hours) + "00");    		
+    	}
+    	else {
+        	militaryTime = Integer.valueOf(Long.toString(hours) + Long.toString(mins));    		
+    	}
+
+    	return militaryTime;
+    }
+
+    public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
+		int year = Integer.parseInt(date.substring(0, 3));
+		int month = Integer.parseInt(date.substring(5, 6));
+		int day = Integer.parseInt(date.substring(8, 9));
+		return new GregorianCalendar(year, month, day);
+	}
+
 }

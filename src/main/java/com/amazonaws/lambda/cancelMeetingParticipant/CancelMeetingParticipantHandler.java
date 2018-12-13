@@ -33,6 +33,7 @@ import db.SchedulerDAO;
  */
 public class CancelMeetingParticipantHandler implements RequestStreamHandler {
 
+	public String tempMeetingCode;
 	public LambdaLogger logger = null;
 
 	// handle to our s3 storage
@@ -112,6 +113,7 @@ public class CancelMeetingParticipantHandler implements RequestStreamHandler {
 			try {
 				logger.log(" **** In the Try loop *** ");
 				logger.log(req.scheduleCode);
+				
 				boolean del = cancelMeetingParticipant(req.scheduleCode, req.meetingCode);
 				if (del) {
 					logger.log(" *** It definitely worked right? probably. *** ");
