@@ -17,7 +17,7 @@ public class OpenAllSlotsDayResponse {
 
 	public OpenAllSlotsDayResponse(String message, int code) {
 		System.out.println(message);
-		this.httpCode = 200;
+		this.httpCode = code;
 	}
 	
 	public String toString()

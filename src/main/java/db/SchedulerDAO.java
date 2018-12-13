@@ -721,6 +721,103 @@ public ArrayList<String> reportActivity(int hours) throws Exception {
 			throw new Exception("Couldn't find any schedules to delete: " + e.getMessage());
 		}
 	}
+	
+	public boolean extendEndDate(String shareCode, String organizerCode, GregorianCalendar newEndDate) throws Exception {
+		try {
+			String query = "SELECT * FROM Schedule WHERE organizerCode = ?";
+			PreparedStatement ps = conn.prepareStatement(query);
+	    	ps.setString(1, organizerCode);
+	    	ResultSet resultSet1 = ps.executeQuery();
+	    	resultSet1.next();
+	    	int scheduleID = resultSet1.getInt("scheduleID");
+	    	long startTime = resultSet1.getLong("startTime");
+	    	long endTime = resultSet1.getLong("endTime");
+	    	int duration = resultSet1.getInt("meetingDuration");
+	    	Date endDate = resultSet1.getDate("endDate");
+	    	
+	    	query = "UPDATE Schedule SET endDate = ? WHERE scheduleID = ?";
+	    	ps = conn.prepareStatement(query);
+	    	ps.setDate(1, new Date(newEndDate.getTimeInMillis()));
+	    	ps.setInt(2, scheduleID);
+	    	ps.executeUpdate();
+	    	String calCurr = endDate.toString();
+	    	Date calEnd = new Date(newEndDate.getTimeInMillis());
+	    	String calEndd = calEnd.toString();
+	    	GregorianCalendar calendarCurrent = parseDate(endDate.toString());
+	    	//GregorianCalendar calendarEnd = newEndDate;
+	    	
+	    	while(calendarCurrent.equals(newEndDate)==false) {
+	    		calendarCurrent.add(Calendar.DAY_OF_MONTH, 1);
+	    		if (calendarCurrent.DAY_OF_WEEK != calendarCurrent.SUNDAY || calendarCurrent.DAY_OF_WEEK != calendarCurrent.SATURDAY) {
+	        		Date currentDate = new Date(calendarCurrent.getTimeInMillis());
+	        		
+	        		query = "INSERT INTO Day (dayID, dayDate, dayStartTime, dayEndTime, scheduleID) values(NULL, ?, ?, ?, ?);";
+	        		ps = conn.prepareStatement(query);
+	        		ps.setDate(1, currentDate);
+	        		ps.setLong(2, startTime);
+	        		ps.setLong(3, endTime);
+	        		ps.setInt(4, scheduleID);
+	        		ps.execute();
+	        		
+	        		//Populate day with timeslots
+	        		
+	        		query = "SELECT dayID FROM Day WHERE scheduleID = ? AND dayDate =?";
+	        		ps = conn.prepareStatement(query);
+	        		ps.setInt(1, scheduleID);
+	        		ps.setDate(2, currentDate);
+	        		ResultSet resultSet2 = ps.executeQuery();
+	        		resultSet2.next();
+	        		int dayID = resultSet2.getInt("dayID");
+	        		int schedID = scheduleID;
+	        		//Timeslots
+	        		long currentTime = startTime;
+	        		long et = endTime;
+	        		while (currentTime < et)
+	        		{
+	        			query = "INSERT INTO Timeslot (startTime, available, participantInfo, meetingCode, dayDate, scheduleID, dayID) values(?, true, NULL, NULL, ?, ?, ?);";
+		    			ps = conn.prepareStatement(query);
+		    			ps.setLong(1, currentTime);
+		    			ps.setDate(2, currentDate);
+		    			ps.setInt(3, scheduleID);
+		    			ps.setInt(4, dayID);
+		    			ps.execute();
+		    			
+		    			currentTime = currentTime + duration*60*1000;
+	        		}
+	    		}
+	    		
+	    	}
+//	    	query = "SELECT dayID, dayDate FROM Day WHERE scheduleID = ?;";
+//	    	ps = conn.prepareStatement(query);
+//	    	ps.setInt(1, scheduleID);
+//	    	resultSet1 = ps.executeQuery();
+//	    	while (resultSet1.next()) {
+//	        	long currentTime = startTime;
+//	        	long et = endTime;
+//	    		while (currentTime < et) {
+//	    			query = "INSERT INTO Timeslot (startTime, available, participantInfo, meetingCode, dayDate, scheduleID, dayID) values(?, true, NULL, NULL, ?, ?, ?);";
+//	    			ps = conn.prepareStatement(query);
+//	    			ps.setLong(1, currentTime);
+//	    			ps.setDate(2, resultSet1.getDate("dayDate"));
+//	    			ps.setInt(3, scheduleID);
+//	    			ps.setInt(4, resultSet1.getInt("dayID"));
+//	    			ps.execute();
+//	    			
+//	    			currentTime = currentTime + duration*60*1000;
+//	    		}
+//	    	}
+	    	resultSet1.close();
+	    	ps.close();
+			
+			
+			return true;
+			
+		}
+		catch (Exception e){
+			throw new Exception("Failed to extend end date: " + e.getMessage());
+		}
+
+	}
     
     private long convertTimeToDB(int inputTime) {
     	long millisTime = 0;
@@ -762,11 +859,11 @@ public ArrayList<String> reportActivity(int hours) throws Exception {
     	return militaryTime;
     }
 
-    public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
-		int year = Integer.parseInt(date.substring(0, 3));
-		int month = Integer.parseInt(date.substring(5, 6));
-		int day = Integer.parseInt(date.substring(8, 9));
-		return new GregorianCalendar(year, month, day);
+	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
+		int year = Integer.parseInt(date.substring(0, 4));
+		int month = Integer.parseInt(date.substring(5, 7));
+		int day = Integer.parseInt(date.substring(8));
+		return new GregorianCalendar(year, month-1, day);
 	}
 
 }
