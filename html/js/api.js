@@ -19,3 +19,12 @@ var participant_cancelMeeting = participant_url + "/cancelmeeting";
 var organizer_deleteSchedule = organizer_url + "/deleteschedule";
 
 var organizer_cancelMeeting = organizer_url + "/cancelmeeting";
+
+
+var admin_url = base_url + "/admin"
+
+var admin_retrieveOld = admin_url + "/retrieveoldschedules"
+
+var admin_report = admin_url + "/reportactivity"
+
+var admin_deleteOld= admin_url + "/deleteoldschedules"
