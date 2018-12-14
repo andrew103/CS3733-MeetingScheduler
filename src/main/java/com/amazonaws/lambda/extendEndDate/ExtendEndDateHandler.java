@@ -104,7 +104,7 @@ public class ExtendEndDateHandler implements RequestStreamHandler {
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
 			ExtendEndDateResponse resp;
-			logger.log(" ***Request made succ*** ");
+			logger.log(" ***Request made successfully*** ");
 			try {
 				logger.log(" **** In the Try loop *** ");
 				boolean s = extendEndDate(req.shareCode, req.organizerCode, req.newEndDate);

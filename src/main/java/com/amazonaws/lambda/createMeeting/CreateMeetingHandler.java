@@ -115,7 +115,7 @@ public class CreateMeetingHandler implements RequestStreamHandler {
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
 			CreateMeetingResponse resp = null;
-			logger.log(" ***Request made succ*** ");
+			logger.log(" ***Request made successfully*** ");
 			try {
 				logger.log(" **** In the Try loop *** ");
 				logger.log(req.scheduleCode);
@@ -124,11 +124,9 @@ public class CreateMeetingHandler implements RequestStreamHandler {
 				tempMeetingCode = timeslot.getMeetingCode();
 				boolean del = createMeeting(req.scheduleCode, req.participantInfo, tempMeetingCode, req.time, req.day);
 				if (del) {
-					logger.log(" *** It definitely worked right? probably. *** ");
 					resp = new CreateMeetingResponse(req.scheduleCode, req.time, req.day, req.participantInfo, meetingCode, 200);					
 				}
 				else {
-					logger.log(" *** fuck it failed *** ");
 					resp = new CreateMeetingResponse("The meeting could not be deleted", 400);					
 					}
 				logger.log("WTF");

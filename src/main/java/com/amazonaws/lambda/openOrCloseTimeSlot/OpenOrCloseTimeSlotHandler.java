@@ -110,7 +110,7 @@ public class OpenOrCloseTimeSlotHandler implements RequestStreamHandler {
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
 			OpenOrCloseTimeSlotResponse resp;
-			logger.log(" ***Request made succ*** ");
+			logger.log(" ***Request made successfully*** ");
 			try {
 				logger.log(" **** In the Try loop *** ");
 				logger.log(req.scheduleCode);
@@ -118,14 +118,11 @@ public class OpenOrCloseTimeSlotHandler implements RequestStreamHandler {
 				logger.log(req.day);
 				boolean del = openOrCloseTimeSlot(req.secretCode, req.time, req.day);
 				if (del) {
-					logger.log(" *** It definitely worked right? probably. *** ");
 					resp = new OpenOrCloseTimeSlotResponse(req.scheduleCode, req.secretCode, req.time, req.day, 200);					
 				}
 				else {
-					logger.log(" *** fuck it failed *** ");
 					resp = new OpenOrCloseTimeSlotResponse("Timeslot could not be toggled", 400);					
 					}
-				logger.log("WTF");
 				} 
 			catch (Exception e) 
 			{

@@ -102,7 +102,7 @@ public class DeleteOldSchedulesHandler implements RequestStreamHandler {
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
 			DeleteOldSchedulesResponse resp;
-			logger.log(" ***Request made succ*** ");
+			logger.log(" ***Request made successfully*** ");
 			try {
 				logger.log(" **** In the Try loop *** ");
 				boolean s = deleteOldSchedules(req.days);
@@ -121,7 +121,6 @@ public class DeleteOldSchedulesHandler implements RequestStreamHandler {
 				resp = new DeleteOldSchedulesResponse("Something went wrong in the database", 400);					
 			}
 	        
-			logger.log(" ***something did happen*** ");
 			logger.log(resp.toString());
 			responseJson.put("body", new Gson().toJson(resp));  
 		}

@@ -109,21 +109,19 @@ public class CancelMeetingParticipantHandler implements RequestStreamHandler {
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
 			CancelMeetingParticipantResponse resp;
-			logger.log(" ***Request made succ*** ");
+			logger.log(" ***Request made successfully*** ");
 			try {
 				logger.log(" **** In the Try loop *** ");
 				logger.log(req.scheduleCode);
 				
 				boolean del = cancelMeetingParticipant(req.scheduleCode, req.meetingCode, req.time, req.day);
 				if (del) {
-					logger.log(" *** It definitely worked right? probably. *** ");
 					resp = new CancelMeetingParticipantResponse(req.scheduleCode, req.meetingCode, 200);					
 				}
 				else {
 					logger.log(" ***it failed, wrong id probably *** ");
 					resp = new CancelMeetingParticipantResponse("The meeting could not be deleted", 400);					
 					}
-				logger.log("WTF");
 				} 
 			catch (Exception e) 
 			{
@@ -131,7 +129,6 @@ public class CancelMeetingParticipantHandler implements RequestStreamHandler {
 				resp = new CancelMeetingParticipantResponse("Something went wrong in the database", 400);					
 			}
 	        
-			logger.log(" ***something did happen*** ");
 			logger.log(resp.toString());
 			responseJson.put("body", new Gson().toJson(resp));  
 		}

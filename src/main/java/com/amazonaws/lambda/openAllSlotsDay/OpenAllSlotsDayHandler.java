@@ -109,7 +109,7 @@ public class OpenAllSlotsDayHandler implements RequestStreamHandler {
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
 			OpenAllSlotsDayResponse resp;
-			logger.log(" ***Request made succ*** ");
+			logger.log(" ***Request made successfully*** ");
 			try {
 				logger.log(" **** In the Try loop *** ");
 				logger.log(req.scheduleCode);
@@ -117,14 +117,11 @@ public class OpenAllSlotsDayHandler implements RequestStreamHandler {
 				logger.log(req.date);
 				boolean del = openAllSlotsDay(req.scheduleCode, req.secretCode, req.date);
 				if (del) {
-					logger.log(" *** It definitely worked right? probably. *** ");
 					resp = new OpenAllSlotsDayResponse(req.scheduleCode, req.secretCode, req.date, 200);					
 				}
 				else {
-					logger.log(" *** fuck it failed *** ");
 					resp = new OpenAllSlotsDayResponse("The schedule was not found", 400);					
 					}
-				logger.log("WTF");
 				} 
 			catch (Exception e) 
 			{

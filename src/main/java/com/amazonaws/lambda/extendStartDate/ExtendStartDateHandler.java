@@ -104,7 +104,7 @@ public class ExtendStartDateHandler implements RequestStreamHandler {
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
 			ExtendStartDateResponse resp;
-			logger.log(" ***Request made succ*** ");
+			logger.log(" ***Request made successfully*** ");
 			try {
 				logger.log(" **** In the Try loop *** ");
 				boolean s = extendStartDate(req.shareCode, req.organizerCode, req.newStartDate);

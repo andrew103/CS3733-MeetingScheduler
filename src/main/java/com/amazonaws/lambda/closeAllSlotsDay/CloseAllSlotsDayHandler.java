@@ -110,7 +110,7 @@ public class CloseAllSlotsDayHandler implements RequestStreamHandler {
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
 			CloseAllSlotsDayResponse resp;
-			logger.log(" ***Request made succ*** ");
+			logger.log(" ***Request made successfully*** ");
 			try {
 				logger.log(" **** In the Try loop *** ");
 				logger.log(req.scheduleCode);
@@ -122,10 +122,8 @@ public class CloseAllSlotsDayHandler implements RequestStreamHandler {
 					resp = new CloseAllSlotsDayResponse(req.scheduleCode, req.secretCode, req.date, 200);					
 				}
 				else {
-					logger.log(" *** fuck it failed *** ");
 					resp = new CloseAllSlotsDayResponse("The schedule was not found", 400);					
 					}
-				logger.log("WTF");
 				} 
 			catch (Exception e) 
 			{
@@ -133,7 +131,6 @@ public class CloseAllSlotsDayHandler implements RequestStreamHandler {
 				resp = new CloseAllSlotsDayResponse("Something went wrong in the database", 400);					
 			}
 	        
-			logger.log(" ***something did happen*** ");
 			logger.log(resp.toString());
 			responseJson.put("body", new Gson().toJson(resp));  
 		}
