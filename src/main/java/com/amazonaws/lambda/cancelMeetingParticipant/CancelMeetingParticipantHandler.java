@@ -120,7 +120,7 @@ public class CancelMeetingParticipantHandler implements RequestStreamHandler {
 					resp = new CancelMeetingParticipantResponse(req.scheduleCode, req.meetingCode, 200);					
 				}
 				else {
-					logger.log(" *** fuck it failed *** ");
+					logger.log(" ***it failed, wrong id probably *** ");
 					resp = new CancelMeetingParticipantResponse("The meeting could not be deleted", 400);					
 					}
 				logger.log("WTF");
