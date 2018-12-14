@@ -172,7 +172,7 @@ function handleRetrieve(){
                 if(ret["httpCode"] == 200){
                     console.log("got schedules")
                     if(ret["schedules"]){
-                        if(confirm("The following schedules were created in the past:" + num + "hours\n" + ret["schedules"])){
+                        if(confirm("The following schedules were created in the past " + num + " hours\n" + ret["schedules"])){
                         }
                     }
 
