@@ -63,18 +63,23 @@
     <div class="row">
       <div class="col-sm-6">
         <div class="btn-group">
-          <input type="time" class="btn btn-default">
-          <button type="button" class="btn btn-success">Open all slots at this time</button>
-          <button type="button" class="btn btn-danger">Close all slots at this time</button>
+          <select class="btn btn-default" id="closeByTime"></select>
+          <button type="button" class="btn btn-success" onclick="openByTime()">Open all slots at this time</button>
+          <button type="button" class="btn btn-danger" onclick="closeByTime()">Close all slots at this time</button>
         </div>
       </div>
       <div class="col-sm-6">
         <div class="btn-group">
-          <input type="date" class="btn btn-default">
+          <input type="date" class="btn btn-default"></input>
           <button type="button" class="btn btn-info">Extend start date</button>
           <button type="button" class="btn btn-info">Extend end date</button>
         </div>
       </div>
+    </div>
+    <div class="btn-group">
+      <input type="date" class="btn btn-default" id="closeByDate"></input>
+      <button type="button" class="btn btn-success" onclick="openByDate()">Open all slots at this day</button>
+      <button type="button" class="btn btn-danger" onclick="closeByDate()">Close all slots at this day</button>
     </div>
     <div class="emptyspace"></div>
     <button type="button" class="btn btn-danger btn-block" onclick="deleteSchedule()">Delete Entire Schedule</button>

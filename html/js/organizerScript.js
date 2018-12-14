@@ -1,7 +1,13 @@
-var table = $('#scheduleTable');
-table.on("click", "td", cellClick); //attaches the handler on the whole table, but filter the events by the "td" selector
-
 isOrganizer = true;
+
+function loadSelect(){
+  select = $(document.getElementById("closeByTime"));
+  timeslots = schedule["days"][0]["timeSlots"];
+  for (i=0;i<timeslots.length;i++){
+    time = timeslots[i]["startTime"]
+    select.append($('<option></option>').text(time).attr('value',time));
+  }
+}
 
 function processCell(cellText, cellIndex, rowIndex){//organizer version
     switch(cellText){
@@ -139,5 +145,151 @@ function toggleTimeSlot(){
             alert("Server seems to be down, try again later?")
         }
     }
+}
 
+function openByTime(){
+  console.log(open);
+  var postReq = {}
+  postReq["scheduleCode"] = schedule["shareCode"];
+  postReq["secretCode"] = urlParams["secretCode"];
+  postReq["time"] = document.getElementById("closeByTime").value;
+
+  console.log("JS of req:" + JSON.stringify(postReq))
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST",organizer_openByTime,true);
+  console.log("PostReq:" + JSON.stringify(postReq));
+  xhr.send(JSON.stringify(postReq));
+
+  xhr.onloadend=function() {
+      //console.log(xhr);
+      var found;
+      console.log(xhr.request);
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+          console.log ("XHR:" + xhr.responseText);
+          ret = JSON.parse(xhr.responseText)
+          console.log(ret)
+          if(ret["httpCode"] == 200){
+            console.log("opened all Timeslots");
+            loadSchedule(false);
+          }
+          else {
+              console.log("could not retrieve schedule, got stats" + ret["httpCode"])
+              alert("Could not open time slot, try again later?");
+
+          }
+      } else {
+          console.log("Could not get req")
+          alert("Server seems to be down, try again later?")
+      }
+  }
+}
+
+function closeByTime(){
+  console.log(open);
+  var postReq = {}
+  postReq["scheduleCode"] = schedule["shareCode"];
+  postReq["secretCode"] = urlParams["secretCode"];
+  postReq["time"] = document.getElementById("closeByTime").value;
+
+  console.log("JS of req:" + JSON.stringify(postReq))
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST",organizer_closeByTime,true);
+  console.log("PostReq:" + JSON.stringify(postReq));
+  xhr.send(JSON.stringify(postReq));
+
+  xhr.onloadend=function() {
+      //console.log(xhr);
+      var found;
+      console.log(xhr.request);
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+          console.log ("XHR:" + xhr.responseText);
+          ret = JSON.parse(xhr.responseText)
+          console.log(ret)
+          if(ret["httpCode"] == 200){
+            console.log("closed all Timeslots");
+            loadSchedule(false);
+          }
+          else {
+              console.log("could not retrieve schedule, got stats" + ret["httpCode"])
+              alert("Could not close time slot, try again later?");
+          }
+      } else {
+          console.log("Could not get req")
+          alert("Server seems to be down, try again later?")
+      }
+  }
+}
+
+function openByDate(){
+  console.log("by date"+open);
+  var postReq = {}
+  postReq["scheduleCode"] = schedule["shareCode"];
+  postReq["secretCode"] = urlParams["secretCode"];
+  postReq["date"] = document.getElementById("closeByDate").value;
+
+  console.log("JS of req:" + JSON.stringify(postReq))
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST",organizer_openByDate,true);
+  console.log("PostReq:" + JSON.stringify(postReq));
+  xhr.send(JSON.stringify(postReq));
+
+  xhr.onloadend=function() {
+      //console.log(xhr);
+      var found;
+      console.log(xhr.request);
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+          console.log ("XHR:" + xhr.responseText);
+          ret = JSON.parse(xhr.responseText)
+          console.log(ret)
+          if(ret["httpCode"] == 200){
+            console.log("opened all Timeslots");
+            loadSchedule(false);
+          }
+          else {
+              console.log("could not retrieve schedule, got stats" + ret["httpCode"])
+              alert("Could not open time slot, try again later?");
+
+          }
+      } else {
+          console.log("Could not get req")
+          alert("Server seems to be down, try again later?")
+      }
+  }
+}
+
+function closeByDate(){
+  console.log("by date"+open);
+  var postReq = {}
+  postReq["scheduleCode"] = schedule["shareCode"];
+  postReq["secretCode"] = urlParams["secretCode"];
+  postReq["date"] = document.getElementById("closeByDate").value;
+
+  console.log("JS of req:" + JSON.stringify(postReq))
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST",organizer_closeByDate,true);
+  console.log("PostReq:" + JSON.stringify(postReq));
+  xhr.send(JSON.stringify(postReq));
+
+  xhr.onloadend=function() {
+      //console.log(xhr);
+      var found;
+      console.log(xhr.request);
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+          console.log ("XHR:" + xhr.responseText);
+          ret = JSON.parse(xhr.responseText)
+          console.log(ret)
+          if(ret["httpCode"] == 200){
+            console.log("closed all Timeslots");
+            loadSchedule(false);
+          }
+          else {
+            console.log("could not retrieve schedule, got stats" + ret["httpCode"])
+            alert("Could not close time slot, try again later?");
+
+          }
+      } else {
+          console.log("Could not get req")
+          alert("Server seems to be down, try again later?")
+      }
+  }
 }
