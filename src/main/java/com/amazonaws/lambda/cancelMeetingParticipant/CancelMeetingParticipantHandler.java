@@ -42,9 +42,9 @@ public class CancelMeetingParticipantHandler implements RequestStreamHandler {
 
 	boolean useRDS = true;
 
-	boolean cancelMeetingParticipant(String scheduleCode, String meetingCode) throws Exception {
+	boolean cancelMeetingParticipant(String scheduleCode, String meetingCode, int time, String date) throws Exception {
 		SchedulerDAO dao = new SchedulerDAO();	
-		return dao.cancelMeetingParticipant(scheduleCode, meetingCode);	
+		return dao.cancelMeetingParticipant(scheduleCode, meetingCode, time, parseDate(date));	
 	}
 	
 	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
@@ -114,11 +114,12 @@ public class CancelMeetingParticipantHandler implements RequestStreamHandler {
 				logger.log(" **** In the Try loop *** ");
 				logger.log(req.scheduleCode);
 				
-				boolean del = cancelMeetingParticipant(req.scheduleCode, req.meetingCode);
+				boolean del = cancelMeetingParticipant(req.scheduleCode, req.meetingCode, req.time, req.day);
 				if (del) {
 					resp = new CancelMeetingParticipantResponse(req.scheduleCode, req.meetingCode, 200);					
 				}
 				else {
+					logger.log(" ***it failed, wrong id probably *** ");
 					resp = new CancelMeetingParticipantResponse("The meeting could not be deleted", 400);					
 					}
 				} 

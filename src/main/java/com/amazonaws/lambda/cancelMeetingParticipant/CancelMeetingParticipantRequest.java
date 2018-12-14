@@ -4,11 +4,15 @@ public class CancelMeetingParticipantRequest {
 	
 	String scheduleCode;
 	String meetingCode;
+	int time;
+	String day;
 	
-	public CancelMeetingParticipantRequest(String scheduleCode, String meetingCode)
+	public CancelMeetingParticipantRequest(String scheduleCode, String meetingCode, int time, String day)
 	{
 		this.scheduleCode = scheduleCode;
 		this.meetingCode = meetingCode;
+		this.time = time;
+		this.day = day;
 	}
 
 	

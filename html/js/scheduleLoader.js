@@ -1,5 +1,6 @@
 //Fetches the url paramaters and sets them to the variable
 var urlParams;
+var scheduleLoaded;
 (window.onpopstate = function () {
     var match,
         pl     = /\+/g,  // Regex for replacing addition symbol with a space
@@ -101,16 +102,17 @@ function initSchedule(foundSchedule){
                 row.insertCell(j+1)
             }
         }
-
         console.log(scheduleTable)
-
         updateSchedule(schedule["startDateStr"], isOrganizer)
+        if(isOrganizer){loadSelect();}
     }
     else{
         alert("Invalid id")
         window.location.href = indexWebsite;
     }
 }
+
+
 
 var table = $('#scheduleTable');
 table.on("click", "td", cellClick); //attaches the handler on the whole table, but filter the events by the "td" selector
@@ -160,7 +162,7 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
-function showDayTime(cellIndex, rowIndex){
+function showDayTime(cellIndex, rowIndex, option){
     //TODO get actual meeting time from JSON
     switch(cellIndex){
         case 1:
@@ -188,39 +190,21 @@ function showDayTime(cellIndex, rowIndex){
     }
     days = schedule["days"];
     for (i = 0; i < days.length; i++){
-      console.log("date"+date);
-      console.log("dateStr"+days[i]["dateStr"]);
         if (days[i]["dateStr"] == date){
-            console.log("inside here");
             timeOfClickedSlot = days[i]["timeSlots"][rowIndex]["startTime"];
             dayOfClickedSlot = days[i]["dateStr"];
             break;
         }
     }
-    return date+", "+day+" at "+timeOfClickedSlot;
+    if(option==false){
+      return date+", "+day+" at "+timeOfClickedSlot;
+    }
+    else {
+      return date+timeOfClickedSlot;
+    }
+
 }
 
-function getDate(cellIndex) {
-    switch (cellIndex) {
-        case 1:
-            return returnDate(0); //base reference
-            break;
-        case 2:
-            return returnDate(1);
-            break;
-        case 3:
-            return returnDate(2);
-            break;
-        case 4:
-            return returnDate(3);
-            break;
-        case 5:
-            return returnDate(4);
-            break;
-        default:
-            return "Invalid day of week";
-    }
-}
 
 //takes in a start date, finds the appropriate sunday and populates the schedule
 function updateSchedule(startDate){
@@ -258,7 +242,6 @@ function updateSchedule(startDate){
 
             var timeSlots = days[index]["timeSlots"]
             for(y = 0; y < timeSlots.length; y++){
-                console.log(timeSlots[y]["available"])
                 if(!timeSlots[y]["available"]){
                     if(timeSlots[y]["participantInfo"]){
                             scheduleTable.rows[y].cells[x].innerHTML = 'Booked by:' + timeSlots[y]["participantInfo"];

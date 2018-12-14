@@ -58,6 +58,7 @@ public class SchedulerDAO {
         	
         	GregorianCalendar calendarCurrent = schedule.getStartDate();
         	GregorianCalendar calendarEnd = schedule.getEndDate();
+        	calendarEnd.add(Calendar.DAY_OF_MONTH, 1);
         	while(!calendarCurrent.equals(calendarEnd)) {
         		if (calendarCurrent.DAY_OF_WEEK != calendarCurrent.SUNDAY || calendarCurrent.DAY_OF_WEEK != calendarCurrent.SATURDAY) {
             		Date currentDate = new Date(calendarCurrent.getTimeInMillis());
@@ -404,7 +405,7 @@ public class SchedulerDAO {
 
 	}
 	
-	public boolean cancelMeetingParticipant(String scheduleCode, String meetingCode) throws Exception {
+	public boolean cancelMeetingParticipant(String scheduleCode, String meetingCode, int time, GregorianCalendar day) throws Exception {
 		try {
 			//UPDATE tableName SET colname = ? WHERE schedId = ? AND dayID = ? AND dayDate = ? --Retrieves timeslots
 			//Remove schedule from database
@@ -414,32 +415,52 @@ public class SchedulerDAO {
         	ResultSet resultSet1 = ps.executeQuery();
         	resultSet1.next();
         	int scheduleID = resultSet1.getInt("scheduleID");
+        	Date startDate = new Date(day.getTimeInMillis());
+        	long startTime = convertTimeToDB(time);
+        	System.out.println(startTime);
         	
-        	query = "SELECT * FROM Timeslot WHERE scheduleID = ? AND meetingCode = ?";
-        	ps  =conn.prepareStatement(query);
+        	
+        	query = "SELECT * FROM Day WHERE scheduleID = ? AND dayDate = ?";
+        	ps = conn.prepareStatement(query);
         	ps.setInt(1, scheduleID);
-        	ps.setString(2, meetingCode);
+        	ps.setDate(2, startDate);
         	ResultSet resultSet2 = ps.executeQuery();
         	resultSet2.next();
+        	int dayID = resultSet2.getInt("dayID");
         	
-        	if (resultSet2.getInt("available")==0)
+        	query = "SELECT * FROM Timeslot WHERE scheduleID = ? AND dayID = ? AND startTime = ?";
+        	ps  =conn.prepareStatement(query);
+        	ps.setInt(1, scheduleID);
+        	ps.setInt(2, dayID);
+        	ps.setLong(3, startTime);
+        	ResultSet resultSet3 = ps.executeQuery();
+        	resultSet3.next();
+        	
+        	if (resultSet3.getString("meetingCode").equals(meetingCode))
         	{
             	//Create new timeslot+meeting
-        		query = "UPDATE Timeslot SET available = ?, participantInfo = ?, meetingCode = ? WHERE scheduleID = ? AND meetingCode = ?";
+        		query = "UPDATE Timeslot SET available = ?, participantInfo = ?, meetingCode = ? WHERE scheduleID = ? AND dayID =? AND startTime = ?";
             	ps = conn.prepareStatement(query);
             	ps.setInt(1, 1);
             	ps.setString(2, null);
             	ps.setString(3, null);
             	ps.setInt(4, scheduleID);
-            	ps.setString(5, meetingCode);
+            	ps.setInt(5, dayID);
+            	ps.setLong(6, startTime);
             	ps.executeUpdate();
         	}
         	else
         	{
-        		System.out.println("No meeting to cancel at that time");
+        		System.out.println("Wrong code, correct code: " + resultSet3.getString("meetingCode"));
+            	resultSet1.close();
+            	resultSet2.close();
+            	resultSet3.close();
+            	ps.close();
+        		return false;
         	}
         	resultSet1.close();
         	resultSet2.close();
+        	resultSet3.close();
         	ps.close();
 			return true;
 		}
@@ -447,7 +468,6 @@ public class SchedulerDAO {
 			
 			throw new Exception("***Failed to cancel meeting: " + e.getMessage()+ "***");
 		}
-
 	}
 
 	public boolean openAllSlotsDay(String scheduleCode, String secretCode, GregorianCalendar date) throws Exception {
@@ -725,6 +745,8 @@ public ArrayList<String> reportActivity(int hours) throws Exception {
 	
 	public boolean extendEndDate(String shareCode, String organizerCode, GregorianCalendar newEndDate) throws Exception {
 		try {
+			newEndDate.add(Calendar.DAY_OF_MONTH, 1);
+			
 			String query = "SELECT * FROM Schedule WHERE organizerCode = ?";
 			PreparedStatement ps = conn.prepareStatement(query);
 	    	ps.setString(1, organizerCode);
@@ -890,7 +912,11 @@ public ArrayList<String> reportActivity(int hours) throws Exception {
     		inputHours = "00";
     		inputMin = "00";
     	}
-    	else if (inputTime < 1000) {
+    	else if (inputTime > 0 && inputTime < 100) {
+    		inputHours = "00";
+    		inputMin = inputTimeStr;
+    	}
+    	else if (inputTime >= 100 && inputTime < 1000) {
         	inputHours = inputTimeStr.substring(0, 1);
         	inputMin = inputTimeStr.substring(1);
     	}

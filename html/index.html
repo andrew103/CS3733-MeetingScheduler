@@ -2,6 +2,8 @@
 <html lang="en">
     <head runat="server">
         <title>Team Cursa Meeting Scheduler/index</title>
+        <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+        <META HTTP-EQUIV="Expires" CONTENT="-1">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -85,7 +87,7 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-success" onclick="createSchedule()"><span class="glyphicon glyphicon-check"></span> Create</button>
+                <button type="button" class="btn btn-success" onclick="createSchedule()" data-toggle="popover" title="Loading...." data-content="Please be patient"><span class="glyphicon glyphicon-check"></span> Create</button>
                 <button type="submit" class="btn btn-danger pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
               </div>
             </div>

@@ -2,26 +2,34 @@
 <html lang="en">
 <head>
   <title>Team Cursa Meeting Scheduler/organizer</title>
+  <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+  <META HTTP-EQUIV="Expires" CONTENT="-1">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/links.js"></script>
   <link rel="stylesheet" href="modal.css">
 </head>
 <body>
 
   <div class="jumbotron text-center" style="margin-bottom:0" >
     <h1>Team Cursa Meeting Scheduler</h1>
+    <p>This is the Organizer view</p>
     <p id="shareCodeDisplay">This is the Organizer view</p>
   </div>
 
 <div class="container">
 	<div class="row">
-    	<div class="col-sm-6">
+      <div class="col-sm-4">
+        <a href="https://s3.us-east-2.amazonaws.com/scheduler-storage/html/index.html">Go back to landing page</a>
+      </div>
+    	<div class="col-sm-4">
         <label for="schedule_name" id = "name">Schedule name</label>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <form class="form-inline" action="/action_page.php">
             <label for="week of">Week of: </label>
             <input id = "weekDate" type="date" class="form-control" onchange="changeDate('0')">
@@ -55,18 +63,23 @@
     <div class="row">
       <div class="col-sm-6">
         <div class="btn-group">
-          <input type="time" class="btn btn-default">
-          <button type="button" class="btn btn-success">Open all slots at this time</button>
-          <button type="button" class="btn btn-danger">Close all slots at this time</button>
+          <select class="btn btn-default" id="closeByTime"></select>
+          <button type="button" class="btn btn-success" onclick="openByTime()">Open all slots at this time</button>
+          <button type="button" class="btn btn-danger" onclick="closeByTime()">Close all slots at this time</button>
         </div>
       </div>
       <div class="col-sm-6">
         <div class="btn-group">
-          <input type="date" class="btn btn-default">
-          <button type="button" class="btn btn-info">Extend start date</button>
-          <button type="button" class="btn btn-info">Extend end date</button>
+          <input type="date" class="btn btn-default" id="extensionDate">
+          <button type="button" class="btn btn-info" id="extendStartButton" onclick="extendStartDate()">Extend start date</button>
+          <button type="button" class="btn btn-info" id="extendEndButton" onclick="extendEndDate()">Extend end date</button>
         </div>
       </div>
+    </div>
+    <div class="btn-group">
+      <input type="date" class="btn btn-default" id="closeByDate"></input>
+      <button type="button" class="btn btn-success" onclick="openByDate()">Open all slots at this day</button>
+      <button type="button" class="btn btn-danger" onclick="closeByDate()">Close all slots at this day</button>
     </div>
     <div class="emptyspace"></div>
     <button type="button" class="btn btn-danger btn-block" onclick="deleteSchedule()">Delete Entire Schedule</button>
@@ -130,8 +143,6 @@
 </div>
 
 </body>
-<script src="js/api.js"></script>
-<script src="js/links.js"></script>
 <script src="js/scheduleLoader.js"></script>
 <script src="js/organizerScript.js" type="text/javascript"></script>
 </html>
