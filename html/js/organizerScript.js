@@ -293,3 +293,111 @@ function closeByDate(){
       }
   }
 }
+
+
+function extendStartDate() {
+    var oldStartDate = schedule["startDateStr"];
+    var newStartDate = document.getElementById("extensionDate").value;
+
+    if (newStartDate === "" || newStartDate == null) {
+        alert("Not a full date");
+    }
+    else {
+        var oldStartComponents = oldStartDate.split("-");
+        var newStartComponents = newStartDate.split("-");
+        oldStart = new Date(oldStartComponents[0], oldStartComponents[1]-1, oldStartComponents[2]);
+        newStart = new Date(newStartComponents[0], newStartComponents[1]-1, newStartComponents[2]);
+
+        if (newStart >= oldStart) {
+            alert("Invalid input date");
+        }
+        else {
+            console.log("yep");
+
+            var postReq = {};
+            postReq["shareCode"] = schedule["shareCode"];
+            postReq["organizerCode"] = urlParams["secretCode"];
+            postReq["newStartDate"] = newStartDate;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST",organizer_extendStartDate,true);
+            xhr.send(JSON.stringify(postReq));
+
+            xhr.onloadend=function() {
+                //console.log(xhr);
+                var found;
+                console.log(xhr.request);
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    console.log ("XHR:" + xhr.responseText);
+                    ret = JSON.parse(xhr.responseText)
+                    console.log(ret)
+                    if(ret["httpCode"] == 200){
+                        console.log("Extended Start Date")
+                        loadSchedule(false)
+                    }
+                    else {
+                        console.log("could not extend start date, got stats" + ret["httpCode"])
+                        alert("Could not extend start date, try again later?")
+                    }
+                } else {
+                    console.log("Could not get req")
+                    alert("Server seems to be down, try again later?")
+                }
+            }
+        }
+    }
+}
+
+
+function extendEndDate() {
+    var oldEndDate = schedule["endDateStr"];
+    var newEndDate = document.getElementById("extensionDate").value;
+
+    if (newEndDate === "" || newEndDate == null) {
+        alert("Invalid input data");
+    }
+    else {
+        var oldEndComponents = oldEndDate.split("-");
+        var newEndComponents = newEndDate.split("-");
+        oldEnd = new Date(oldEndComponents[0], oldEndComponents[1]-1, oldEndComponents[2]);
+        newEnd = new Date(newEndComponents[0], newEndComponents[1]-1, newEndComponents[2]);
+
+        if (newEnd <= oldEnd) {
+            alert("Invalid input date");
+        }
+        else {
+            console.log("yep");
+
+            var postReq = {};
+            postReq["shareCode"] = schedule["shareCode"];
+            postReq["organizerCode"] = urlParams["secretCode"];
+            postReq["newEndDate"] = newEndDate;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST",organizer_extendEndDate,true);
+            xhr.send(JSON.stringify(postReq));
+
+            xhr.onloadend=function() {
+                //console.log(xhr);
+                var found;
+                console.log(xhr.request);
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    console.log ("XHR:" + xhr.responseText);
+                    ret = JSON.parse(xhr.responseText)
+                    console.log(ret)
+                    if(ret["httpCode"] == 200){
+                        console.log("Extended End Date")
+                        loadSchedule(false)
+                    }
+                    else {
+                        console.log("could not extend end date, got stats" + ret["httpCode"])
+                        alert("Could not extend end date, try again later?")
+                    }
+                } else {
+                    console.log("Could not get req")
+                    alert("Server seems to be down, try again later?")
+                }
+            }
+        }
+    }
+}

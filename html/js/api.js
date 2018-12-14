@@ -20,6 +20,10 @@ var organizer_deleteSchedule = organizer_url + "/deleteschedule";
 
 var organizer_cancelMeeting = organizer_url + "/cancelmeeting";
 
+var organizer_extendStartDate = organizer_url + "/extendstartdate";
+
+var organizer_extendEndDate = organizer_url + "/extendenddate";
+
 var organizer_openByDate = organizer_url + "/openallslotsday";
 
 var organizer_closeByDate = organizer_url + "/closeallslotsday";
