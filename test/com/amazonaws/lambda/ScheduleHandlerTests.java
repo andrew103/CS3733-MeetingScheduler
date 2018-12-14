@@ -149,7 +149,7 @@ public class ScheduleHandlerTests extends TestCase{
         handler31.handleRequest(input31, output31, c);
         
         tempMeetingCode = handler31.getMeetingCode();
-        CancelMeetingParticipantRequest req5 = new CancelMeetingParticipantRequest(tempShareCode, tempMeetingCode);
+        CancelMeetingParticipantRequest req5 = new CancelMeetingParticipantRequest(tempShareCode, tempMeetingCode, 0300, "2018-10-26");
         CancelMeetingParticipantHandler handler5 = new CancelMeetingParticipantHandler();
     	JSONObject req5Json = new JSONObject();
     	req5Json.put("body", new Gson().toJson(req5));
