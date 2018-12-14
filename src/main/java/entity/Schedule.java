@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -13,6 +14,9 @@ public class Schedule
 	ArrayList<Day> days;
 	GregorianCalendar startDate;
 	GregorianCalendar endDate;
+	GregorianCalendar createdDate;
+	String startDateStr;
+	String endDateStr;
 	int startTime;
 	int endTime;
 	int meetingDuration;
@@ -35,9 +39,11 @@ public class Schedule
 		this.organizerCode = randomAlphaNumeric(10);
 		this.shareCode = randomAlphaNumeric(10);
 		this.days = new ArrayList<Day>();
+		this.createdDate = new GregorianCalendar();
+		//this.createdDate.setTimeZone(TimeZone.getTimeZone("Zulu"));
 	}
 
-	public Schedule(String name, GregorianCalendar startDate, GregorianCalendar endDate, int duration, int startTime, int endTime, String organizerCode, String shareCode) {
+	public Schedule(String name, GregorianCalendar startDate, GregorianCalendar endDate, int duration, int startTime, int endTime, GregorianCalendar createdDate, String organizerCode, String shareCode) {
 		/*
 		 * Use this constructor when dealing with existing schedules
 		 */
@@ -50,6 +56,8 @@ public class Schedule
 		this.organizerCode = organizerCode;
 		this.shareCode = shareCode;
 		this.days = new ArrayList<Day>();
+		this.createdDate = createdDate;
+		//this.createdDate.setTimeZone(TimeZone.getTimeZone("Zulu"));
 	}
 
 	public static String randomAlphaNumeric(int count) {
@@ -60,6 +68,16 @@ public class Schedule
 		}
 
 		return builder.toString();
+	}
+	
+	public void makeDateStr() {
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+
+		fmt.setCalendar(this.startDate);
+	    this.startDateStr = fmt.format(this.startDate.getTime());
+
+		fmt.setCalendar(this.endDate);
+	    this.endDateStr = fmt.format(this.endDate.getTime());
 	}
 	
 	public void addDay(Day day) {
@@ -102,6 +120,11 @@ public class Schedule
 		return days;
 	}
 	
+	public GregorianCalendar getCreatedDate()
+	{
+		return createdDate;
+	}
+	
 	public JSONObject toJSON() {
 		JSONObject obj = new JSONObject();
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -112,6 +135,8 @@ public class Schedule
      
 		obj.put("startDate", fmt.format(this.startDate.getTime()));
 		obj.put("endDate", fmt.format(this.endDate.getTime()));
+		obj.put("sDateStr", this.startDateStr);
+		obj.put("eDateStr", this.endDateStr);
 		obj.put("meetingDurating", this.meetingDuration);
 		obj.put("name", this.scheduleName);
 		obj.put("days", daysJSON);

@@ -1,0 +1,21 @@
+.emptyspace{
+    height: 20px;
+    background: #ffffff;
+}
+.modal-header, h4, .close {
+    background-color: #5bc0de;
+    color:white !important;
+    text-align: center;
+    font-size: 30px;
+}
+.modal-body {
+    background-color: #ffffff
+}
+.modal-footer {
+    background-color: #f9f9f9;
+}
+
+.modal {
+
+    overflow-y: scroll;
+}

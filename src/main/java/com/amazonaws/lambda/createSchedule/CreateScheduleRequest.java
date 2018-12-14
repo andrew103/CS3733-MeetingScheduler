@@ -22,11 +22,21 @@ public class CreateScheduleRequest {
 		this.endTime = et;
 	}
 	
+//	public CreateScheduleRequest(String name, int duration, String sd, String ed, int st, int et, long createdDate) {
+//		this.name = name;
+//		this.meetingDuration = duration;
+//		this.sd = sd;
+//		this.ed = ed;
+//		this.startTime = st;
+//		this.endTime = et;
+//		this.createdDate = createdDate;
+//	}
+	
 	public GregorianCalendar parseDate(String date) { ///take in date as "YYYY-MM-DD"
 		int year = Integer.parseInt(date.substring(0, 4));
 		int month = Integer.parseInt(date.substring(5, 7));
 		int day = Integer.parseInt(date.substring(8));
-		return new GregorianCalendar(year, month, day);
+		return new GregorianCalendar(year, month-1, day);
 	}
 	
 	public String toString() {

@@ -92,31 +92,44 @@ public class OrganizerGetScheduleHandler implements RequestStreamHandler {
 		if (!processed) 
 		{
 			GetScheduleRequest req = new Gson().fromJson(body, GetScheduleRequest.class);
-			logger.log(req.toString());
-			
-			logger.log("***"+req.toString()+"***");
-			// compute proper response
 			GetScheduleResponse resp;
-				try{
-					SchedulerDAO dao = new SchedulerDAO();	
-					try {
-						Schedule s =  dao.getSchedule(req.shareCode);	
+			logger.log("***"+req.toString()+"***");
+
+			// compute proper response
+			try{
+				SchedulerDAO dao = new SchedulerDAO();	
+				try {
+					if (req.secretCode.length() > 0 && req.shareCode.length() > 0) {
+						resp = new GetScheduleResponse("Cannot pass in both a secret code and a share code", 400);
+					}
+					else if (req.secretCode.length() == 0 && req.shareCode.length() == 0) {
+						resp = new GetScheduleResponse("Must pass in a code", 400);
+					}
+					else {
+						Schedule s;
+						if (req.secretCode.length() > 0) {
+							s = dao.organizerGetSchedule(req.secretCode);
+						}
+						else {
+							s =  dao.getSchedule(req.shareCode);							
+						}
 						logger.log(" ***we found a schedule*** ");
 						resp = new GetScheduleResponse(s);
-						logger.log("\nname:" + s.getScheduleName());
-					}
-					catch(Exception e)
-					{
-						logger.log("Could not find a schedule");
-						resp = new GetScheduleResponse("The schedule was not found", 404);
+						logger.log("\nname:" + s.getScheduleName());						
 					}
 				}
-				catch(Exception e){
-					logger.log("DAO could not connect to database" + e.getMessage());
-					resp = new GetScheduleResponse(req.shareCode, 500);					
+				catch(Exception e)
+				{
+					logger.log("Could not find a schedule");
+					resp = new GetScheduleResponse("The schedule was not found", 404);
 				}
-
-				responseJson.put("body", new Gson().toJson(resp));
+			}
+			catch(Exception e){
+				logger.log("DAO could not connect to database" + e.getMessage());
+				resp = new GetScheduleResponse(req.shareCode, 500);					
+			}	
+			
+			responseJson.put("body", new Gson().toJson(resp));
 		}
 		
         logger.log("end result:" + responseJson.toJSONString());
