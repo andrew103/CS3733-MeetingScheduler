@@ -101,7 +101,7 @@ public class DeleteScheduleHandler implements RequestStreamHandler {
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
 			DeleteScheduleResponse resp;
-			logger.log(" ***Request made succ*** ");
+			logger.log(" ***Request made successfully*** ");
 			try {
 				logger.log(" **** In the Try loop *** ");
 				logger.log(req.scheduleCode);
@@ -112,10 +112,8 @@ public class DeleteScheduleHandler implements RequestStreamHandler {
 					resp = new DeleteScheduleResponse(req.scheduleCode, req.secretCode, 200);					
 				}
 				else {
-					logger.log(" *** fuck it failed *** ");
 					resp = new DeleteScheduleResponse("The schedule could not be deleted", 400);					
 					}
-				logger.log("WTF");
 				} 
 			catch (Exception e) 
 			{

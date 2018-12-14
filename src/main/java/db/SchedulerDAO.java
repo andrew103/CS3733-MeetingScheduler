@@ -611,9 +611,6 @@ public ArrayList<String> reportActivity(int hours) throws Exception {
 	        									 resultSet1.getString("organizerCode"),
 	        									 resultSet1.getString("shareCode"));
 	        	GregorianCalendar current = new GregorianCalendar();
-	        	System.out.println("Created Time: " + resultSet1.getTimestamp("createdDate"));
-	        	
-	        	//GregorianCalendar schedDate = schedule.getCreatedDate();	
 	        	
 	    		if (schedule.getCreatedDate().getTimeInMillis() > (current.getTimeInMillis() - TimeUnit.HOURS.toMillis(hours)))
 	    		{

@@ -118,14 +118,11 @@ public class CancelMeetingHandler implements RequestStreamHandler {
 				logger.log(req.printTime());
 				boolean del = cancelMeeting(req.scheduleCode, req.secretCode, req.time, req.day);
 				if (del) {
-					logger.log(" *** It definitely worked right? probably. *** ");
 					resp = new CancelMeetingResponse(req.scheduleCode, req.secretCode, req.time, req.day, 200);					
 				}
 				else {
-					logger.log(" *** fuck it failed *** ");
 					resp = new CancelMeetingResponse("The meeting could not be deleted", 400);					
 					}
-				logger.log("WTF");
 				} 
 			catch (Exception e) 
 			{

@@ -102,7 +102,7 @@ public class RetrieveOldSchedulesHandler implements RequestStreamHandler {
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
 			RetrieveOldSchedulesResponse resp;
-			logger.log(" ***Request made succ*** ");
+			logger.log(" ***Request made successfully*** ");
 			try {
 				logger.log(" **** In the Try loop *** ");
 				ArrayList<String> s = retrieveOldSchedules(req.days);

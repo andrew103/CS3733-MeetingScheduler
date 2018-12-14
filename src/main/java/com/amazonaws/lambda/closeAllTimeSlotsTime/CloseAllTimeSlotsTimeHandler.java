@@ -39,56 +39,6 @@ public class CloseAllTimeSlotsTimeHandler implements RequestStreamHandler {
 			.withRegion("us-east-2").build();
 
 	boolean useRDS = true;
-	
-//	// not yet connected to RDS, so comment this out...
-//	public double loadConstant(String arg) {
-//		if (useRDS) {
-//			double val = 0;
-//			try {
-//				val = loadValueFromRDS(arg);
-//				return val;
-//			} catch (Exception e) {
-//				return 0;
-//			}
-//		}
-//		
-//		return loadValueFromBucket(arg);
-//	}
-//
-//	/** Load from RDS, if it exists
-//	 * 
-//	 * @throws Exception 
-//	 */
-//	double loadValueFromRDS(String arg) throws Exception {
-//		if (logger != null) { logger.log("in loadValue"); }
-//		ConstantsDAO dao = new ConstantsDAO();
-//		Constant constant = dao.getConstant(arg);
-//		return constant.value;
-//	}
-//	
-//	/** Load up S3 Bucket with given key and interpret contents as double. */
-//	double loadValueFromBucket(String arg) {
-//		if (logger != null) { logger.log("load from bucket:" + arg); }
-//		try {
-//			S3Object pi = s3.getObject("cs3733/constants", arg);
-//			if (pi == null) {
-//				return 0;
-//			} else {
-//				S3ObjectInputStream pis = pi.getObjectContent();
-//				Scanner sc = new Scanner(pis);
-//				String val = sc.nextLine();
-//				sc.close();
-//				try { pis.close(); } catch (IOException e) { }
-//				try {
-//					return Double.valueOf(val);
-//				} catch (NumberFormatException nfe) {
-//					return 0.0;
-//				}
-//			}
-//		} catch (SdkClientException sce) {
-//			return 0;
-//		}
-//	}
 
 	boolean closeAllTimeSlotsTime(String scheduleCode, String secretCode, int time) throws Exception {
 		SchedulerDAO dao = new SchedulerDAO();	
@@ -150,7 +100,7 @@ public class CloseAllTimeSlotsTimeHandler implements RequestStreamHandler {
 			logger.log("***"+req.toString()+"***");
 			// compute proper response
 			CloseAllTimeSlotsTimeResponse resp;
-			logger.log(" ***Request made succ*** ");
+			logger.log(" ***Request made successfully*** ");
 			try {
 				logger.log(" **** In the Try loop *** ");
 				logger.log(req.scheduleCode);
@@ -162,10 +112,8 @@ public class CloseAllTimeSlotsTimeHandler implements RequestStreamHandler {
 					resp = new CloseAllTimeSlotsTimeResponse(req.scheduleCode, req.secretCode, req.time, 200);					
 				}
 				else {
-					logger.log(" *** fuck it failed *** ");
 					resp = new CloseAllTimeSlotsTimeResponse("The schedule was not found", 400);					
 					}
-				logger.log("WTF");
 				} 
 			catch (Exception e) 
 			{
