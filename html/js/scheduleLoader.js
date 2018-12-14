@@ -1,5 +1,6 @@
 //Fetches the url paramaters and sets them to the variable
 var urlParams;
+var scheduleLoaded;
 (window.onpopstate = function () {
     var match,
         pl     = /\+/g,  // Regex for replacing addition symbol with a space
@@ -101,10 +102,9 @@ function initSchedule(foundSchedule){
                 row.insertCell(j+1)
             }
         }
-
         console.log(scheduleTable)
-
         updateSchedule(schedule["startDateStr"], isOrganizer)
+        if(isOrganizer){loadSelect();}
     }
     else{
         alert("Invalid id")

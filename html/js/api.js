@@ -23,3 +23,19 @@ var organizer_cancelMeeting = organizer_url + "/cancelmeeting";
 var organizer_extendStartDate = organizer_url + "/extendstartdate";
 
 var organizer_extendEndDate = organizer_url + "/extendenddate";
+
+var organizer_openByDate = organizer_url + "/openallslotsday";
+
+var organizer_closeByDate = organizer_url + "/closeallslotsday";
+
+var organizer_openByTime = organizer_url + "/openallslotstime";
+
+var organizer_closeByTime = organizer_url + "/closeallslotstime";
+
+var admin_url = base_url + "/admin"
+
+var admin_retrieveOld = admin_url + "/retrieveoldschedules"
+
+var admin_report = admin_url + "/reportactivity"
+
+var admin_deleteOld= admin_url + "/deleteoldschedules"
