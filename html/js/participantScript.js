@@ -24,13 +24,13 @@ function processCell(cellText, cellIndex, rowIndex){//organizer version
       $("#scheduleMeeting").modal();
       break;
     case "Closed":
-      stringDisp = "Time slot closed on "+showDayTime(cellIndex, rowIndex);
+      stringDisp = "Time slot closed on "+showDayTime(cellIndex, rowIndex, false);
       alert(stringDisp);
       break;
     case "Not on schedule":
       break;
     default: //there is a meeting scheduled but not visiable to participant
-      stringDisp = "Time slot has a scheduled meeting on "+showDayTime(cellIndex, rowIndex)+".";
+      stringDisp = "Time slot has a scheduled meeting on "+showDayTime(cellIndex, rowIndex, false)+".";
       document.getElementById("cancelMeetingText").innerHTML=stringDisp;
       document.getElementById("cancelMeetingButton").onclick = function() {
         var shareCode = urlParams["shareCode"];

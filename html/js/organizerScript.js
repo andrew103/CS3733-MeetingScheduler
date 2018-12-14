@@ -12,19 +12,19 @@ function loadSelect(){
 function processCell(cellText, cellIndex, rowIndex){//organizer version
     switch(cellText){
         case "Open":
-            stringDisp = "Time slot open on "+showDayTime(cellIndex, rowIndex);
+            stringDisp = "Time slot open on "+showDayTime(cellIndex, rowIndex, false);
             document.getElementById("closeSlotText").innerHTML=stringDisp;
             $("#closeSlot").modal();
             break;
         case "Closed":
-            stringDisp = "Time slot closed on "+showDayTime(cellIndex, rowIndex);
+            stringDisp = "Time slot closed on "+showDayTime(cellIndex, rowIndex, false);
             document.getElementById("openSlotText").innerHTML=stringDisp;
             $("#openSlot").modal();
             break;
         case "Not on schedule":
             break;
         default: //there is a meeting scheduled
-            stringDisp = "Meeting scheduled on "+showDayTime(cellIndex, rowIndex)+". "+cellText;
+            stringDisp = "Meeting scheduled on "+showDayTime(cellIndex, rowIndex, false)+". "+cellText;
             document.getElementById("cancelMeetingText").innerHTML=stringDisp;
             $("#cancelMeeting").modal();
     }
