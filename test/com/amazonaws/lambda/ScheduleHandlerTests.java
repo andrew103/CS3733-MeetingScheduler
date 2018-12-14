@@ -276,28 +276,28 @@ public class ScheduleHandlerTests extends TestCase{
         
       //*******************************************
         //Test reportActivity
-//    	CreateScheduleRequest req12 = new CreateScheduleRequest("Yin4", 60, "2018-12-1", "2018-12-12", 0300, 0400);
-//    	CreateScheduleHandler handler12 = new CreateScheduleHandler();
-//    	JSONObject reqJson12 = new JSONObject();
-//    	reqJson12.put("body", new Gson().toJson(req12));
-//    	
-//    	
-//        InputStream input12 = new ByteArrayInputStream(reqJson12.toJSONString().getBytes());;
-//        OutputStream output12 = new ByteArrayOutputStream();
-//                
-//        handler12.handleRequest(input12, output12, c);
-//        
-//        
-//    	CreateScheduleRequest req13 = new CreateScheduleRequest("Yang4", 60, "2018-12-1", "2018-12-9", 0300, 0400);
-//    	CreateScheduleHandler handler13 = new CreateScheduleHandler();
-//    	JSONObject reqJson13 = new JSONObject();
-//    	reqJson13.put("body", new Gson().toJson(req13));
-//    	
-//    	
-//        InputStream input13 = new ByteArrayInputStream(reqJson13.toJSONString().getBytes());;
-//        OutputStream output13 = new ByteArrayOutputStream();
-//                
-//        handler13.handleRequest(input13, output13, c);
+    	CreateScheduleRequest req12 = new CreateScheduleRequest("Yin4", 60, "2018-12-1", "2018-12-12", 0300, 0400);
+    	CreateScheduleHandler handler12 = new CreateScheduleHandler();
+    	JSONObject reqJson12 = new JSONObject();
+    	reqJson12.put("body", new Gson().toJson(req12));
+    	
+    	
+        InputStream input12 = new ByteArrayInputStream(reqJson12.toJSONString().getBytes());;
+        OutputStream output12 = new ByteArrayOutputStream();
+                
+        handler12.handleRequest(input12, output12, c);
+        
+        
+    	CreateScheduleRequest req13 = new CreateScheduleRequest("Yang4", 60, "2018-12-1", "2018-12-9", 0300, 0400);
+    	CreateScheduleHandler handler13 = new CreateScheduleHandler();
+    	JSONObject reqJson13 = new JSONObject();
+    	reqJson13.put("body", new Gson().toJson(req13));
+    	
+    	
+        InputStream input13 = new ByteArrayInputStream(reqJson13.toJSONString().getBytes());;
+        OutputStream output13 = new ByteArrayOutputStream();
+                
+        handler13.handleRequest(input13, output13, c);
         
     	ReportActivityRequest req14 = new ReportActivityRequest(1);
     	ReportActivityHandler handler14 = new ReportActivityHandler();

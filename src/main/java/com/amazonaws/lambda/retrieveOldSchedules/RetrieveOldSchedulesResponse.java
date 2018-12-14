@@ -26,7 +26,7 @@ public class RetrieveOldSchedulesResponse {
 		}
 		else
 		{
-			String resp = "Found schedule names: ";
+			String resp = "Found old schedule names that are more than n days old: ";
 			for (String s : schedules)
 			{
 				resp = resp + s + ", ";
